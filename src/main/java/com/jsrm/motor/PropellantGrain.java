@@ -13,7 +13,7 @@ public class PropellantGrain {
     private final double segmentLenght;
     private final double numberOfSegment;
     private final GrainSurface outerSurface;
-    private final GrainSurface innerSurface;
+    private final GrainSurface endsSurface;
     private final GrainSurface coreSurface;
 
     public double getGrainVolume() {

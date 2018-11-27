@@ -26,7 +26,7 @@ class PropellantGrainTest {
         assertThat(propellantGrain.getPropellant()).isEqualTo(KNSB_FINE);
 
         assertThat(propellantGrain.getOuterSurface()).isEqualTo(INHIBITED);
-        assertThat(propellantGrain.getInnerSurface()).isEqualTo(EXPOSED);
+        assertThat(propellantGrain.getEndsSurface()).isEqualTo(EXPOSED);
         assertThat(propellantGrain.getCoreSurface()).isEqualTo(INHIBITED);
 
         assertThat(propellantGrain.getGrainVolume()).isEqualTo(34306.19177, Offset.offset(0.00001));
