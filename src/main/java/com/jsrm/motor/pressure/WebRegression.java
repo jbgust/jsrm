@@ -1,7 +1,9 @@
 package com.jsrm.motor.pressure;
 
 import com.jsrm.motor.PropellantGrain;
+import lombok.Getter;
 
+@Getter
 public class WebRegression {
 
 

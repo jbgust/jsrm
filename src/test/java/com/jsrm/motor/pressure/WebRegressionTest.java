@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class WebRegressionTest {
 
     @ParameterizedTest
-    @ValueSource(ints = { 0, 1 })
+    @ValueSource(ints = { 0, 1, 2 })
     void shouldComputeWebRegressionForAnInterval(int interval) {
         // GIVEN
         double webRegressionStep = 0.005;
