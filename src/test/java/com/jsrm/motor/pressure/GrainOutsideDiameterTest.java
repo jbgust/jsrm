@@ -14,43 +14,41 @@ import static com.jsrm.motor.GrainSurface.INHIBITED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-class GrainCoreDiameterTest {
+class GrainOutsideDiameterTest {
 
     @ParameterizedTest
-    @MethodSource("grainCoreDiameterWhenExposedByInterval")
-    void shouldComputeGrainCoreDiameterWhenExposed(int interval, double expectedCoreDiameter) {
+    @MethodSource("grainOutsideDiameterWhenExposedByInterval")
+    void shouldComputeGrainOutsideDiameterWhenExposed(int interval, double expectedOuterDiameter) {
         // GIVEN
         PropellantGrain propellantGrain = new PropellantGrainBuilder()
-                .withCoreSurface(EXPOSED)
+                .withOuterSurface(EXPOSED)
                 .build();
-
         WebRegression webRegression = new WebRegression(propellantGrain, 1000);
-        GrainCoreDiameterRises grainCoreDiameter = new GrainCoreDiameterRises(webRegression);
 
         // THEN
-        assertThat(grainCoreDiameter.compute(interval)).isEqualTo(expectedCoreDiameter);
+        assertThat(new GrainOutsideDiameterRegression(webRegression).compute(interval)).isEqualTo(expectedOuterDiameter);
     }
 
     @ParameterizedTest
     @ValueSource(ints = { 0, 1, 2 })
-    void shouldComputeGrainCoreDiameterWhenInhibited(int interval) {
+    void shouldComputeGrainOutsideDiameterWhenInhibited(int interval) {
         // GIVEN
         PropellantGrain propellantGrain = new PropellantGrainBuilder()
-                .withCoreSurface(INHIBITED)
+                .withOuterSurface(INHIBITED)
                 .build();
 
         WebRegression webRegression = new WebRegression(propellantGrain, 1000);
-        GrainCoreDiameterRises grainCoreDiameter = new GrainCoreDiameterRises(webRegression);
+        GrainOutsideDiameterRegression grainCoreDiameter = new GrainOutsideDiameterRegression(webRegression);
 
         // THEN
-        assertThat(grainCoreDiameter.compute(interval)).isEqualTo(propellantGrain.getCoreDiameter());
+        assertThat(grainCoreDiameter.compute(interval)).isEqualTo(propellantGrain.getOuterDiameter());
     }
 
-    static Stream<Arguments> grainCoreDiameterWhenExposedByInterval() {
+    static Stream<Arguments> grainOutsideDiameterWhenExposedByInterval() {
         return Stream.of(
-                arguments(0, 10),
-                arguments(1, 10 + 2 * 0.005),
-                arguments(2, 10 + 4 * 0.005)
+                arguments(0, 20),
+                arguments(1, 20 - 2 * 0.005),
+                arguments(2, 20 - 4 * 0.005)
         );
     }
 }

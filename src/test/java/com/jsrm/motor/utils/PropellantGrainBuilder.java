@@ -19,12 +19,17 @@ public class PropellantGrainBuilder {
     private Propellant propellant = KNSB_FINE;;
     private int outerDiameter = 20;
 
+    public PropellantGrain build() {
+        return new PropellantGrain(propellant, outerDiameter, coreDiameter, segmentLenght, numberOfSegment, outerSurface, endsSurface, coreSurface);
+    }
+
     public PropellantGrainBuilder withCoreSurface(GrainSurface surface){
         coreSurface = surface;
         return this;
     }
 
-    public PropellantGrain build() {
-        return new PropellantGrain(propellant, outerDiameter, coreDiameter, segmentLenght, numberOfSegment, outerSurface, endsSurface, coreSurface);
+    public PropellantGrainBuilder withOuterSurface(GrainSurface surface) {
+        outerSurface = surface;
+        return this;
     }
 }
