@@ -8,7 +8,7 @@ import static java.lang.String.format;
 
 public abstract class GrainEvolution {
 
-    private static final String GRAIN_EVOLUTION_FORMULA = "initialCoreDiameter %s coreSurface * 2 * webRegression";
+    private static final String GRAIN_EVOLUTION_FORMULA = "initialDimension %s surface * 2 * webRegression";
 
     private final WebRegression webRegression;
 
@@ -18,22 +18,22 @@ public abstract class GrainEvolution {
         this.webRegression = webRegression;
 
         grainEvolutionExpression = new ExpressionBuilder(format(GRAIN_EVOLUTION_FORMULA, evolution.getEvolutionSign()))
-                .variables("initialCoreDiameter", "coreSurface", "webRegression")
+                .variables("initialDimension", "surface", "webRegression")
                 .build();
     }
 
     public double compute(int interval) {
 
         return grainEvolutionExpression
-                .setVariable("initialCoreDiameter", getInitialDiameter())
-                .setVariable("coreSurface", getSurface().value())
+                .setVariable("initialDimension", getInitialDimension())
+                .setVariable("surface", getSurface().value())
                 .setVariable("webRegression", webRegression.compute(interval))
                 .evaluate();
     }
 
     abstract GrainSurface getSurface();
 
-    abstract double getInitialDiameter();
+    abstract double getInitialDimension();
 
     WebRegression getWebRegression() {
         return webRegression;

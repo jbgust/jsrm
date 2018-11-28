@@ -14,41 +14,44 @@ import static com.jsrm.motor.GrainSurface.INHIBITED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-class GrainOutsideDiameterTest {
+class GrainLengthRegressionTest {
 
     @ParameterizedTest
-    @MethodSource("grainOutsideDiameterWhenExposedByInterval")
-    void shouldComputeGrainOutsideDiameterWhenExposed(int interval, double expectedOuterDiameter) {
+    @MethodSource("grainLengthWhenExposedByInterval")
+    void shouldComputeGrainLengthWhenExposed(int interval, double expectedLength) {
         // GIVEN
         PropellantGrain propellantGrain = new PropellantGrainBuilder()
-                .withOuterSurface(EXPOSED)
+                .withEndsSurface(EXPOSED)
+                .withNumberOfSegments(2)
                 .build();
         WebRegression webRegression = new WebRegression(propellantGrain, 1000);
 
         // THEN
-        assertThat(new GrainOutsideDiameterRegression(webRegression).compute(interval)).isEqualTo(expectedOuterDiameter);
+        assertThat(new GrainLengthRegression(webRegression).compute(interval)).isEqualTo(expectedLength);
     }
 
     @ParameterizedTest
     @ValueSource(ints = { 0, 1, 2 })
-    void shouldComputeGrainOutsideDiameterWhenInhibited(int interval) {
+    void shouldComputeGrainLengthWhenInhibited(int interval) {
         // GIVEN
         PropellantGrain propellantGrain = new PropellantGrainBuilder()
-                .withOuterSurface(INHIBITED)
+                .withEndsSurface(INHIBITED)
+                .withNumberOfSegments(2)
                 .build();
 
         WebRegression webRegression = new WebRegression(propellantGrain, 1000);
-        GrainOutsideDiameterRegression grainOutsideDiameterRegression = new GrainOutsideDiameterRegression(webRegression);
+        GrainLengthRegression grainLengthRegression = new GrainLengthRegression(webRegression);
 
         // THEN
-        assertThat(grainOutsideDiameterRegression.compute(interval)).isEqualTo(propellantGrain.getOuterDiameter());
+        assertThat(grainLengthRegression.compute(interval)).isEqualTo(propellantGrain.getGrainLength());
     }
 
-    static Stream<Arguments> grainOutsideDiameterWhenExposedByInterval() {
+    static Stream<Arguments> grainLengthWhenExposedByInterval() {
+        int numberOfSegment = 2;
         return Stream.of(
-                arguments(0, 20),
-                arguments(1, 20 - 2 * 0.005),
-                arguments(2, 20 - 4 * 0.005)
+                arguments(0, 100),
+                arguments(1, 100 - numberOfSegment * 2 * 0.005),
+                arguments(2, 100 - numberOfSegment * 4 * 0.005)
         );
     }
 }

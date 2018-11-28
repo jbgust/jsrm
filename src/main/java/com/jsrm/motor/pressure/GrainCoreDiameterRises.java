@@ -14,7 +14,7 @@ public class GrainCoreDiameterRises extends GrainEvolution {
     }
 
     @Override
-    double getInitialDiameter() {
+    double getInitialDimension() {
         return getWebRegression().getPropellantGrain().getCoreDiameter();
     }
 }

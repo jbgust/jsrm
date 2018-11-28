@@ -10,7 +10,7 @@ public class PropellantGrain {
     private final Propellant propellant;
     private final double outerDiameter;
     private final double coreDiameter;
-    private final double segmentLenght;
+    private final double segmentLength;
     private final double numberOfSegment;
     private final GrainSurface outerSurface;
     private final GrainSurface endsSurface;
@@ -22,11 +22,16 @@ public class PropellantGrain {
                 .build()
                 .setVariable("outerRadius", outerDiameter/2)
                 .setVariable("coreRadius", coreDiameter/2)
-                .setVariable("grainLenght", numberOfSegment*segmentLenght)
+                .setVariable("grainLenght", getGrainLength())
                 .evaluate();
+    }
+
+    public double getGrainLength() {
+        return numberOfSegment* segmentLength;
     }
 
     public double getInitialWebThickness() {
         return (outerDiameter-coreDiameter)/2;
     }
+
 }

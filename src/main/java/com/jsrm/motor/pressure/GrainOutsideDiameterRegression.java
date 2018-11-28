@@ -14,7 +14,7 @@ public class GrainOutsideDiameterRegression extends GrainEvolution {
     }
 
     @Override
-    double getInitialDiameter() {
+    double getInitialDimension() {
         return getWebRegression().getPropellantGrain().getOuterDiameter();
     }
 }
