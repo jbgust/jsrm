@@ -1,4 +1,4 @@
-package com.jsrm.motor.pressure;
+package com.jsrm.motor.formula;
 
 import org.junit.jupiter.api.Test;
 

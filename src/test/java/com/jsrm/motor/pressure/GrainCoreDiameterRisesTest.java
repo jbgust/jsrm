@@ -14,7 +14,7 @@ import static com.jsrm.motor.GrainSurface.INHIBITED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-class GrainCoreDiameterTest {
+class GrainCoreDiameterRisesTest {
 
     @ParameterizedTest
     @MethodSource("grainCoreDiameterWhenExposedByInterval")
