@@ -16,6 +16,7 @@ public class WebRegression {
         this.numberOfInterval = numberOfInterval;
     }
 
+    //TODO : refaire le calcul car invalide sir outerSurface et coreSurface sont EXPOSED
     public double compute(int interval) {
         return propellantGrain.getInitialWebThickness()/numberOfInterval*interval;
     }
