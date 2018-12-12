@@ -10,7 +10,7 @@ public class Calculator {
 
     private final Formula formula;
     private final Map<String, Double> constants;
-    private final Map<String, Double> initialValues;
+    private final Map<Formula, Double> initialValues;
 
     /**
      *
@@ -18,7 +18,7 @@ public class Calculator {
      * @param constants Constants used in the formula and in its dependencies
      * @param initialValues Used by formulas that has a initial result
      */
-    public Calculator(Formula formula, Map<String, Double> constants, Map<String, Double> initialValues) {
+    public Calculator(Formula formula, Map<String, Double> constants, Map<Formula, Double> initialValues) {
         this.formula = formula;
         this.constants = constants;
         this.initialValues = initialValues;
@@ -30,7 +30,7 @@ public class Calculator {
      * @param toLine last line of the calculation
      * @return the result of the formula and its dependencies stored line by line. The result in each line are indexed by the formula name
      */
-    public List<Map<String, Double>> compute(int fromLine, int toLine) {
+    public List<Map<Formula, Double>> compute(int fromLine, int toLine) {
 
         LineCalculator lineCalculator = new LineCalculator(formula, constants, initialValues);
 

@@ -5,18 +5,17 @@ import java.util.Map;
 
 import static com.jsrm.calculation.Formula.PREVIOUS_VARIABLE_SUFFIX;
 import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
 
 class LineCalculator {
 
     private final Formula formula;
     private final Map<String, Double> constants;
-    private final Map<String, Double> initialValues;
+    private final Map<Formula, Double> initialValues;
 
     private Map<String, Double> previousLineResults;
-    private Map<String, Double> currentLineResults;
+    private Map<Formula, Double> currentLineResults;
 
-    LineCalculator(Formula formula, Map<String, Double> constants, Map<String, Double> initialValues) {
+    LineCalculator(Formula formula, Map<String, Double> constants, Map<Formula, Double> initialValues) {
         this.formula = formula;
         this.initialValues = new HashMap<>(initialValues);
         previousLineResults = new HashMap<>();
@@ -28,14 +27,14 @@ class LineCalculator {
      * @param lineNumber the line number
      * @return the result of the line
      */
-    Map<String, Double> compute(int lineNumber) {
+    Map<Formula, Double> compute(int lineNumber) {
         currentLineResults = new HashMap<>();
 
         run(formula, lineNumber);
 
         previousLineResults.clear();
         previousLineResults.putAll(currentLineResults.entrySet().stream()
-                .collect(toMap(o-> o.getKey()+ PREVIOUS_VARIABLE_SUFFIX, Map.Entry::getValue)));
+                .collect(toMap(o-> o.getKey().getName()+ PREVIOUS_VARIABLE_SUFFIX, Map.Entry::getValue)));
 
         return currentLineResults;
     }
@@ -43,7 +42,7 @@ class LineCalculator {
     private void run(Formula formula, int lineNumber){
 
         if(hasInitialValue(formula)) {
-            currentLineResults.put(formula.getName(), initialValues.remove(formula.getName()));
+            currentLineResults.put(formula, initialValues.remove(formula));
         } else {
             resolveVariablesDependencies(formula, lineNumber);
 
@@ -53,12 +52,12 @@ class LineCalculator {
                     .setVariables(constants)
                     .evaluate();
 
-            currentLineResults.put(formula.getName(), result);
+            currentLineResults.put(formula, result);
         }
     }
 
     private boolean hasInitialValue(Formula formula) {
-        return initialValues.containsKey(formula.getName());
+        return initialValues.containsKey(formula);
     }
 
     /**
@@ -79,8 +78,8 @@ class LineCalculator {
      */
     private Map<String, Double> getVariablesFromDependentCalculations(Formula formula) {
         return currentLineResults.entrySet().stream()
-                .filter(entry -> formula.getDependencies().stream().map(Formula::getName).collect(toSet()).contains(entry.getKey()))
-                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+                .filter(entry -> formula.getDependencies().contains(entry.getKey()))
+                .collect(toMap(entry -> entry.getKey().getName(), Map.Entry::getValue));
     }
 
     /**
@@ -90,7 +89,7 @@ class LineCalculator {
      */
     private void resolveVariablesDependencies(Formula formula, int lineNumber) {
         formula.getDependencies().stream()
-                .filter(entry -> !currentLineResults.keySet().contains(entry.getName()))
+                .filter(entry -> !currentLineResults.keySet().contains(entry))
                 .forEach(formule1 -> run(formule1, lineNumber));
     }
 }

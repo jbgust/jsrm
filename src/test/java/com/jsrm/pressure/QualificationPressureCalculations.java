@@ -1,6 +1,7 @@
 package com.jsrm.pressure;
 
 import com.jsrm.calculation.Calculator;
+import com.jsrm.calculation.Formula;
 import com.jsrm.pressure.csv.CsvToPressureLine;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class QualificationPressureCalculations {
 
-    private static List<Map<String, Double>> results;
+    private static List<Map<Formula, Double>> results;
 
     @BeforeAll
     static void init(){
@@ -26,8 +27,8 @@ class QualificationPressureCalculations {
         constants.put("ci",1d);
         constants.put("xincp", 6.6/834d);
 
-        HashMap<String, Double> initialValues = new HashMap<>();
-        initialValues.put(CORE_DIAMETER.name(),8d);
+        HashMap<Formula, Double> initialValues = new HashMap<>();
+        initialValues.put(CORE_DIAMETER,8d);
 
         Calculator calculator = new Calculator(CORE_DIAMETER, constants, initialValues);
         results = calculator.compute(0, 835);
@@ -37,7 +38,7 @@ class QualificationPressureCalculations {
     @CsvFileSource(resources = "/METEOR-KNSB-final_E46_QUALIFICATION.csv", numLinesToSkip = 1, delimiter = '|')
     @DisplayName("Check pressure data for METEOR motor with SRM results")
     void qualification1(@CsvToPressureLine Map<String, Double> expectedLine) {
-        assertThat(results.get(expectedLine.get(INTERVAL).intValue()).get(CORE_DIAMETER.getName()))
+        assertThat(results.get(expectedLine.get(INTERVAL).intValue()).get(CORE_DIAMETER))
                 .isEqualTo(expectedLine.get(CORE_DIAMETER.getName()), Offset.offset(0.01));
     }
 

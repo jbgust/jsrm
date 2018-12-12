@@ -1,14 +1,12 @@
 package com.jsrm.calculation;
 
-import com.jsrm.calculation.formulas.Formula1;
-import com.jsrm.calculation.formulas.Formula2;
-import com.jsrm.calculation.formulas.Formula3;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.jsrm.calculation.TestFormulas.*;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.emptySet;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,88 +20,87 @@ class LineCalculatorTest {
     @Test
     void shouldUseInitialValue() {
         // GIVEN
-        Formula3 formula = new Formula3();
-        Map<String, Double> initialValues = new HashMap<>();
-        initialValues.put(formula.getName(), 25d);
+        Map<Formula, Double> initialValues = new HashMap<>();
+        initialValues.put(FORMULA_3, 25d);
         Map<String, Double> constants = emptyMap();
-        LineCalculator lineCalculator = new LineCalculator(formula, constants, initialValues);
+        LineCalculator lineCalculator = new LineCalculator(FORMULA_3, constants, initialValues);
 
         // WHEN
-        Map<String, Double> results = lineCalculator.compute(0);
+        Map<Formula, Double> results = lineCalculator.compute(0);
 
         // THEN
-        assertThat(results).containsExactly(entry(formula.getName(), 25d));
+        assertThat(results).containsExactly(entry(FORMULA_3, 25d));
     }
 
     @Test
     void shouldUsePreviousValue() {
         // GIVEN
-        Formula3 formula = new Formula3();
-
-        Map<String, Double> initialValues = new HashMap<>();
-        initialValues.put(formula.getName(), 25d);
+        Map<Formula, Double> initialValues = new HashMap<>();
+        initialValues.put(FORMULA_3, 25d);
 
         Map<String, Double> constants = emptyMap();
 
-        LineCalculator lineCalculator = new LineCalculator(formula, constants, initialValues);
+        LineCalculator lineCalculator = new LineCalculator(FORMULA_3, constants, initialValues);
         lineCalculator.compute(0);
 
         // WHEN
-        Map<String, Double> results = lineCalculator.compute(1);
+        Map<Formula, Double> results = lineCalculator.compute(1);
 
         // THEN
-        assertThat(results).containsExactly(entry(formula.getName(), 100d));
+        assertThat(results).containsExactly(entry(FORMULA_3, 100d));
     }
 
     @Test
     void shouldUseConstant(){
         // GIVEN
-        Formula formula = new Formula2();
-
-        Map<String, Double> initialValues = new HashMap<>();
-        initialValues.put("formula3", 2d);
+        Map<Formula, Double> initialValues = new HashMap<>();
+        initialValues.put(FORMULA_3, 2d);
 
         Map<String, Double> constants = new HashMap<>();
         constants.put("e", 4d);
 
-        LineCalculator lineCalculator = new LineCalculator(formula, constants, initialValues);
+        LineCalculator lineCalculator = new LineCalculator(FORMULA_2, constants, initialValues);
 
         // WHEN
-        Map<String, Double> results = lineCalculator.compute(1);
+        Map<Formula, Double> results = lineCalculator.compute(1);
 
         // THEN
-        assertThat(results).containsExactly(
-                entry(formula.getName(), 32d),
-                entry("formula3", 2d));
-
+        assertThat(results)
+                .containsOnly(
+                    entry(FORMULA_2, 32d),
+                    entry(FORMULA_3, 2d))
+                .hasSize(2);
     }
 
     @Test
     void shouldComputeDependencies(){
         // GIVEN
-        Formula formula = new Formula1();
         Map<String, Double> constants = new HashMap<>();
         constants.put("constant1", 4d);
         constants.put("e", 2d);
 
-        Map<String, Double> initialValues = new HashMap<>();
-        initialValues.put("formula3", 3d);
-        LineCalculator lineCalculator = new LineCalculator(formula, constants, initialValues);
+        Map<Formula, Double> initialValues = new HashMap<>();
+        initialValues.put(FORMULA_3, 3d);
+        LineCalculator lineCalculator = new LineCalculator(FORMULA_1, constants, initialValues);
 
         // WHEN
-        Map<String, Double> result1 = lineCalculator.compute(0);
-        Map<String, Double> result2 = lineCalculator.compute(1);
+        Map<Formula, Double> result1 = lineCalculator.compute(0);
+        Map<Formula, Double> result2 = lineCalculator.compute(1);
 
         // THEN
-        assertThat(result1).containsExactly(
-                entry("formula1", -2d),
-                entry("formula2", 12d),
-                entry("formula3", 3d));
+        assertThat(result1)
+                .containsOnly(
+                        entry(FORMULA_1, -2d),
+                        entry(FORMULA_2, 12d),
+                        entry(FORMULA_3, 3d))
+                .hasSize(3);
 
-        assertThat(result2).containsExactly(
-                entry("formula1", -11d),
-                entry("formula2", 48d),
-                entry("formula3", 12d));
+        assertThat(result2)
+                .containsOnly(
+                    entry(FORMULA_1, -11d),
+                    entry(FORMULA_2, 48d),
+                    entry(FORMULA_3, 12d))
+                .hasSize(3);
     }
 
     @Test
