@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.jsrm.pressure.PressureFormulas.CORE_DIAMETER;
+import static com.jsrm.pressure.PressureFormulas.*;
 import static com.jsrm.pressure.csv.PressureCsvLineAggregator.INTERVAL;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,12 +25,14 @@ class QualificationPressureCalculations {
     static void init(){
         HashMap<String, Double> constants = new HashMap<>();
         constants.put("ci",1d);
+        constants.put("osi",0d);
         constants.put("xincp", 6.6/834d);
 
         HashMap<Formula, Double> initialValues = new HashMap<>();
-        initialValues.put(CORE_DIAMETER,8d);
+        initialValues.put(GRAIN_CORE_DIAMETER,8d);
+        initialValues.put(GRAIN_OUTSIDE_DIAMETER,21.2d);
 
-        Calculator calculator = new Calculator(CORE_DIAMETER, constants, initialValues);
+        Calculator calculator = new Calculator(WEB_THICKNESS, constants, initialValues);
         results = calculator.compute(0, 835);
     }
 
@@ -38,8 +40,16 @@ class QualificationPressureCalculations {
     @CsvFileSource(resources = "/METEOR-KNSB-final_E46_QUALIFICATION.csv", numLinesToSkip = 1, delimiter = '|')
     @DisplayName("Check pressure data for METEOR motor with SRM results")
     void qualification1(@CsvToPressureLine Map<String, Double> expectedLine) {
-        assertThat(results.get(expectedLine.get(INTERVAL).intValue()).get(CORE_DIAMETER))
-                .isEqualTo(expectedLine.get(CORE_DIAMETER.getName()), Offset.offset(0.01));
+        Map<Formula, Double> resultLIneToAssert = results.get(expectedLine.get(INTERVAL).intValue());
+
+        assertThat(resultLIneToAssert.get(GRAIN_CORE_DIAMETER))
+                .isEqualTo(expectedLine.get(GRAIN_CORE_DIAMETER.getName()), Offset.offset(0.01));
+
+        assertThat(resultLIneToAssert.get(GRAIN_OUTSIDE_DIAMETER))
+                .isEqualTo(expectedLine.get(GRAIN_OUTSIDE_DIAMETER.getName()), Offset.offset(0.01));
+
+        assertThat(resultLIneToAssert.get(WEB_THICKNESS))
+                .isEqualTo(expectedLine.get(WEB_THICKNESS.getName()), Offset.offset(0.001));;
     }
 
 

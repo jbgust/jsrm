@@ -13,7 +13,9 @@ import static java.util.stream.Stream.of;
 
 public enum PressureFormulas implements Formula {
 
-    CORE_DIAMETER("CORE_DIAMETER_previous + ci * 2 * xincp", empty(), of("ci", "xincp", "CORE_DIAMETER_previous"));
+    GRAIN_CORE_DIAMETER("GRAIN_CORE_DIAMETER_previous + ci * 2 * xincp", empty(), of("ci", "xincp", "GRAIN_CORE_DIAMETER_previous")),
+    GRAIN_OUTSIDE_DIAMETER("GRAIN_OUTSIDE_DIAMETER_previous - osi * 2 * xincp", empty(), of("osi", "xincp", "GRAIN_OUTSIDE_DIAMETER_previous")),
+    WEB_THICKNESS("(GRAIN_OUTSIDE_DIAMETER - GRAIN_CORE_DIAMETER) / 2", of("GRAIN_CORE_DIAMETER", "GRAIN_OUTSIDE_DIAMETER"), empty());
 
     private final Expression expression;
     private final Set<String> dependencies;
