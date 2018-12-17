@@ -14,7 +14,10 @@ public enum TestFormulas implements Formula {
 
     FORMULA_1("(4 - FORMULA_2) / constant1", of("FORMULA_2"), of("constant1")),
     FORMULA_2("e^2 * FORMULA_3", of("FORMULA_3"), of("e")),
-    FORMULA_3("4 * FORMULA_3_previous", empty(), of("FORMULA_3_previous"));
+    FORMULA_3("4 * FORMULA_3_previous", empty(), of("FORMULA_3_previous")),
+
+
+    FORMULA_4("2 * FUNCTION_A", empty(), of("FUNCTION_A"));
 
     private final Expression expression;
     private final Set<String> dependencies;

@@ -1,6 +1,8 @@
 package com.jsrm.calculation;
 
 import net.objecthunter.exp4j.ExpressionBuilder;
+import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -123,6 +125,30 @@ class LineCalculatorTest {
 
         //THEN
         verify(formula4, times(1)).getExpression();
+    }
+
+    @RepeatedTest(5)
+    void shouldUseFunctionInFormula(RepetitionInfo repetitionInfo) {
+        // GIVEN
+        ResultLineProvider resultLineProvider = new ResultLineProvider() {
+            @Override
+            public String getName() {
+                return "FUNCTION_A";
+            }
+
+            @Override
+            public double getResult(int lineNumber) {
+                return lineNumber+2;
+            }
+        };
+
+        LineCalculator lineCalculator = new LineCalculator(FORMULA_4, emptyMap(), emptyMap(), newSet(resultLineProvider));
+
+        // WHEN
+        Map<Formula, Double> result = lineCalculator.compute(repetitionInfo.getCurrentRepetition());
+
+        //THEN
+        assertThat(result.get(FORMULA_4)).isEqualTo(2*(repetitionInfo.getCurrentRepetition()+2));
     }
 
     private Formula mockFormula(String formulaName) {

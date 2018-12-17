@@ -2,8 +2,10 @@ package com.jsrm.calculation;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static com.jsrm.calculation.Formula.PREVIOUS_VARIABLE_SUFFIX;
+import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toMap;
 
 class LineCalculator {
@@ -11,24 +13,35 @@ class LineCalculator {
     private final Formula formula;
     private final Map<String, Double> constants;
     private final Map<Formula, Double> initialValues;
+    private final Set<ResultLineProvider> resultLineProviders;
 
     private Map<String, Double> previousLineResults;
     private Map<Formula, Double> currentLineResults;
+    private Map<String, Double> currentLineProvidedResult;
 
     LineCalculator(Formula formula, Map<String, Double> constants, Map<Formula, Double> initialValues) {
+        this(formula, constants, initialValues, emptySet());
+    }
+
+    LineCalculator(Formula formula, Map<String, Double> constants, Map<Formula, Double> initialValues, Set<ResultLineProvider> resultLineProviders) {
         this.formula = formula;
         this.initialValues = new HashMap<>(initialValues);
+        this.resultLineProviders = resultLineProviders;
         previousLineResults = new HashMap<>();
         this.constants = constants;
     }
 
     /**
-     * Compute the results from the line
+     * Compute the results for the line
      * @param lineNumber the line number
      * @return the result of the line
      */
     Map<Formula, Double> compute(int lineNumber) {
         currentLineResults = new HashMap<>();
+
+        //Compute provided results
+        currentLineProvidedResult = resultLineProviders.stream()
+                .collect(toMap(ResultLineProvider::getName, resultLineProvider -> resultLineProvider.getResult(lineNumber)));
 
         run(formula, lineNumber);
 
@@ -44,9 +57,11 @@ class LineCalculator {
         if(hasInitialValue(formula)) {
             currentLineResults.put(formula, initialValues.remove(formula));
         } else {
+
             resolveVariablesDependencies(formula, lineNumber);
 
             double result = formula.getExpression()
+                    .setVariables(currentLineProvidedResult)
                     .setVariables(getVariablesFromDependentCalculations(formula))
                     .setVariables(getPreviousVariables(formula))
                     .setVariables(constants)
