@@ -1,6 +1,8 @@
 package com.jsrm.pressure;
 
 import com.jsrm.calculation.Formula;
+import com.jsrm.calculation.function.CircleAreaFunction;
+import com.jsrm.calculation.function.HollowCircleAreaFunction;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import net.objecthunter.exp4j.function.Function;
@@ -18,24 +20,44 @@ public enum PressureFormulas implements Formula {
     GRAIN_CORE_DIAMETER("GRAIN_CORE_DIAMETER_previous + ci * 2 * xincp",
             empty(),
             of("ci", "xincp", "GRAIN_CORE_DIAMETER_previous")),
+
     GRAIN_OUTSIDE_DIAMETER("GRAIN_OUTSIDE_DIAMETER_previous - osi * 2 * xincp",
             empty(),
             of("osi", "xincp", "GRAIN_OUTSIDE_DIAMETER_previous")),
+
+    GRAIN_LENGTH("GRAIN_LENGTH_previous-ei*n*2*xincp",
+            empty(),
+            of("ei", "n", "xincp", "GRAIN_LENGTH_previous")),
+
     WEB_THICKNESS("(GRAIN_OUTSIDE_DIAMETER - GRAIN_CORE_DIAMETER) / 2",
             of("GRAIN_CORE_DIAMETER", "GRAIN_OUTSIDE_DIAMETER"),
             empty()),
 
-    THROAT_AREA("pi/4*(dto+erate*(two-WEB_THICKNESS)/two)^2",
+    THROAT_AREA("CircleArea(dto+erate*(two-WEB_THICKNESS)/two)",
             of("WEB_THICKNESS"),
-            of("dto", "erate", "two")),
+            of("dto", "erate", "two"),
+            new CircleAreaFunction()),
+
     NOZZLE_CRITICAL_PASSAGE_AREA("THROAT_AREA / 1000^2",
             of("THROAT_AREA"),
             empty()),
+
     //Difference in chamber and grain cross-sectional area (flow area)
-    EROSIVE_BURN_FACTOR("ErosiveBurnFactor((pi/4*dc^2-pi/4*(GRAIN_OUTSIDE_DIAMETER^2-GRAIN_CORE_DIAMETER^2))/THROAT_AREA, gstar)",
+    EROSIVE_BURN_FACTOR("ErosiveBurnFactor((CircleArea(dc)-HollowCircleArea(GRAIN_OUTSIDE_DIAMETER, GRAIN_CORE_DIAMETER))/THROAT_AREA, gstar)",
             of("GRAIN_OUTSIDE_DIAMETER", "GRAIN_CORE_DIAMETER", "THROAT_AREA"),
             of("dc", "gstar"),
-            new ErosiveBurnFactorFunction())
+            new ErosiveBurnFactorFunction(), new HollowCircleAreaFunction(), new CircleAreaFunction()),
+
+    GRAIN_VOLUME("(HollowCircleArea(GRAIN_OUTSIDE_DIAMETER, GRAIN_CORE_DIAMETER) * GRAIN_LENGTH)",
+            of("GRAIN_OUTSIDE_DIAMETER", "GRAIN_CORE_DIAMETER", "GRAIN_LENGTH"),
+            empty(),
+            new HollowCircleAreaFunction()),
+
+    //TODO : a virer
+    TEST_A_VIRER("FreeVolumeInChamber(vc, GRAIN_VOLUME)",
+            of("GRAIN_VOLUME"),
+            of("vc"),
+            new FreeVolumeInChamberFunction())
     ;
 
     private final Expression expression;
@@ -46,7 +68,7 @@ public enum PressureFormulas implements Formula {
         ExpressionBuilder expressionBuilder = new ExpressionBuilder(formula);
 
         this.dependencies = dependencies
-                .peek(s1 -> expressionBuilder.variable(s1))
+                .peek(expressionBuilder::variable)
                 .collect(Collectors.toSet());
 
         expressionBuilder.functions(functions);
