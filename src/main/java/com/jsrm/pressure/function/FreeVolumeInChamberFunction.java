@@ -1,4 +1,4 @@
-package com.jsrm.pressure;
+package com.jsrm.pressure.function;
 
 import net.objecthunter.exp4j.function.Function;
 
@@ -13,8 +13,8 @@ public class FreeVolumeInChamberFunction extends Function{
     @Override
     public double apply(double... doubles) {
         double volumeChamber = doubles[0];
-        double grainVolumeInMillimeter = doubles[1];
+        double grainVolumeInCubicMillimeter = doubles[1];
 
-        return (volumeChamber - grainVolumeInMillimeter)/pow(1000,3);
+        return (volumeChamber - grainVolumeInCubicMillimeter)/pow(1000,3);
     }
 }

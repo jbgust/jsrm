@@ -3,6 +3,7 @@ package com.jsrm.pressure;
 import com.jsrm.calculation.Formula;
 import com.jsrm.calculation.function.CircleAreaFunction;
 import com.jsrm.calculation.function.HollowCircleAreaFunction;
+import com.jsrm.pressure.function.ErosiveBurnFactorFunction;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import net.objecthunter.exp4j.function.Function;

@@ -1,4 +1,4 @@
-package com.jsrm.pressure;
+package com.jsrm.pressure.function;
 
 import net.objecthunter.exp4j.function.Function;
 
