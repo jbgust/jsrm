@@ -26,32 +26,34 @@ class QualificationPressureCalculations {
         HashMap<String, Double> constants = new HashMap<>();
         constants.put("ci",1d);
         constants.put("osi",0d);
-        constants.put("ei",0.5d);
-        constants.put("xincp", 6.6/834d);
-        constants.put("dc", 21.2d);
-        constants.put("n", 1d);
+        constants.put("ei",1d);
+        double two = 24.5;
+        constants.put("xincp", two /834d);
+        constants.put("dc", 75d);
+        constants.put("n", 4d);
+        constants.put("vc", 2076396d);
 
         //initial throat diam
-        constants.put("dto", 5.696d);
+        constants.put("dto", 17.339d);
         constants.put("erate", 0d);
 
         //initial grain web thickness
-        constants.put("two", 6.6d);
+        constants.put("two", two);
 
         constants.put("gstar", 6d);
 
         HashMap<Formula, Double> initialValues = new HashMap<>();
-        initialValues.put(GRAIN_CORE_DIAMETER,8d);
-        initialValues.put(GRAIN_OUTSIDE_DIAMETER,21.2d);
-        initialValues.put(GRAIN_LENGTH,60d);
+        initialValues.put(GRAIN_CORE_DIAMETER, 20d);
+        initialValues.put(GRAIN_OUTSIDE_DIAMETER, 69d);
+        initialValues.put(GRAIN_LENGTH, 460d);
 
-        Calculator calculator = new Calculator(TEST_A_VIRER, constants, initialValues);
+        Calculator calculator = new Calculator(GRAIN_VOLUME, constants, initialValues);
         results = calculator.compute(0, 835);
     }
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/METEOR-KNSB-final_E46_QUALIFICATION.csv", numLinesToSkip = 1, delimiter = '|')
-    @DisplayName("Check pressure data for METEOR motor with SRM results")
+    @CsvFileSource(resources = "/SRM_2014_QUALIFICATION.csv", numLinesToSkip = 1, delimiter = '|')
+    @DisplayName("Check pressure with SRM results")
     void qualification1(@CsvToPressureLine Map<String, Double> expectedLine) {
         Map<Formula, Double> resultLIneToAssert = results.get(expectedLine.get(INTERVAL).intValue());
 
@@ -79,10 +81,6 @@ class QualificationPressureCalculations {
 
         assertThat(resultLIneToAssert.get(GRAIN_VOLUME))
                 .isEqualTo(expectedLine.get(GRAIN_VOLUME.getName()), Offset.offset(1d));
-
-        //TODO finir le test (ajout PressureCsvLineAggregator et refaire export des données csv avec précision)
-        assertThat(resultLIneToAssert.get(TEST_A_VIRER))
-                .isEqualTo(expectedLine.get(TEST_A_VIRER.getName()), Offset.offset(1d));
     }
 
 

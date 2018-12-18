@@ -16,7 +16,6 @@ import static java.util.stream.Stream.of;
 
 public enum PressureFormulas implements Formula {
 
-
     GRAIN_CORE_DIAMETER("GRAIN_CORE_DIAMETER_previous + ci * 2 * xincp",
             empty(),
             of("ci", "xincp", "GRAIN_CORE_DIAMETER_previous")),
@@ -52,12 +51,6 @@ public enum PressureFormulas implements Formula {
             of("GRAIN_OUTSIDE_DIAMETER", "GRAIN_CORE_DIAMETER", "GRAIN_LENGTH"),
             empty(),
             new HollowCircleAreaFunction()),
-
-    //TODO : a virer
-    TEST_A_VIRER("FreeVolumeInChamber(vc, GRAIN_VOLUME)",
-            of("GRAIN_VOLUME"),
-            of("vc"),
-            new FreeVolumeInChamberFunction())
     ;
 
     private final Expression expression;
