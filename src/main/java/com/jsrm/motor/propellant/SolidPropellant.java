@@ -34,13 +34,17 @@ public interface SolidPropellant {
     double getChamberTemperature();
 
     /**
+     * @param chamberPressure in [Mpa]
      * @return Burn rate coefficient by chamber pressure  [mm/s]
+     * @throws ChamberPressureOutOfBoundException
      */
-    double getBurnRateCoefficient(double chamberPressure);
+    double getBurnRateCoefficient(double chamberPressure) throws ChamberPressureOutOfBoundException;
 
     /**
+     * @param chamberPressure in [Mpa]
      * @return Pressure exponent valid at Po
+     * @throws ChamberPressureOutOfBoundException
      */
-    double getPressureExponent(double chamberPressure);
+    double getPressureExponent(double chamberPressure) throws ChamberPressureOutOfBoundException;
 
 }
