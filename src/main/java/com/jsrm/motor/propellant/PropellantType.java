@@ -1,6 +1,6 @@
 package com.jsrm.motor.propellant;
 
-public enum Propellant {
+public enum PropellantType {
     KNSB_FINE
 
 }

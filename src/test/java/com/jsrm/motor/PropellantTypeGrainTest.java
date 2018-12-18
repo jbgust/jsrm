@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 
 import static com.jsrm.motor.GrainSurface.EXPOSED;
 import static com.jsrm.motor.GrainSurface.INHIBITED;
-import static com.jsrm.motor.propellant.Propellant.KNSB_FINE;
+import static com.jsrm.motor.propellant.PropellantType.KNSB_FINE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class PropellantGrainTest {
+class PropellantTypeGrainTest {
 
     @Test
     void shouldBuildPropellantGrain() {
@@ -23,7 +23,7 @@ class PropellantGrainTest {
                 INHIBITED, EXPOSED, INHIBITED);
 
         // THEN
-        assertThat(propellantGrain.getPropellant()).isEqualTo(KNSB_FINE);
+        assertThat(propellantGrain.getPropellantType()).isEqualTo(KNSB_FINE);
 
         assertThat(propellantGrain.getOuterSurface()).isEqualTo(INHIBITED);
         assertThat(propellantGrain.getEndsSurface()).isEqualTo(EXPOSED);

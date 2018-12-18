@@ -2,11 +2,11 @@ package com.jsrm.motor.utils;
 
 import com.jsrm.motor.GrainSurface;
 import com.jsrm.motor.PropellantGrain;
-import com.jsrm.motor.propellant.Propellant;
+import com.jsrm.motor.propellant.PropellantType;
 
 import static com.jsrm.motor.GrainSurface.EXPOSED;
 import static com.jsrm.motor.GrainSurface.INHIBITED;
-import static com.jsrm.motor.propellant.Propellant.KNSB_FINE;
+import static com.jsrm.motor.propellant.PropellantType.KNSB_FINE;
 
 public class PropellantGrainBuilder {
 
@@ -16,11 +16,11 @@ public class PropellantGrainBuilder {
     private GrainSurface outerSurface = INHIBITED;
     private GrainSurface endsSurface = INHIBITED;
     private GrainSurface coreSurface = EXPOSED;
-    private Propellant propellant = KNSB_FINE;;
+    private PropellantType propellantType = KNSB_FINE;;
     private int outerDiameter = 20;
 
     public PropellantGrain build() {
-        return new PropellantGrain(propellant, outerDiameter, coreDiameter, segmentLenght, numberOfSegments, outerSurface, endsSurface, coreSurface);
+        return new PropellantGrain(propellantType, outerDiameter, coreDiameter, segmentLenght, numberOfSegments, outerSurface, endsSurface, coreSurface);
     }
 
     public PropellantGrainBuilder withCoreSurface(GrainSurface surface){
