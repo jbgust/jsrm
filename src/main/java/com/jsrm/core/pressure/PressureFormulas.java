@@ -11,74 +11,63 @@ import net.objecthunter.exp4j.function.Function;
 
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.jsrm.core.JSRMConstant.*;
-import static java.util.stream.Stream.empty;
 import static java.util.stream.Stream.of;
+
 
 public enum PressureFormulas implements Formula {
 
-    GRAIN_CORE_DIAMETER("GRAIN_CORE_DIAMETER_previous + ci * 2 * xincp",
-            empty(),
-            of(ci, xincp),
-            of("GRAIN_CORE_DIAMETER_previous")),
+    GRAIN_CORE_DIAMETER(new Config("GRAIN_CORE_DIAMETER_previous + ci * 2 * xincp")
+            .withConstants(ci, xincp)
+            .withVariables("GRAIN_CORE_DIAMETER_previous")),
 
-    GRAIN_OUTSIDE_DIAMETER("GRAIN_OUTSIDE_DIAMETER_previous - osi * 2 * xincp",
-            empty(),
-            of(osi, xincp),
-            of("GRAIN_OUTSIDE_DIAMETER_previous")),
+    GRAIN_OUTSIDE_DIAMETER(new Config("GRAIN_OUTSIDE_DIAMETER_previous - osi * 2 * xincp")
+            .withConstants(osi, xincp)
+            .withVariables("GRAIN_OUTSIDE_DIAMETER_previous")),
 
-    GRAIN_LENGTH("GRAIN_LENGTH_previous-ei*n*2*xincp",
-            empty(),
-            of(ei, n, xincp),
-            of("GRAIN_LENGTH_previous")),
+    GRAIN_LENGTH(new Config("GRAIN_LENGTH_previous-ei*n*2*xincp")
+            .withConstants(ei, n, xincp)
+            .withVariables("GRAIN_LENGTH_previous")),
 
-    WEB_THICKNESS("(GRAIN_OUTSIDE_DIAMETER - GRAIN_CORE_DIAMETER) / 2",
-            of("GRAIN_CORE_DIAMETER", "GRAIN_OUTSIDE_DIAMETER"),
-            empty(),
-            empty()),
+    WEB_THICKNESS(new Config("(GRAIN_OUTSIDE_DIAMETER - GRAIN_CORE_DIAMETER) / 2")
+            .withDependencies("GRAIN_CORE_DIAMETER", "GRAIN_OUTSIDE_DIAMETER")),
 
-    THROAT_AREA("CircleArea(dto+erate*(two-WEB_THICKNESS)/two)",
-            of("WEB_THICKNESS"),
-            of(dto, erate, two),
-            empty(),
-            Functions.circleAreaFunction),
+    THROAT_AREA(new Config("CircleArea(dto+erate*(two-WEB_THICKNESS)/two)")
+            .withDependencies("WEB_THICKNESS")
+            .withConstants(dto, erate, two)
+            .withFunctions(Functions.circleAreaFunction)),
 
-    NOZZLE_CRITICAL_PASSAGE_AREA("THROAT_AREA / 1000^2",
-            of("THROAT_AREA"),
-            empty(), empty()),
+    NOZZLE_CRITICAL_PASSAGE_AREA(new Config("THROAT_AREA / 1000^2")
+            .withDependencies("THROAT_AREA")),
 
     //Difference in chamber and grain cross-sectional area (flow area)
-    EROSIVE_BURN_FACTOR("ErosiveBurnFactor((CircleArea(dc)-HollowCircleArea(GRAIN_OUTSIDE_DIAMETER, GRAIN_CORE_DIAMETER))/THROAT_AREA, gstar)",
-            of("GRAIN_OUTSIDE_DIAMETER", "GRAIN_CORE_DIAMETER", "THROAT_AREA"),
-            of(dc, gstar),
-            empty(),
-            Functions.erosiveBurnFactorFunction, Functions.hollowCircleAreaFunction, Functions.circleAreaFunction),
+    EROSIVE_BURN_FACTOR(new Config("ErosiveBurnFactor((CircleArea(dc)-HollowCircleArea(GRAIN_OUTSIDE_DIAMETER, GRAIN_CORE_DIAMETER))/THROAT_AREA, gstar)")
+            .withDependencies("GRAIN_OUTSIDE_DIAMETER", "GRAIN_CORE_DIAMETER", "THROAT_AREA")
+            .withConstants(dc, gstar)
+            .withFunctions(Functions.erosiveBurnFactorFunction, Functions.hollowCircleAreaFunction, Functions.circleAreaFunction)),
 
-    GRAIN_VOLUME("(HollowCircleArea(GRAIN_OUTSIDE_DIAMETER, GRAIN_CORE_DIAMETER) * GRAIN_LENGTH)",
-            of("GRAIN_OUTSIDE_DIAMETER", "GRAIN_CORE_DIAMETER", "GRAIN_LENGTH"),
-            empty(),
-            empty(),
-            Functions.hollowCircleAreaFunction),
+    GRAIN_VOLUME(new Config("(HollowCircleArea(GRAIN_OUTSIDE_DIAMETER, GRAIN_CORE_DIAMETER) * GRAIN_LENGTH)")
+            .withDependencies("GRAIN_OUTSIDE_DIAMETER", "GRAIN_CORE_DIAMETER", "GRAIN_LENGTH")
+            .withFunctions(Functions.hollowCircleAreaFunction)),
     ;
 
     private final Expression expression;
     private final Set<String> dependencies;
 
-    PressureFormulas(String formula, Stream<String> dependencies, Stream<JSRMConstant>  constants, Stream<String>  variables, Function ... functions) {
+    PressureFormulas(Config config) {
 
-        ExpressionBuilder expressionBuilder = new ExpressionBuilder(formula);
+        ExpressionBuilder expressionBuilder = new ExpressionBuilder(config.getFormula());
 
-        this.dependencies = dependencies
+        this.dependencies = of(config.getDependencies())
                 .peek(expressionBuilder::variable)
                 .collect(Collectors.toSet());
 
-        expressionBuilder.functions(functions);
+        expressionBuilder.functions(config.getFunctions());
 
-        constants.map(Enum::toString).forEach(expressionBuilder::variable);
+        of(config.getConstants()).map(Enum::toString).forEach(expressionBuilder::variable);
 
-        variables.forEach(expressionBuilder::variable);
+        of(config.getVariables()).forEach(expressionBuilder::variable);
 
         expression = expressionBuilder.build();
     }
@@ -107,5 +96,57 @@ public enum PressureFormulas implements Formula {
         private static final CircleAreaFunction circleAreaFunction = new CircleAreaFunction();
         private static final ErosiveBurnFactorFunction erosiveBurnFactorFunction = new ErosiveBurnFactorFunction();
         private static final HollowCircleAreaFunction hollowCircleAreaFunction = new HollowCircleAreaFunction();
+    }
+
+    private static class Config {
+        String formula;
+        String[] dependencies = new String[0];
+        JSRMConstant[]  constants = new JSRMConstant[0];
+        String[]  variables = new String[0];
+        Function[] functions = new Function[0];
+
+        Config(String formula) {
+            this.formula = formula;
+        }
+
+        Config withDependencies(String... dependencies) {
+            this.dependencies = dependencies;
+            return this;
+        }
+
+        Config withConstants(JSRMConstant... constants) {
+            this.constants = constants;
+            return this;
+        }
+
+        Config withVariables(String... variables) {
+            this.variables = variables;
+            return this;
+        }
+
+        Config withFunctions(Function... functions) {
+            this.functions = functions;
+            return this;
+        }
+
+        public String getFormula() {
+            return formula;
+        }
+
+        public Function[] getFunctions() {
+            return functions;
+        }
+
+        public String[] getDependencies() {
+            return dependencies;
+        }
+
+        public JSRMConstant[] getConstants() {
+            return constants;
+        }
+
+        public String[] getVariables() {
+            return variables;
+        }
     }
 }
