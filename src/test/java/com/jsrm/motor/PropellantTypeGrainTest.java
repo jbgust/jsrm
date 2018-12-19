@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.jsrm.motor.GrainSurface.EXPOSED;
 import static com.jsrm.motor.GrainSurface.INHIBITED;
-import static com.jsrm.motor.propellant.PropellantType.KNSB_FINE;
+import static com.jsrm.motor.propellant.PropellantType.KNDX;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PropellantTypeGrainTest {
@@ -19,11 +19,11 @@ class PropellantTypeGrainTest {
         double numberOfSegment = 2;
 
         // WHEN
-        PropellantGrain propellantGrain = new PropellantGrain(KNSB_FINE, outerDiameter, coreDiameter, segmentLenght, numberOfSegment,
+        PropellantGrain propellantGrain = new PropellantGrain(KNDX, outerDiameter, coreDiameter, segmentLenght, numberOfSegment,
                 INHIBITED, EXPOSED, INHIBITED);
 
         // THEN
-        assertThat(propellantGrain.getPropellantType()).isEqualTo(KNSB_FINE);
+        assertThat(propellantGrain.getPropellantType()).isEqualTo(KNDX);
 
         assertThat(propellantGrain.getOuterSurface()).isEqualTo(INHIBITED);
         assertThat(propellantGrain.getEndsSurface()).isEqualTo(EXPOSED);
@@ -39,7 +39,7 @@ class PropellantTypeGrainTest {
         double coreDiameter = 6;
         double segmentLenght = 60;
         double numberOfSegment = 2;
-        PropellantGrain propellantGrain = new PropellantGrain(KNSB_FINE, outerDiameter, coreDiameter, segmentLenght, numberOfSegment,
+        PropellantGrain propellantGrain = new PropellantGrain(KNDX, outerDiameter, coreDiameter, segmentLenght, numberOfSegment,
                 INHIBITED, EXPOSED, INHIBITED);
 
         // WHEN
