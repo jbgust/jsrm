@@ -1,0 +1,7 @@
+propellant|Grain mass density, ideal|Ratio of specific heats, 2-ph.|Ratio of specific heats, mixture|Effective molecular wt.|Chamber temperature
+KNDX|1.879|1.043|1.1308|42.39|1710
+KNSB_FINE|1.841|1.042|1.1361|39.9|1600
+KNSB_COARSE|1.841|1.042|1.1361|39.9|1600
+KNSU|1.889|1.044|1.133|41.98|1720
+KNER_COARSE|1.82|1.0426|1.139|38.78|1608
+KNMN_COARSE|1.854|1.042|1.1363|39.826|1616
