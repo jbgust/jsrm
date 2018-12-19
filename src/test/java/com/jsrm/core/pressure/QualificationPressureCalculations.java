@@ -1,8 +1,8 @@
-package com.jsrm.pressure;
+package com.jsrm.core.pressure;
 
 import com.jsrm.calculation.Calculator;
 import com.jsrm.calculation.Formula;
-import com.jsrm.pressure.csv.CsvToPressureLine;
+import com.jsrm.core.pressure.csv.CsvToPressureLine;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -13,8 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.jsrm.pressure.PressureFormulas.*;
-import static com.jsrm.pressure.csv.PressureCsvLineAggregator.INTERVAL;
+import static com.jsrm.core.pressure.PressureFormulas.*;
+import static com.jsrm.core.pressure.csv.PressureCsvLineAggregator.INTERVAL;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class QualificationPressureCalculations {
@@ -82,7 +82,5 @@ class QualificationPressureCalculations {
         assertThat(resultLIneToAssert.get(GRAIN_VOLUME))
                 .isEqualTo(expectedLine.get(GRAIN_VOLUME.getName()), Offset.offset(1d));
     }
-
-
 
 }

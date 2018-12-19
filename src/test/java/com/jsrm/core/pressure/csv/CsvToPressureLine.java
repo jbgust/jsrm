@@ -1,4 +1,4 @@
-package com.jsrm.pressure.csv;
+package com.jsrm.core.pressure.csv;
 
 import org.junit.jupiter.params.aggregator.AggregateWith;
 

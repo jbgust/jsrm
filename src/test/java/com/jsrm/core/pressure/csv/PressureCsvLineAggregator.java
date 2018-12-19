@@ -1,4 +1,4 @@
-package com.jsrm.pressure.csv;
+package com.jsrm.core.pressure.csv;
 
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
@@ -8,7 +8,7 @@ import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.jsrm.pressure.PressureFormulas.*;
+import static com.jsrm.core.pressure.PressureFormulas.*;
 
 public class PressureCsvLineAggregator implements ArgumentsAggregator {
 
