@@ -1,21 +1,32 @@
 package com.jsrm.core.pressure;
 
-import com.jsrm.calculation.Calculator;
-import com.jsrm.calculation.Formula;
-import com.jsrm.core.pressure.csv.CsvToPressureLine;
+import static com.jsrm.core.pressure.PressureFormulas.GRAIN_CORE_DIAMETER;
+import static com.jsrm.core.pressure.PressureFormulas.GRAIN_LENGTH;
+import static com.jsrm.core.pressure.PressureFormulas.GRAIN_OUTSIDE_DIAMETER;
+import static com.jsrm.core.pressure.PressureFormulas.GRAIN_VOLUME;
+import static com.jsrm.core.pressure.csv.PressureCsvLineAggregator.INTERVAL;
+import static com.jsrm.motor.GrainSurface.EXPOSED;
+import static com.jsrm.motor.GrainSurface.INHIBITED;
+import static com.jsrm.motor.propellant.PropellantType.KNDX;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static com.jsrm.core.pressure.PressureFormulas.*;
-import static com.jsrm.core.pressure.csv.PressureCsvLineAggregator.INTERVAL;
-import static org.assertj.core.api.Assertions.assertThat;
+import com.jsrm.calculation.Calculator;
+import com.jsrm.calculation.Formula;
+import com.jsrm.core.pressure.csv.CsvToPressureLine;
+import com.jsrm.infra.Extract;
+import com.jsrm.motor.MotorChamber;
+import com.jsrm.motor.PropellantGrain;
+import com.jsrm.motor.SolidRocketMotor;
 
 class QualificationPressureCalculations {
 
@@ -23,26 +34,17 @@ class QualificationPressureCalculations {
 
     @BeforeAll
     static void init(){
-        HashMap<String, Double> constants = new HashMap<>();
-        constants.put("ci",1d);
-        constants.put("osi",0d);
-        constants.put("ei",1d);
-        double two = 24.5;
-        constants.put("xincp", two /834d);
-        constants.put("dc", 75d);
-        constants.put("n", 4d);
-        constants.put("vc", 2076396d);
+        PropellantGrain propellantGrain = new PropellantGrain(KNDX, 20, 1d,
+                                                 60d, 4d,
+                                                              INHIBITED, EXPOSED, EXPOSED);
+        MotorChamber motorChamber = new MotorChamber(75d, 470d);
 
-        //initial throat diam
-        constants.put("dto", 17.339d);
-        constants.put("erate", 0d);
+        SolidRocketMotor solidRocketMotor = new SolidRocketMotor(propellantGrain, motorChamber,
+                                                 6d, 17.339d, 0d);
 
-        //initial grain web thickness
-        constants.put("two", two);
+        Map<String, Double> constants = Extract.extractConstants(solidRocketMotor);
 
-        constants.put("gstar", 6d);
-
-        HashMap<Formula, Double> initialValues = new HashMap<>();
+        Map<Formula, Double> initialValues = new HashMap<>();
         initialValues.put(GRAIN_CORE_DIAMETER, 20d);
         initialValues.put(GRAIN_OUTSIDE_DIAMETER, 69d);
         initialValues.put(GRAIN_LENGTH, 460d);
@@ -82,5 +84,4 @@ class QualificationPressureCalculations {
         assertThat(resultLIneToAssert.get(GRAIN_VOLUME))
                 .isEqualTo(expectedLine.get(GRAIN_VOLUME.getName()), Offset.offset(1d));
     }
-
 }

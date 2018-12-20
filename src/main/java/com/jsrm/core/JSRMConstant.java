@@ -10,5 +10,6 @@ public enum JSRMConstant {
     erate,
     two,
     dc,
+    vc,
     gstar;
 }

@@ -1,7 +1,11 @@
 package com.jsrm.motor;
 
+import com.jsrm.calculation.function.CircleAreaFunction;
+
+import lombok.Getter;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
+@Getter
 public class MotorChamber
 {
     private final double chamberInnerDiameter;
@@ -18,10 +22,11 @@ public class MotorChamber
     }
 
     public double getVolume() {
-        return new ExpressionBuilder("pi * rc^2 * lc")
-                .variables("rc", "lc")
+        return new ExpressionBuilder("CircleArea(dc) * lc")
+                .variables("dc", "lc")
+                .function(new CircleAreaFunction())
                 .build()
-                .setVariable("rc", chamberInnerDiameter/2)
+                .setVariable("dc", chamberInnerDiameter)
                 .setVariable("lc", chamberLength)
                 .evaluate();
     }
