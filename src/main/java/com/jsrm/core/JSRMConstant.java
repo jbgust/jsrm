@@ -15,5 +15,6 @@ public enum JSRMConstant {
 
     //not form motor value
     gstar,
-    kv;
+    kv,
+    pbd;
 }

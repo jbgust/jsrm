@@ -47,6 +47,9 @@ class QualificationPressureCalculations {
 
         //TODO
         initialValues.put(TIME_SINCE_BURN_STARTS, 0d);
+        initialValues.put(TEMPORARY_CHAMBER_PRESSURE, 0.101);//patm?
+        initialValues.put(MASS_GENERATION_RATE, 0d);
+        initialValues.put(NOZZLE_MASS_FLOW_RATE, 0d);
 
         Calculator calculator = new Calculator(GRAIN_VOLUME, constants, initialValues);
         results = calculator.compute(0, 835);

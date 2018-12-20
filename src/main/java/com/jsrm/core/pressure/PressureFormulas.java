@@ -6,6 +6,8 @@ import com.jsrm.calculation.function.HollowCircleAreaFunction;
 import com.jsrm.core.JSRMConstant;
 import com.jsrm.core.pressure.function.BurnRateCharacteristicFunction;
 import com.jsrm.core.pressure.function.ErosiveBurnFactorFunction;
+import com.jsrm.core.pressure.function.GrainMassFunction;
+import com.jsrm.core.pressure.function.NozzleMassFlowRateFunction;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import net.objecthunter.exp4j.function.Function;
@@ -52,16 +54,34 @@ public enum PressureFormulas implements Formula {
             .withDependencies("GRAIN_OUTSIDE_DIAMETER", "GRAIN_CORE_DIAMETER", "GRAIN_LENGTH")
             .withFunctions(Functions.hollowCircleArea)),
 
-    CHAMBER_PRESSURE(new Config("TODO")),
+    TEMPORARY_CHAMBER_PRESSURE(new Config("CHAMBER_PRESSURE_previous")
+            //TODO : a virer les valeur _previous n'ont surement pas besoin d'être déclaré en dépendances => A TESTER
+            .withDependencies("CHAMBER_PRESSURE")),
 
-    PROPELLANT_BURN_RATE(new Config("(1 + kv * EROSIVE_BURN_FACTOR) * BurnRateCharacteristic(propellantId, CHAMBER_PRESSURE)")
+    PROPELLANT_BURN_RATE(new Config("(1 + kv * EROSIVE_BURN_FACTOR) * BurnRateCharacteristic(propellantId, TEMPORARY_CHAMBER_PRESSURE)")
             .withConstants(kv, propellantId)
             .withFunctions(Functions.burnRateCharacteristic)
-            .withDependencies("EROSIVE_BURN_FACTOR", "CHAMBER_PRESSURE")),
+            .withDependencies("EROSIVE_BURN_FACTOR", "TEMPORARY_CHAMBER_PRESSURE")),
 
     TIME_SINCE_BURN_STARTS(new Config("xincp / PROPELLANT_BURN_RATE + TIME_SINCE_BURN_STARTS_previous")
             .withConstants(xincp)
-            .withDependencies("PROPELLANT_BURN_RATE"))
+            .withDependencies("PROPELLANT_BURN_RATE")),
+
+    //Mass generation rate of combustion products
+    MASS_GENERATION_RATE(new Config("(GrainMass(GRAIN_VOLUME_previous)-GrainMass(GRAIN_VOLUME)) / (TIME_SINCE_BURN_STARTS-TIME_SINCE_BURN_STARTS_previous)")
+            .withDependencies("GRAIN_VOLUME", "TIME_SINCE_BURN_STARTS")
+            .withFunctions(Functions.grainMass)),
+
+    //Mass flow rate through nozzle
+    NOZZLE_MASS_FLOW_RATE(new Config("NozzleMassFlowRate(pbd, MASS_GENERATION_RATE, CHAMBER_PRESSURE_previous, AI)")
+            .withConstants(pbd)
+            .withDependencies("MASS_GENERATION_RATE", "AI")
+            .withFunctions(Functions.nozzleMassFlowRate)),
+
+    //TODO
+    CHAMBER_PRESSURE(new Config("TODO")),
+    //Strange column AI in Excel file, no more information about it
+    AI(new Config("TODO"))
     ;
 
     private final Expression expression;
@@ -109,6 +129,8 @@ public enum PressureFormulas implements Formula {
         private static final ErosiveBurnFactorFunction erosiveBurnFactor = new ErosiveBurnFactorFunction();
         private static final HollowCircleAreaFunction hollowCircleArea = new HollowCircleAreaFunction();
         private static final BurnRateCharacteristicFunction burnRateCharacteristic = new BurnRateCharacteristicFunction();
+        private static final GrainMassFunction grainMass = new GrainMassFunction();
+        private static final NozzleMassFlowRateFunction nozzleMassFlowRate = new NozzleMassFlowRateFunction();
     }
 
     private static class Config {
