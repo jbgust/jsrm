@@ -4,6 +4,7 @@ import com.jsrm.calculation.Formula;
 import com.jsrm.calculation.function.CircleAreaFunction;
 import com.jsrm.calculation.function.HollowCircleAreaFunction;
 import com.jsrm.core.JSRMConstant;
+import com.jsrm.core.pressure.function.BurnRateCharacteristicFunction;
 import com.jsrm.core.pressure.function.ErosiveBurnFactorFunction;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -36,7 +37,7 @@ public enum PressureFormulas implements Formula {
     THROAT_AREA(new Config("CircleArea(dto+erate*(two-WEB_THICKNESS)/two)")
             .withDependencies("WEB_THICKNESS")
             .withConstants(dto, erate, two)
-            .withFunctions(Functions.circleAreaFunction)),
+            .withFunctions(Functions.circleArea)),
 
     NOZZLE_CRITICAL_PASSAGE_AREA(new Config("THROAT_AREA / 1000^2")
             .withDependencies("THROAT_AREA")),
@@ -45,11 +46,22 @@ public enum PressureFormulas implements Formula {
     EROSIVE_BURN_FACTOR(new Config("ErosiveBurnFactor((CircleArea(dc)-HollowCircleArea(GRAIN_OUTSIDE_DIAMETER, GRAIN_CORE_DIAMETER))/THROAT_AREA, gstar)")
             .withDependencies("GRAIN_OUTSIDE_DIAMETER", "GRAIN_CORE_DIAMETER", "THROAT_AREA")
             .withConstants(dc, gstar)
-            .withFunctions(Functions.erosiveBurnFactorFunction, Functions.hollowCircleAreaFunction, Functions.circleAreaFunction)),
+            .withFunctions(Functions.erosiveBurnFactor, Functions.hollowCircleArea, Functions.circleArea)),
 
     GRAIN_VOLUME(new Config("(HollowCircleArea(GRAIN_OUTSIDE_DIAMETER, GRAIN_CORE_DIAMETER) * GRAIN_LENGTH)")
             .withDependencies("GRAIN_OUTSIDE_DIAMETER", "GRAIN_CORE_DIAMETER", "GRAIN_LENGTH")
-            .withFunctions(Functions.hollowCircleAreaFunction)),
+            .withFunctions(Functions.hollowCircleArea)),
+
+    CHAMBER_PRESSURE(new Config("TODO")),
+
+    PROPELLANT_BURN_RATE(new Config("(1 + kv * EROSIVE_BURN_FACTOR) * BurnRateCharacteristic(propellantId, CHAMBER_PRESSURE)")
+            .withConstants(kv, propellantId)
+            .withFunctions(Functions.burnRateCharacteristic)
+            .withDependencies("EROSIVE_BURN_FACTOR", "CHAMBER_PRESSURE")),
+
+    TIME_SINCE_BURN_STARTS(new Config("xincp / PROPELLANT_BURN_RATE + TIME_SINCE_BURN_STARTS_previous")
+            .withConstants(xincp)
+            .withDependencies("PROPELLANT_BURN_RATE"))
     ;
 
     private final Expression expression;
@@ -93,9 +105,10 @@ public enum PressureFormulas implements Formula {
     }
 
     private static class Functions {
-        private static final CircleAreaFunction circleAreaFunction = new CircleAreaFunction();
-        private static final ErosiveBurnFactorFunction erosiveBurnFactorFunction = new ErosiveBurnFactorFunction();
-        private static final HollowCircleAreaFunction hollowCircleAreaFunction = new HollowCircleAreaFunction();
+        private static final CircleAreaFunction circleArea = new CircleAreaFunction();
+        private static final ErosiveBurnFactorFunction erosiveBurnFactor = new ErosiveBurnFactorFunction();
+        private static final HollowCircleAreaFunction hollowCircleArea = new HollowCircleAreaFunction();
+        private static final BurnRateCharacteristicFunction burnRateCharacteristic = new BurnRateCharacteristicFunction();
     }
 
     private static class Config {

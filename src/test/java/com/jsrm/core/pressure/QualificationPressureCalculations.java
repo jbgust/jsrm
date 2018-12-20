@@ -1,25 +1,5 @@
 package com.jsrm.core.pressure;
 
-import static com.jsrm.core.pressure.PressureFormulas.GRAIN_CORE_DIAMETER;
-import static com.jsrm.core.pressure.PressureFormulas.GRAIN_LENGTH;
-import static com.jsrm.core.pressure.PressureFormulas.GRAIN_OUTSIDE_DIAMETER;
-import static com.jsrm.core.pressure.PressureFormulas.GRAIN_VOLUME;
-import static com.jsrm.core.pressure.csv.PressureCsvLineAggregator.INTERVAL;
-import static com.jsrm.motor.GrainSurface.EXPOSED;
-import static com.jsrm.motor.GrainSurface.INHIBITED;
-import static com.jsrm.motor.propellant.PropellantType.KNDX;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.assertj.core.data.Offset;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvFileSource;
-
 import com.jsrm.calculation.Calculator;
 import com.jsrm.calculation.Formula;
 import com.jsrm.core.pressure.csv.CsvToPressureLine;
@@ -27,6 +7,22 @@ import com.jsrm.infra.Extract;
 import com.jsrm.motor.MotorChamber;
 import com.jsrm.motor.PropellantGrain;
 import com.jsrm.motor.SolidRocketMotor;
+import org.assertj.core.data.Offset;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.jsrm.core.pressure.PressureFormulas.*;
+import static com.jsrm.core.pressure.csv.PressureCsvLineAggregator.INTERVAL;
+import static com.jsrm.motor.GrainSurface.EXPOSED;
+import static com.jsrm.motor.GrainSurface.INHIBITED;
+import static com.jsrm.motor.propellant.PropellantType.KNDX;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class QualificationPressureCalculations {
 
@@ -48,6 +44,9 @@ class QualificationPressureCalculations {
         initialValues.put(GRAIN_CORE_DIAMETER, 20d);
         initialValues.put(GRAIN_OUTSIDE_DIAMETER, 69d);
         initialValues.put(GRAIN_LENGTH, 460d);
+
+        //TODO
+        initialValues.put(TIME_SINCE_BURN_STARTS, 0d);
 
         Calculator calculator = new Calculator(GRAIN_VOLUME, constants, initialValues);
         results = calculator.compute(0, 835);
