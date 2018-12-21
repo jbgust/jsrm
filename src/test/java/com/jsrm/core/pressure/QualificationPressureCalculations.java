@@ -50,8 +50,11 @@ class QualificationPressureCalculations {
         initialValues.put(TEMPORARY_CHAMBER_PRESSURE, 0.101);//patm?
         initialValues.put(MASS_GENERATION_RATE, 0d);
         initialValues.put(NOZZLE_MASS_FLOW_RATE, 0d);
+        initialValues.put(MASS_STORAGE_RATE, 0d);
+        initialValues.put(MASS_COMBUSTION_PRODUCTS, 0d);
+        initialValues.put(DENSITY_COMBUSTION_PRODUCTS, 0d);
 
-        Calculator calculator = new Calculator(GRAIN_VOLUME, constants, initialValues);
+        Calculator calculator = new Calculator(ABSOLUTE_CHAMBER_PRESSURE_PSIG, constants, initialValues);
         results = calculator.compute(0, 835);
     }
 
@@ -85,5 +88,8 @@ class QualificationPressureCalculations {
 
         assertThat(resultLIneToAssert.get(GRAIN_VOLUME))
                 .isEqualTo(expectedLine.get(GRAIN_VOLUME.getName()), Offset.offset(1d));
+
+        assertThat(resultLIneToAssert.get(ABSOLUTE_CHAMBER_PRESSURE_PSIG))
+                .isEqualTo(expectedLine.get(ABSOLUTE_CHAMBER_PRESSURE_PSIG.name()), Offset.offset(0.1));
     }
 }

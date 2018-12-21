@@ -1,21 +1,12 @@
 package com.jsrm.infra;
 
-import static com.jsrm.core.JSRMConstant.ci;
-import static com.jsrm.core.JSRMConstant.dc;
-import static com.jsrm.core.JSRMConstant.dto;
-import static com.jsrm.core.JSRMConstant.ei;
-import static com.jsrm.core.JSRMConstant.erate;
-import static com.jsrm.core.JSRMConstant.gstar;
-import static com.jsrm.core.JSRMConstant.n;
-import static com.jsrm.core.JSRMConstant.osi;
-import static com.jsrm.core.JSRMConstant.two;
-import static com.jsrm.core.JSRMConstant.vc;
-import static com.jsrm.core.JSRMConstant.xincp;
+import com.jsrm.motor.SolidRocketMotor;
+import com.jsrm.motor.propellant.PropellantType;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.jsrm.motor.SolidRocketMotor;
+import static com.jsrm.core.JSRMConstant.*;
 
 public class Extract {
 
@@ -35,6 +26,17 @@ public class Extract {
         constants.put(erate.name(), solidRocketMotor.getNozzleErosion());
         constants.put(two.name(), twoValue);
         constants.put(gstar.name(), solidRocketMotor.getErosiveBurningArea());
+
+        //TODO
+        PropellantType propellantType = solidRocketMotor.getPropellantGrain().getPropellantType();
+        constants.put(kv.name(), 0d);
+        constants.put(pbd.name(), 0d);
+        constants.put(rat.name(), 8314/ propellantType.getEffectiveMolecularWeight());
+         constants.put(to.name(), propellantType.getChamberTemperature());
+         constants.put(patm.name(), 0.101);
+         constants.put(k.name(), propellantType.getK());
+         constants.put(propellantId.name(), new Double(propellantType.getId()));
+         constants.put(rhopgrain.name(), propellantType.getIdealMassDensity()*.95);
         return constants;
     }
 }

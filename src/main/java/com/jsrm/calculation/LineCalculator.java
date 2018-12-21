@@ -54,20 +54,27 @@ class LineCalculator {
 
     private void run(Formula formula, int lineNumber){
 
+        //TODO : faire un test pour ce cas
+        resolveVariablesDependencies(formula, lineNumber);
+
         if(hasInitialValue(formula)) {
             currentLineResults.put(formula, initialValues.remove(formula));
         } else {
 
-            resolveVariablesDependencies(formula, lineNumber);
 
-            double result = formula.getExpression()
-                    .setVariables(currentLineProvidedResult)
-                    .setVariables(getVariablesFromDependentCalculations(formula))
-                    .setVariables(getPreviousVariables(formula))
-                    .setVariables(constants)
-                    .evaluate();
 
-            currentLineResults.put(formula, result);
+            try {
+                double result = formula.getExpression()
+                        .setVariables(currentLineProvidedResult)
+                        .setVariables(getVariablesFromDependentCalculations(formula))
+                        .setVariables(getPreviousVariables(formula))
+                        .setVariables(constants)
+                        .evaluate();
+
+                currentLineResults.put(formula, result);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
 
