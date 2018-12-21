@@ -1,5 +1,6 @@
 package com.jsrm.core.pressure;
 
+import com.google.common.collect.ImmutableMap;
 import com.jsrm.calculation.Calculator;
 import com.jsrm.calculation.Formula;
 import com.jsrm.core.pressure.csv.CsvToPressureLine;
@@ -23,10 +24,34 @@ import static com.jsrm.motor.GrainSurface.EXPOSED;
 import static com.jsrm.motor.GrainSurface.INHIBITED;
 import static com.jsrm.motor.propellant.PropellantType.KNDX;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.data.Offset.offset;
 
 class QualificationPressureCalculations {
 
     private static List<Map<Formula, Double>> results;
+
+    Map<Formula, Offset> precisionByFormulas = ImmutableMap.<Formula, Offset>builder()
+            .put(GRAIN_CORE_DIAMETER, offset(0.01))
+            .put(GRAIN_OUTSIDE_DIAMETER, offset(0.01))
+            .put(GRAIN_LENGTH, offset(0.1))
+            .put(WEB_THICKNESS, offset(0.001))
+            .put(THROAT_AREA, offset(0.1))
+            .put(NOZZLE_CRITICAL_PASSAGE_AREA, offset(0.00000001))
+            .put(EROSIVE_BURN_FACTOR, offset(0.01))
+            .put(GRAIN_VOLUME, offset(1d))
+            .put(TEMPORARY_CHAMBER_PRESSURE, offset(0.001))
+            .put(PROPELLANT_BURN_RATE, offset(0.001))
+            .put(TIME_SINCE_BURN_STARTS, offset(0.0001))
+            .put(AI, offset(0.0001))
+            .put(MASS_GENERATION_RATE, offset(0.0001))
+            .put(NOZZLE_MASS_FLOW_RATE, offset(0.0001))
+            .put(MASS_STORAGE_RATE, offset(0.0001))
+            .put(MASS_COMBUSTION_PRODUCTS, offset(0.0001))
+            .put(DENSITY_COMBUSTION_PRODUCTS, offset(0.001))
+            .put(CHAMBER_PRESSURE_MPA, offset(0.001))
+            .put(ABSOLUTE_CHAMBER_PRESSURE, offset(0.001))
+            .put(ABSOLUTE_CHAMBER_PRESSURE_PSIG, offset(0.1))
+            .build();
 
     @BeforeAll
     static void init(){
@@ -35,8 +60,10 @@ class QualificationPressureCalculations {
                                                               INHIBITED, EXPOSED, EXPOSED);
         MotorChamber motorChamber = new MotorChamber(75d, 470d);
 
+        double throatDiameter = 17.3985248919802;
+
         SolidRocketMotor solidRocketMotor = new SolidRocketMotor(propellantGrain, motorChamber,
-                                                 6d, 17.339d, 0d);
+                                                 6d, throatDiameter, 0d);
 
         Map<String, Double> constants = Extract.extractConstants(solidRocketMotor);
 
@@ -64,15 +91,20 @@ class QualificationPressureCalculations {
     void qualification1(@CsvToPressureLine Map<String, Double> expectedLine) {
         Map<Formula, Double> resultLIneToAssert = results.get(expectedLine.get(INTERVAL).intValue());
 
+        precisionByFormulas.forEach((formula, offset) -> {
+            assertThat(resultLIneToAssert.get(formula)).as(formula.getName())
+                    .isEqualTo(expectedLine.getOrDefault(formula.getName(),-111d), offset);
+        });
 
-        assertThat(resultLIneToAssert.get(GRAIN_CORE_DIAMETER))
-                .isEqualTo(expectedLine.get(GRAIN_CORE_DIAMETER.getName()), Offset.offset(0.01));
 
-        assertThat(resultLIneToAssert.get(GRAIN_OUTSIDE_DIAMETER))
-                .isEqualTo(expectedLine.get(GRAIN_OUTSIDE_DIAMETER.getName()), Offset.offset(0.01));
-
-        assertThat(resultLIneToAssert.get(GRAIN_LENGTH))
-                .isEqualTo(expectedLine.get(GRAIN_LENGTH.getName()), Offset.offset(0.1));
+//        assertThat(resultLIneToAssert.get(GRAIN_CORE_DIAMETER))
+//                .isEqualTo(expectedLine.get(GRAIN_CORE_DIAMETER.getName()), Offset.offset(0.01));
+//
+//        assertThat(resultLIneToAssert.get(GRAIN_OUTSIDE_DIAMETER))
+//                .isEqualTo(expectedLine.get(GRAIN_OUTSIDE_DIAMETER.getName()), Offset.offset(0.01));
+//
+//        assertThat(resultLIneToAssert.get(GRAIN_LENGTH))
+//                .isEqualTo(expectedLine.get(GRAIN_LENGTH.getName()), Offset.offset(0.1));
 //
 //        assertThat(resultLIneToAssert.get(WEB_THICKNESS))
 //                .isEqualTo(expectedLine.get(WEB_THICKNESS.getName()), Offset.offset(0.001));
@@ -86,10 +118,10 @@ class QualificationPressureCalculations {
 //        assertThat(resultLIneToAssert.get(EROSIVE_BURN_FACTOR))
 //                .isEqualTo(expectedLine.get(EROSIVE_BURN_FACTOR.getName()), Offset.offset(0.01d));
 
-        assertThat(resultLIneToAssert.get(GRAIN_VOLUME))
-                .isEqualTo(expectedLine.get(GRAIN_VOLUME.getName()), Offset.offset(1d));
-
-        assertThat(resultLIneToAssert.get(ABSOLUTE_CHAMBER_PRESSURE_PSIG))
-                .isEqualTo(expectedLine.get(ABSOLUTE_CHAMBER_PRESSURE_PSIG.name()), Offset.offset(0.1));
+//        assertThat(resultLIneToAssert.get(GRAIN_VOLUME))
+//                .isEqualTo(expectedLine.get(GRAIN_VOLUME.getName()), Offset.offset(1d));
+//
+//        assertThat(resultLIneToAssert.get(ABSOLUTE_CHAMBER_PRESSURE_PSIG))
+//                .isEqualTo(expectedLine.get(ABSOLUTE_CHAMBER_PRESSURE_PSIG.name()), Offset.offset(0.1));
     }
 }

@@ -51,10 +51,10 @@ public enum PressureFormulas implements Formula {
             .withDependencies("GRAIN_OUTSIDE_DIAMETER", "GRAIN_CORE_DIAMETER", "GRAIN_LENGTH")
             .withFunctions(Functions.hollowCircleArea)),
 
-    TEMPORARY_CHAMBER_PRESSURE(new Config("CHAMBER_PRESSURE_previous")
+    TEMPORARY_CHAMBER_PRESSURE(new Config("CHAMBER_PRESSURE_MPA_previous")
             //TODO : a virer les valeur _previous n'ont surement pas besoin d'être déclaré en dépendances => A TESTER
-//            .withDependencies("CHAMBER_PRESSURE")
-            .withVariables("CHAMBER_PRESSURE_previous")),
+//            .withDependencies("CHAMBER_PRESSURE_MPA")
+            .withVariables("CHAMBER_PRESSURE_MPA_previous")),
 
     PROPELLANT_BURN_RATE(new Config("(1 + kv * EROSIVE_BURN_FACTOR) * BurnRateCharacteristic(propellantId, TEMPORARY_CHAMBER_PRESSURE)")
             .withConstants(kv, propellantId)
@@ -74,10 +74,10 @@ public enum PressureFormulas implements Formula {
             .withFunctions(Functions.grainMass)),
 
     //Mass flow rate through nozzle
-    NOZZLE_MASS_FLOW_RATE(new Config("NozzleMassFlowRate(pbd, MASS_GENERATION_RATE, CHAMBER_PRESSURE_previous, AI)")
+    NOZZLE_MASS_FLOW_RATE(new Config("NozzleMassFlowRate(pbd, MASS_GENERATION_RATE, CHAMBER_PRESSURE_MPA_previous, AI)")
             .withConstants(pbd)
             .withDependencies("MASS_GENERATION_RATE", "AI")
-            .withVariables("CHAMBER_PRESSURE_previous")
+            .withVariables("CHAMBER_PRESSURE_MPA_previous")
             .withFunctions(Functions.nozzleMassFlowRate)),
 
     //Mass storage rate of combustion products (in chamber)
@@ -96,12 +96,12 @@ public enum PressureFormulas implements Formula {
             .withFunctions(Functions.freeVolumeInChamber)),
 
     //(Mpa) mega Pascal
-    CHAMBER_PRESSURE(new Config("(DENSITY_COMBUSTION_PRODUCTS * rat * to + patm * 1000000) / 1000000")
+    CHAMBER_PRESSURE_MPA(new Config("(DENSITY_COMBUSTION_PRODUCTS * rat * to + patm * 1000000) / 1000000")
             .withDependencies("DENSITY_COMBUSTION_PRODUCTS")
             .withConstants(rat, to, patm)),
 
-    ABSOLUTE_CHAMBER_PRESSURE(new Config("CHAMBER_PRESSURE - patm")
-            .withDependencies("CHAMBER_PRESSURE")
+    ABSOLUTE_CHAMBER_PRESSURE(new Config("CHAMBER_PRESSURE_MPA - patm")
+            .withDependencies("CHAMBER_PRESSURE_MPA")
             .withConstants(patm)),
 
     ABSOLUTE_CHAMBER_PRESSURE_PSIG(new Config("ABSOLUTE_CHAMBER_PRESSURE * 1000000 / 6895")

@@ -32,7 +32,7 @@ public class Extract {
         constants.put(kv.name(), 0d);
         constants.put(pbd.name(), 0d);
         constants.put(rat.name(), 8314/ propellantType.getEffectiveMolecularWeight());
-         constants.put(to.name(), propellantType.getChamberTemperature());
+         constants.put(to.name(), .95*propellantType.getChamberTemperature());
          constants.put(patm.name(), 0.101);
          constants.put(k.name(), propellantType.getK());
          constants.put(propellantId.name(), new Double(propellantType.getId()));
