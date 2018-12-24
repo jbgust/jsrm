@@ -2,6 +2,8 @@ package com.jsrm.core.pressure;
 
 import com.google.common.collect.ImmutableMap;
 import com.jsrm.calculation.Calculator;
+import com.jsrm.calculation.CalculatorBuilder;
+import com.jsrm.calculation.CalculatorResults;
 import com.jsrm.calculation.Formula;
 import com.jsrm.core.pressure.csv.CsvToPressureLine;
 import com.jsrm.infra.Extract;
@@ -15,7 +17,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.jsrm.core.pressure.PressureFormulas.*;
@@ -28,7 +29,7 @@ import static org.assertj.core.data.Offset.offset;
 
 class QualificationPressureCalculations {
 
-    private static List<Map<Formula, Double>> results;
+    private static CalculatorResults results;
 
     Map<Formula, Offset> precisionByFormulas = ImmutableMap.<Formula, Offset>builder()
             .put(GRAIN_CORE_DIAMETER, offset(0.01))
@@ -81,7 +82,12 @@ class QualificationPressureCalculations {
         initialValues.put(MASS_COMBUSTION_PRODUCTS, 0d);
         initialValues.put(DENSITY_COMBUSTION_PRODUCTS, 0d);
 
-        Calculator calculator = new Calculator(ABSOLUTE_CHAMBER_PRESSURE_PSIG, constants, initialValues);
+        Calculator calculator = new CalculatorBuilder(ABSOLUTE_CHAMBER_PRESSURE_PSIG)
+                .withResultsToSave(PressureFormulas.values())
+                .withConstants(constants)
+                .withInitialValues(initialValues)
+                .createCalculator();
+
         results = calculator.compute(0, 835);
     }
 
@@ -89,10 +95,10 @@ class QualificationPressureCalculations {
     @CsvFileSource(resources = "/SRM_2014_QUALIFICATION.csv", numLinesToSkip = 1, delimiter = '|')
     @DisplayName("Check pressure with SRM results")
     void qualification1(@CsvToPressureLine Map<String, Double> expectedLine) {
-        Map<Formula, Double> resultLIneToAssert = results.get(expectedLine.get(INTERVAL).intValue());
+        int lineNumber = expectedLine.get(INTERVAL).intValue();
 
         precisionByFormulas.forEach((formula, offset) -> {
-            assertThat(resultLIneToAssert.get(formula)).as(formula.getName())
+            assertThat(results.getResult(formula, lineNumber)).as(formula.getName())
                     .isEqualTo(expectedLine.getOrDefault(formula.getName(),-111d), offset);
         });
 
