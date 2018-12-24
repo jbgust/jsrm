@@ -27,7 +27,7 @@ import static com.jsrm.motor.propellant.PropellantType.KNDX;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
 
-class QualificationPressureCalculations {
+class QualificationDuringBurnPressureCalculations {
 
     private static CalculatorResults results;
 
@@ -92,7 +92,7 @@ class QualificationPressureCalculations {
     }
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/SRM_2014_QUALIFICATION.csv", numLinesToSkip = 1, delimiter = '|')
+    @CsvFileSource(resources = "/SRM_2014_DURING_BURN_PRESSURE_QUALIFICATION.csv", numLinesToSkip = 1, delimiter = '|')
     @DisplayName("Check pressure with SRM results")
     void qualification1(@CsvToPressureLine Map<String, Double> expectedLine) {
         int lineNumber = expectedLine.get(INTERVAL).intValue();
