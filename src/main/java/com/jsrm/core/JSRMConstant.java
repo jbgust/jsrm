@@ -21,5 +21,12 @@ public enum JSRMConstant {
     to,
     patm,
     k,
-    rhopgrain;
+    rhopgrain,
+
+    //tbinc solve
+    pfinal,
+    pbout,
+    astarf,
+    cstar
+    ;
 }
