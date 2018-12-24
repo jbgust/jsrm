@@ -75,6 +75,20 @@ class LineCalculatorTest {
     }
 
     @Test
+    void shouldResolveDependanciesWhenInitialValuesAreUsed() {
+        //GIVEN
+        Map<Formula, Double> initialValues = new HashMap<>();
+        initialValues.put(FORMULA_5, 2d);
+        LineCalculator lineCalculator = new LineCalculator(FORMULA_5, emptyMap(), initialValues);
+
+        //WHEN
+        Map<Formula, Double> results = lineCalculator.compute(0);
+
+        //THEN
+        assertThat(results.get(FORMULA_6)).isEqualTo(3d);
+    }
+
+    @Test
     void shouldComputeDependencies(){
         // GIVEN
         Map<String, Double> constants = new HashMap<>();

@@ -54,15 +54,11 @@ class LineCalculator {
 
     private void run(Formula formula, int lineNumber){
 
-        //TODO : faire un test pour ce cas
         resolveVariablesDependencies(formula, lineNumber);
 
         if(hasInitialValue(formula)) {
             currentLineResults.put(formula, initialValues.remove(formula));
         } else {
-
-
-
             try {
                 double result = formula.getExpression()
                         .setVariables(currentLineProvidedResult)
