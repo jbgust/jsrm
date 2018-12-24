@@ -27,6 +27,10 @@ public enum JSRMConstant {
     pfinal,
     pbout,
     astarf,
-    cstar
+    cstar,
+
+    //post burn pressure
+    tbinc,
+    tbout
     ;
 }

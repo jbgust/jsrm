@@ -97,37 +97,8 @@ class QualificationPressureCalculations {
     void qualification1(@CsvToPressureLine Map<String, Double> expectedLine) {
         int lineNumber = expectedLine.get(INTERVAL).intValue();
 
-        precisionByFormulas.forEach((formula, offset) -> {
-            assertThat(results.getResult(formula, lineNumber)).as(formula.getName())
-                    .isEqualTo(expectedLine.getOrDefault(formula.getName(),-111d), offset);
-        });
-
-
-//        assertThat(resultLIneToAssert.get(GRAIN_CORE_DIAMETER))
-//                .isEqualTo(expectedLine.get(GRAIN_CORE_DIAMETER.getName()), Offset.offset(0.01));
-//
-//        assertThat(resultLIneToAssert.get(GRAIN_OUTSIDE_DIAMETER))
-//                .isEqualTo(expectedLine.get(GRAIN_OUTSIDE_DIAMETER.getName()), Offset.offset(0.01));
-//
-//        assertThat(resultLIneToAssert.get(GRAIN_LENGTH))
-//                .isEqualTo(expectedLine.get(GRAIN_LENGTH.getName()), Offset.offset(0.1));
-//
-//        assertThat(resultLIneToAssert.get(WEB_THICKNESS))
-//                .isEqualTo(expectedLine.get(WEB_THICKNESS.getName()), Offset.offset(0.001));
-//
-//        assertThat(resultLIneToAssert.get(THROAT_AREA))
-//                .isEqualTo(expectedLine.get(THROAT_AREA.getName()), Offset.offset(0.1));
-//
-//        assertThat(resultLIneToAssert.get(NOZZLE_CRITICAL_PASSAGE_AREA))
-//                .isEqualTo(expectedLine.get(NOZZLE_CRITICAL_PASSAGE_AREA.getName()), Offset.offset(0.00000001));
-
-//        assertThat(resultLIneToAssert.get(EROSIVE_BURN_FACTOR))
-//                .isEqualTo(expectedLine.get(EROSIVE_BURN_FACTOR.getName()), Offset.offset(0.01d));
-
-//        assertThat(resultLIneToAssert.get(GRAIN_VOLUME))
-//                .isEqualTo(expectedLine.get(GRAIN_VOLUME.getName()), Offset.offset(1d));
-//
-//        assertThat(resultLIneToAssert.get(ABSOLUTE_CHAMBER_PRESSURE_PSIG))
-//                .isEqualTo(expectedLine.get(ABSOLUTE_CHAMBER_PRESSURE_PSIG.name()), Offset.offset(0.1));
+        precisionByFormulas.forEach((formula, offset) ->
+                assertThat(results.getResult(formula, lineNumber)).as(formula.getName())
+                .isEqualTo(expectedLine.getOrDefault(formula.getName(),-111d), offset));
     }
 }
