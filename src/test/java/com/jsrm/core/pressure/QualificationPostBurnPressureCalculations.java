@@ -66,7 +66,7 @@ class QualificationPostBurnPressureCalculations {
                 .withInitialValues(initialValues)
                 .createCalculator();
 
-        results = calculator.compute(0, 835);
+        results = calculator.compute(0, 47);
     }
 
     @ParameterizedTest
