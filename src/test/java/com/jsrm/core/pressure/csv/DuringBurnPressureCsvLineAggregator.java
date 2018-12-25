@@ -10,7 +10,7 @@ import java.util.Map;
 
 import static com.jsrm.core.pressure.PressureFormulas.*;
 
-public class PressureCsvLineAggregator implements ArgumentsAggregator {
+public class DuringBurnPressureCsvLineAggregator implements ArgumentsAggregator {
 
     public static final String INTERVAL = "Interval";
 

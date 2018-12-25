@@ -27,10 +27,10 @@ class QualificationPostBurnPressureCalculations {
     private static CalculatorResults results;
 
     Map<Formula, Offset> precisionByFormulas = ImmutableMap.<Formula, Offset>builder()
-            .put(TIME_SINCE_BURN_STARTS, offset(0.0001))
-            .put(CHAMBER_PRESSURE_MPA, offset(0.001))
-            .put(ABSOLUTE_CHAMBER_PRESSURE, offset(0.001))
-            .put(ABSOLUTE_CHAMBER_PRESSURE_PSIG, offset(0.1))
+            .put(POST_BURN_TIME_SINCE_BURN_STARTS, offset(0.0001))
+            .put(POST_BURN_CHAMBER_PRESSURE_MPA, offset(0.001))
+            .put(POST_BURN_ABSOLUTE_CHAMBER_PRESSURE, offset(0.001))
+            .put(POST_BURN_ABSOLUTE_CHAMBER_PRESSURE_PSIG, offset(0.1))
             .build();
 
     @BeforeAll
@@ -57,10 +57,10 @@ class QualificationPostBurnPressureCalculations {
                 .build();
 
         Map<Formula, Double> initialValues = new HashMap<>();
-        initialValues.put(TIME_SINCE_BURN_STARTS, constants.get("tbout")+tbinc);
+        initialValues.put(POST_BURN_TIME_SINCE_BURN_STARTS, constants.get("tbout")+tbinc);
 
 
-        Calculator calculator = new CalculatorBuilder(ABSOLUTE_CHAMBER_PRESSURE_PSIG)
+        Calculator calculator = new CalculatorBuilder(POST_BURN_ABSOLUTE_CHAMBER_PRESSURE_PSIG)
                 .withResultsToSave(PostBurnPressureFormulas.values())
                 .withConstants(constants)
                 .withInitialValues(initialValues)

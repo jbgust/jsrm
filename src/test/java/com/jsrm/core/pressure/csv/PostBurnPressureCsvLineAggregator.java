@@ -20,10 +20,10 @@ public class PostBurnPressureCsvLineAggregator implements ArgumentsAggregator {
 
         csvValues.put(LINE, argumentsAccessor.getDouble(0));
 
-        csvValues.put(TIME_SINCE_BURN_STARTS.getName(), argumentsAccessor.getDouble(1));
-        csvValues.put(CHAMBER_PRESSURE_MPA.getName(), argumentsAccessor.getDouble(2));
-        csvValues.put(ABSOLUTE_CHAMBER_PRESSURE.getName(), argumentsAccessor.getDouble(3));
-        csvValues.put(ABSOLUTE_CHAMBER_PRESSURE_PSIG.getName(), argumentsAccessor.getDouble(4));
+        csvValues.put(POST_BURN_TIME_SINCE_BURN_STARTS.getName(), argumentsAccessor.getDouble(1));
+        csvValues.put(POST_BURN_CHAMBER_PRESSURE_MPA.getName(), argumentsAccessor.getDouble(2));
+        csvValues.put(POST_BURN_ABSOLUTE_CHAMBER_PRESSURE.getName(), argumentsAccessor.getDouble(3));
+        csvValues.put(POST_BURN_ABSOLUTE_CHAMBER_PRESSURE_PSIG.getName(), argumentsAccessor.getDouble(4));
 
 
         return csvValues;

@@ -5,7 +5,7 @@ import com.jsrm.calculation.Calculator;
 import com.jsrm.calculation.CalculatorBuilder;
 import com.jsrm.calculation.CalculatorResults;
 import com.jsrm.calculation.Formula;
-import com.jsrm.core.pressure.csv.CsvToPressureLine;
+import com.jsrm.core.pressure.csv.CsvToDuringBurnPressureLine;
 import com.jsrm.infra.Extract;
 import com.jsrm.motor.MotorChamber;
 import com.jsrm.motor.PropellantGrain;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.jsrm.core.pressure.PressureFormulas.*;
-import static com.jsrm.core.pressure.csv.PressureCsvLineAggregator.INTERVAL;
+import static com.jsrm.core.pressure.csv.DuringBurnPressureCsvLineAggregator.INTERVAL;
 import static com.jsrm.motor.GrainSurface.EXPOSED;
 import static com.jsrm.motor.GrainSurface.INHIBITED;
 import static com.jsrm.motor.propellant.PropellantType.KNDX;
@@ -93,8 +93,8 @@ class QualificationDuringBurnPressureCalculations {
 
     @ParameterizedTest
     @CsvFileSource(resources = "/SRM_2014_DURING_BURN_PRESSURE_QUALIFICATION.csv", numLinesToSkip = 1, delimiter = '|')
-    @DisplayName("Check pressure with SRM results")
-    void qualification1(@CsvToPressureLine Map<String, Double> expectedLine) {
+    @DisplayName("Check pressure (during propellant burn) with SRM results")
+    void qualification1(@CsvToDuringBurnPressureLine Map<String, Double> expectedLine) {
         int lineNumber = expectedLine.get(INTERVAL).intValue();
 
         precisionByFormulas.forEach((formula, offset) ->

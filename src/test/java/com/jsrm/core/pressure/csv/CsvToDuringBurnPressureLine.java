@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
-@AggregateWith(PressureCsvLineAggregator.class)
-public @interface CsvToPressureLine {
+@AggregateWith(DuringBurnPressureCsvLineAggregator.class)
+public @interface CsvToDuringBurnPressureLine {
 }

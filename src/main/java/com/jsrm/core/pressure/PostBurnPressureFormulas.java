@@ -14,22 +14,22 @@ import static java.util.stream.Stream.of;
 
 public enum PostBurnPressureFormulas implements Formula {
 
-    TIME_SINCE_BURN_STARTS(new FormulaConfiguration("TIME_SINCE_BURN_STARTS_previous + tbinc")
+    POST_BURN_TIME_SINCE_BURN_STARTS(new FormulaConfiguration("POST_BURN_TIME_SINCE_BURN_STARTS_previous + tbinc")
             .withConstants(tbinc)
-            .withVariables("TIME_SINCE_BURN_STARTS_previous")),
+            .withVariables("POST_BURN_TIME_SINCE_BURN_STARTS_previous")),
 
-    CHAMBER_PRESSURE_MPA(new FormulaConfiguration("pbout*exp(-rat*to*astarf*(TIME_SINCE_BURN_STARTS-tbout)/vc*1000000000/cstar)")
-            .withDependencies("TIME_SINCE_BURN_STARTS")
+    POST_BURN_CHAMBER_PRESSURE_MPA(new FormulaConfiguration("pbout*exp(-rat*to*astarf*(POST_BURN_TIME_SINCE_BURN_STARTS-tbout)/vc*1000000000/cstar)")
+            .withDependencies("POST_BURN_TIME_SINCE_BURN_STARTS")
             .withConstants(pbout, rat, to, astarf, tbout, vc, cstar)),
 
     //TODO : formule  utile?
-    ABSOLUTE_CHAMBER_PRESSURE(new FormulaConfiguration("CHAMBER_PRESSURE_MPA-patm")
-            .withDependencies("CHAMBER_PRESSURE_MPA")
+    POST_BURN_ABSOLUTE_CHAMBER_PRESSURE(new FormulaConfiguration("POST_BURN_CHAMBER_PRESSURE_MPA-patm")
+            .withDependencies("POST_BURN_CHAMBER_PRESSURE_MPA")
             .withConstants(patm)),
 
     //TODO : formule  utile?
-    ABSOLUTE_CHAMBER_PRESSURE_PSIG(new FormulaConfiguration("ABSOLUTE_CHAMBER_PRESSURE*1000000/6895")
-            .withDependencies("ABSOLUTE_CHAMBER_PRESSURE"));
+    POST_BURN_ABSOLUTE_CHAMBER_PRESSURE_PSIG(new FormulaConfiguration("POST_BURN_ABSOLUTE_CHAMBER_PRESSURE*1000000/6895")
+            .withDependencies("POST_BURN_ABSOLUTE_CHAMBER_PRESSURE"));
 
     private final Expression expression;
     private final Set<String> dependencies;
