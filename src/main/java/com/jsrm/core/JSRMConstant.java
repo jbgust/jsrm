@@ -31,6 +31,9 @@ public enum JSRMConstant {
 
     //post burn pressure
     tbinc,
-    tbout
+    tbout,
+
+    //preformance spredsheet
+    exprat
     ;
 }
