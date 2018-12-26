@@ -1,36 +1,37 @@
 package com.jsrm.core.performance.solver;
 
 import com.google.common.collect.Range;
+import com.jsrm.motor.propellant.SolidPropellant;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
-import java.util.Map;
-
 import static com.google.common.collect.Range.closed;
-import static com.jsrm.core.JSRMConstant.exprat;
 import static com.jsrm.core.JSRMConstant.k;
 
-public class InitialMachSpeedAtNozzleExitSolver {
+public class MachSpeedAtNozzleExitSolver {
 
     private static final String INITIAL_MACH_SPEED_VARIABLE = "me";
 
     private static final double MIN_MACH_EXIT_SPEED = 0.2;
     private static final double MAX_MACH_EXIT_SPEED = 10.0;
     public static final double SOLVER_PRECISION = 0.0001;
+    public static final String NOZZLE_EXPANSION_RATION_VARIABLE = "nozzleExpansionRation";
 
     private final Range<Double> EXPECTED_RESULT_RANGE = closed(-SOLVER_PRECISION, SOLVER_PRECISION);
     private final Expression expression;
 
 
-    public InitialMachSpeedAtNozzleExitSolver() {
-        expression = new ExpressionBuilder("exprat-1/me*((1+(k-1)/2*me^2)/(1+(k-1)/2))^((k+1)/2/(k-1))")
-                .variables(exprat.name(), k.name(), INITIAL_MACH_SPEED_VARIABLE)
+    public MachSpeedAtNozzleExitSolver() {
+        expression = new ExpressionBuilder("nozzleExpansionRation-1/me*((1+(k-1)/2*me^2)/(1+(k-1)/2))^((k+1)/2/(k-1))")
+                .variables(NOZZLE_EXPANSION_RATION_VARIABLE, k.name(), INITIAL_MACH_SPEED_VARIABLE)
                 .build();
     }
 
-    public double solve(Map<String, Double> variables) {
+    public double solve(double nozzleExpansionRation, SolidPropellant solidPropellant) {
         boolean isSolved = false;
-        expression.setVariables(variables);
+        expression.setVariable(k.name(), solidPropellant.getK());
+        expression.setVariable(NOZZLE_EXPANSION_RATION_VARIABLE, nozzleExpansionRation);
+
         Range<Double> initialMachSpeedAtNozzleExitRange = closed(MIN_MACH_EXIT_SPEED, MAX_MACH_EXIT_SPEED);
 
         double initialMachSpeedAtNozzle = -1;
