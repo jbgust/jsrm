@@ -74,13 +74,12 @@ class QualificationPostBurnPressureCalculations {
     void qualification(@CsvToPostBurnPressureLine Map<String, Double> expectedLine) {
         int lineNumber = expectedLine.get(LINE).intValue();
 
+        // line 48 should not be computed here
         if(lineNumber < 47) {
             precisionByFormulas.forEach((formula, offset) -> {
                 assertThat(results.getResult(formula, lineNumber)).as(formula.getName())
                         .isEqualTo(expectedLine.getOrDefault(formula.getName(), -111d), offset);
             });
-        } else {
-            //TODO : que faire de la ligne 48?
         }
 
     }

@@ -12,12 +12,12 @@ import static com.jsrm.core.JSRMConstant.*;
  * This class is used to solve the third 'solve button' in Excel file
  * it resolve the tbinc variable with is the time increment after all the propellant is consumed.
  */
-public class IncrementTimeBurstSolver {
+class IncrementTimeBurstSolver {
 
-    public static final String NB_LINE_VARIABLE = "nbLine";
+    static final String NB_LINE_VARIABLE = "nbLine";
     Expression tbincExpression;
 
-    public IncrementTimeBurstSolver() {
+    IncrementTimeBurstSolver() {
          tbincExpression = new ExpressionBuilder("(vc log(expectedPfinal / pbout)) / (-rat * to * astarf * nbLine * (1000000000/cstar))")
                 .variables(vc.name(), expectedPfinal.name(), pbout.name(), rat.name(), to.name(), astarf.name(), cstar.name())
                 .variable(NB_LINE_VARIABLE)
