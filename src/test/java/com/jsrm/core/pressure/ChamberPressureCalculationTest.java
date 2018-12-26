@@ -2,6 +2,7 @@ package com.jsrm.core.pressure;
 
 import com.google.common.collect.ImmutableMap;
 import com.jsrm.calculation.Formula;
+import com.jsrm.core.JSRMConstant;
 import com.jsrm.core.pressure.csv.CsvToPressureLine;
 import com.jsrm.infra.Extract;
 import com.jsrm.motor.MotorChamber;
@@ -53,8 +54,8 @@ class ChamberPressureCalculationTest {
         SolidRocketMotor solidRocketMotor = new SolidRocketMotor(propellantGrain, motorChamber,
                 6d, throatDiameter, 0d);
 
-        Map<String, Double> constants = Extract.extractConstants(solidRocketMotor);
-        constants.put(cstar.name(), 889.279521360202);
+        Map<JSRMConstant, Double> constants = Extract.extractConstants(solidRocketMotor);
+        constants.put(cstar, 889.279521360202);
 
         Map<Formula, Double> initialValues = new HashMap<>();
         initialValues.put(GRAIN_CORE_DIAMETER, 20d);

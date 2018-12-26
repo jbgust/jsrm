@@ -56,7 +56,7 @@ class QualificationPostBurnPressureCalculations {
                 .build();
 
         Map<Formula, Double> initialValues = new HashMap<>();
-        initialValues.put(POST_BURN_TIME_SINCE_BURN_STARTS, constants.get("tbout")+tbincValue);
+        initialValues.put(POST_BURN_TIME_SINCE_BURN_STARTS, constants.get(tbout.name())+tbincValue);
 
 
         Calculator calculator = new CalculatorBuilder(POST_BURN_ABSOLUTE_CHAMBER_PRESSURE_PSIG)

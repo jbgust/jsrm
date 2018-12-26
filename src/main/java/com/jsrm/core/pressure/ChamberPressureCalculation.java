@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.jsrm.calculation.CalculatorBuilder;
 import com.jsrm.calculation.CalculatorResults;
 import com.jsrm.calculation.Formula;
+import com.jsrm.core.JSRMConstant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import static com.jsrm.core.JSRMConstant.*;
 import static com.jsrm.core.pressure.IncrementTimeBurstSolver.NB_LINE_VARIABLE;
 import static com.jsrm.core.pressure.PostBurnPressureFormulas.*;
 import static com.jsrm.core.pressure.PressureFormulas.*;
+import static com.jsrm.infra.Extract.toCalculationFormat;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -33,10 +35,10 @@ public class ChamberPressureCalculation {
     private static final int START_LINE = 0;
     private static final double PMAXPERC = 0.02;
 
-    private final Map<String, Double> constants;
+    private final Map<JSRMConstant, Double> constants;
     private final Map<Formula, Double> initialValues;
 
-    public ChamberPressureCalculation(Map<String, Double> constants, Map<Formula, Double> initialValues) {
+    public ChamberPressureCalculation(Map<JSRMConstant, Double> constants, Map<Formula, Double> initialValues) {
         this.constants = constants;
         this.initialValues = initialValues;
     }
@@ -69,7 +71,7 @@ public class ChamberPressureCalculation {
         List<Double> absoluteChamberPressurePSIGResults = mergeResults(pressureResults, postBurnPressureResults, ABSOLUTE_CHAMBER_PRESSURE_PSIG, POST_BURN_ABSOLUTE_CHAMBER_PRESSURE_PSIG);
 
         //feed last line
-        timeSinceBurnStartResults.add(constants.get(tbinc.name()) + timeSinceBurnStartResults.get(timeSinceBurnStartResults.size()-1));
+        timeSinceBurnStartResults.add(constants.get(tbinc) + timeSinceBurnStartResults.get(timeSinceBurnStartResults.size()-1));
         chamberPressureMPAResults.add(0d);
         absoluteChamberPressureResults.add(0d);
         absoluteChamberPressurePSIGResults.add(0d);
@@ -97,9 +99,9 @@ public class ChamberPressureCalculation {
 
     private CalculatorResults computePostBurnPressure() {
 
-        initialValues.put(POST_BURN_TIME_SINCE_BURN_STARTS, constants.get(tbout.name())+constants.get(tbinc.name()));
+        initialValues.put(POST_BURN_TIME_SINCE_BURN_STARTS, constants.get(tbout)+constants.get(tbinc));
         return new CalculatorBuilder(POST_BURN_ABSOLUTE_CHAMBER_PRESSURE_PSIG)
-                .withConstants(constants)
+                .withConstants(toCalculationFormat(constants))
                 .withInitialValues(initialValues)
                 .withResultsToSave(PostBurnPressureFormulas.values())
                 .createCalculator()
@@ -108,7 +110,7 @@ public class ChamberPressureCalculation {
 
     private CalculatorResults computeChamberPressureDuringPropellantBurn() {
         return new CalculatorBuilder(ABSOLUTE_CHAMBER_PRESSURE_PSIG)
-                .withConstants(constants)
+                .withConstants(toCalculationFormat(constants))
                 .withInitialValues(initialValues)
                 .withResultsToSave(
                         THROAT_AREA, NOZZLE_CRITICAL_PASSAGE_AREA, TIME_SINCE_BURN_STARTS, CHAMBER_PRESSURE_MPA,
@@ -120,21 +122,21 @@ public class ChamberPressureCalculation {
     private void addNewConstantsFromPressureResults(CalculatorResults pressureResults) {
         int lastPressureResultsLine = NB_LINE_IN_PRESSURE_SPREADSHEET - 1;
 
-        constants.put(tbout.name(), pressureResults.getResult(TIME_SINCE_BURN_STARTS, lastPressureResultsLine));
-        constants.put(pbout.name(), pressureResults.getResult(CHAMBER_PRESSURE_MPA, lastPressureResultsLine));
-        constants.put(astarf.name(), pressureResults.getResult(NOZZLE_CRITICAL_PASSAGE_AREA, lastPressureResultsLine));
+        constants.put(tbout, pressureResults.getResult(TIME_SINCE_BURN_STARTS, lastPressureResultsLine));
+        constants.put(pbout, pressureResults.getResult(CHAMBER_PRESSURE_MPA, lastPressureResultsLine));
+        constants.put(astarf, pressureResults.getResult(NOZZLE_CRITICAL_PASSAGE_AREA, lastPressureResultsLine));
 
-        constants.put(expectedPfinal.name(), 2 * constants.get(patm.name()) + PMAXPERC / 100 * getPmax(pressureResults));
-        constants.put(tbinc.name(), getTbinc(constants));
+        constants.put(expectedPfinal, 2 * constants.get(patm) + PMAXPERC / 100 * getPmax(pressureResults));
+        constants.put(tbinc, getTbinc(constants));
     }
 
     private double getPmax(CalculatorResults pressureResults) {
         return pressureResults.getResults(ABSOLUTE_CHAMBER_PRESSURE).stream().max(Double::compareTo).get();
     }
 
-    private Double getTbinc(Map<String, Double> constants) {
+    private Double getTbinc(Map<JSRMConstant, Double> constants) {
         Map<String, Double> tbincVariables = Stream.of(vc, expectedPfinal, pbout, rat, to, astarf, cstar)
-                .collect(toMap(Enum::name, constant -> constants.get(constant.name())));
+                .collect(toMap(Enum::name, constants::get));
 
         tbincVariables.put(NB_LINE_VARIABLE, NB_LINE_POST_BURN_CALCULATION);
 

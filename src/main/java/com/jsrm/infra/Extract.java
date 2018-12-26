@@ -1,5 +1,6 @@
 package com.jsrm.infra;
 
+import com.jsrm.core.JSRMConstant;
 import com.jsrm.motor.SolidRocketMotor;
 import com.jsrm.motor.propellant.PropellantType;
 
@@ -7,36 +8,42 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.jsrm.core.JSRMConstant.*;
+import static java.util.stream.Collectors.toMap;
 
 public class Extract {
 
     private static double numberOfInterval = 834d;
 
-    public static Map<String, Double> extractConstants(SolidRocketMotor solidRocketMotor) {
+    public static Map<JSRMConstant, Double> extractConstants(SolidRocketMotor solidRocketMotor) {
         double twoValue = 24.5;
-        HashMap<String, Double> constants = new HashMap<>();
-        constants.put(ci.name(), (double) solidRocketMotor.getPropellantGrain().getCoreSurface().value());
-        constants.put(osi.name(), (double) solidRocketMotor.getPropellantGrain().getOuterSurface().value());
-        constants.put(ei.name(), (double) solidRocketMotor.getPropellantGrain().getEndsSurface().value());
-        constants.put(xincp.name(), twoValue / numberOfInterval);
-        constants.put(dc.name(), solidRocketMotor.getMotorChamber().getChamberInnerDiameter());
-        constants.put(n.name(), solidRocketMotor.getPropellantGrain().getNumberOfSegment());
-        constants.put(vc.name(), solidRocketMotor.getMotorChamber().getVolume());
-        constants.put(dto.name(), solidRocketMotor.getThroatDiameter());
-        constants.put(erate.name(), solidRocketMotor.getNozzleErosion());
-        constants.put(two.name(), twoValue);
-        constants.put(gstar.name(), solidRocketMotor.getErosiveBurningArea());
+        HashMap<JSRMConstant, Double> constants = new HashMap<>();
+        constants.put(ci, (double) solidRocketMotor.getPropellantGrain().getCoreSurface().value());
+        constants.put(osi, (double) solidRocketMotor.getPropellantGrain().getOuterSurface().value());
+        constants.put(ei, (double) solidRocketMotor.getPropellantGrain().getEndsSurface().value());
+        constants.put(xincp, twoValue / numberOfInterval);
+        constants.put(dc, solidRocketMotor.getMotorChamber().getChamberInnerDiameter());
+        constants.put(n, solidRocketMotor.getPropellantGrain().getNumberOfSegment());
+        constants.put(vc, solidRocketMotor.getMotorChamber().getVolume());
+        constants.put(dto, solidRocketMotor.getThroatDiameter());
+        constants.put(erate, solidRocketMotor.getNozzleErosion());
+        constants.put(two, twoValue);
+        constants.put(gstar, solidRocketMotor.getErosiveBurningArea());
 
         //TODO
         PropellantType propellantType = solidRocketMotor.getPropellantGrain().getPropellantType();
-        constants.put(kv.name(), 0d);
-        constants.put(pbd.name(), 0d);
-        constants.put(rat.name(), 8314/ propellantType.getEffectiveMolecularWeight());
-         constants.put(to.name(), .95*propellantType.getChamberTemperature());
-         constants.put(patm.name(), 0.101);
-         constants.put(k.name(), propellantType.getK());
-         constants.put(propellantId.name(), new Double(propellantType.getId()));
-         constants.put(rhopgrain.name(), propellantType.getIdealMassDensity()*.95);
+        constants.put(kv, 0d);
+        constants.put(pbd, 0d);
+        constants.put(rat, 8314/ propellantType.getEffectiveMolecularWeight());
+         constants.put(to, .95*propellantType.getChamberTemperature());
+         constants.put(patm, 0.101);
+         constants.put(k, propellantType.getK());
+         constants.put(propellantId, new Double(propellantType.getId()));
+         constants.put(rhopgrain, propellantType.getIdealMassDensity()*.95);
         return constants;
+    }
+
+    public static Map<String, Double> toCalculationFormat(Map<JSRMConstant, Double> jsrmConstantDoubleMap) {
+        return jsrmConstantDoubleMap.entrySet().stream()
+                .collect(toMap(entry -> entry.getKey().name(), Map.Entry::getValue));
     }
 }

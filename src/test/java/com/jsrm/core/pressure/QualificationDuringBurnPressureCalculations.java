@@ -5,6 +5,7 @@ import com.jsrm.calculation.Calculator;
 import com.jsrm.calculation.CalculatorBuilder;
 import com.jsrm.calculation.CalculatorResults;
 import com.jsrm.calculation.Formula;
+import com.jsrm.core.JSRMConstant;
 import com.jsrm.core.pressure.csv.CsvToDuringBurnPressureLine;
 import com.jsrm.infra.Extract;
 import com.jsrm.motor.MotorChamber;
@@ -66,7 +67,7 @@ class QualificationDuringBurnPressureCalculations {
         SolidRocketMotor solidRocketMotor = new SolidRocketMotor(propellantGrain, motorChamber,
                                                  6d, throatDiameter, 0d);
 
-        Map<String, Double> constants = Extract.extractConstants(solidRocketMotor);
+        Map<JSRMConstant, Double> constants = Extract.extractConstants(solidRocketMotor);
 
         Map<Formula, Double> initialValues = new HashMap<>();
         initialValues.put(GRAIN_CORE_DIAMETER, 20d);
@@ -84,7 +85,7 @@ class QualificationDuringBurnPressureCalculations {
 
         Calculator calculator = new CalculatorBuilder(ABSOLUTE_CHAMBER_PRESSURE_PSIG)
                 .withResultsToSave(PressureFormulas.values())
-                .withConstants(constants)
+                .withConstants(Extract.toCalculationFormat(constants))
                 .withInitialValues(initialValues)
                 .createCalculator();
 
