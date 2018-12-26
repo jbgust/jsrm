@@ -14,16 +14,17 @@ import static com.jsrm.core.JSRMConstant.*;
  */
 public class IncrementTimeBurstSolver {
 
+    public static final String NB_LINE_VARIABLE = "nbLine";
     Expression tbincExpression;
 
     public IncrementTimeBurstSolver() {
-         tbincExpression = new ExpressionBuilder("(vc log(pfinal / pbout)) / (-rat * to * astarf * nbLine * (1000000000/cstar))")
-                .variables(vc.name(), pfinal.name(), pbout.name(), rat.name(), to.name(), astarf.name(), cstar.name())
-                .variable("nbLine")
+         tbincExpression = new ExpressionBuilder("(vc log(expectedPfinal / pbout)) / (-rat * to * astarf * nbLine * (1000000000/cstar))")
+                .variables(vc.name(), expectedPfinal.name(), pbout.name(), rat.name(), to.name(), astarf.name(), cstar.name())
+                .variable(NB_LINE_VARIABLE)
                 .build();
     }
 
-    public double solve(Map<String, Double> variables) throws Exception {
+    public double solve(Map<String, Double> variables) throws IllegalArgumentException {
         return tbincExpression
                 .setVariables(variables)
                 .evaluate();

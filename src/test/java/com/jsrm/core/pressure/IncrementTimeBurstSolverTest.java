@@ -19,7 +19,7 @@ class IncrementTimeBurstSolverTest {
         IncrementTimeBurstSolver solver = new IncrementTimeBurstSolver();
         Map<String, Double> variables = ImmutableMap.<String, Double>builder()
                 .put(vc.name(), 2076396.394482)
-                .put(pfinal.name(), 0.203044747800798)
+                .put(expectedPfinal.name(), 0.203044747800798)
                 .put(pbout.name(), 3.89641961658439)
                 .put(rat.name(), 196.131163010144)
                 .put(to.name(), 1624.5)

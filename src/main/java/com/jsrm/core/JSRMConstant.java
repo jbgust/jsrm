@@ -21,13 +21,13 @@ public enum JSRMConstant {
     to,
     patm,
     k,
+    cstar,
     rhopgrain,
 
     //tbinc solve
-    pfinal,
+    expectedPfinal,
     pbout,
     astarf,
-    cstar,
 
     //post burn pressure
     tbinc,

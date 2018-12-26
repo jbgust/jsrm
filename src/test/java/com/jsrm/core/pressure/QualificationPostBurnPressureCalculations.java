@@ -5,7 +5,6 @@ import com.jsrm.calculation.Calculator;
 import com.jsrm.calculation.CalculatorBuilder;
 import com.jsrm.calculation.CalculatorResults;
 import com.jsrm.calculation.Formula;
-import com.jsrm.core.JSRMConstant;
 import com.jsrm.core.pressure.csv.CsvToPostBurnPressureLine;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.BeforeAll;
@@ -34,11 +33,11 @@ class QualificationPostBurnPressureCalculations {
             .build();
 
     @BeforeAll
-    static void init() throws Exception {
+    static void init() {
 
         Map<String, Double> variablesTbinc = ImmutableMap.<String, Double>builder()
                 .put(vc.name(), 2076396.394482)
-                .put(pfinal.name(), 0.203044747800798)
+                .put(expectedPfinal.name(), 0.203044747800798)
                 .put(pbout.name(), 3.89641961658439)
                 .put(rat.name(), 196.131163010144)
                 .put(to.name(), 1624.5)
@@ -47,17 +46,17 @@ class QualificationPostBurnPressureCalculations {
                 .put("nbLine", 47d)
                 .build();
         IncrementTimeBurstSolver incrementTimeBurstSolver = new IncrementTimeBurstSolver();
-        double tbinc = incrementTimeBurstSolver.solve(variablesTbinc);
+        double tbincValue = incrementTimeBurstSolver.solve(variablesTbinc);
 
         Map<String, Double> constants = ImmutableMap.<String, Double>builder()
-                .put(JSRMConstant.tbinc.name(), tbinc)
+                .put(tbinc.name(), tbincValue)
                 .put(tbout.name(), 2.08552640517936)
                 .put(patm.name(), 0.101)
                 .putAll(variablesTbinc)
                 .build();
 
         Map<Formula, Double> initialValues = new HashMap<>();
-        initialValues.put(POST_BURN_TIME_SINCE_BURN_STARTS, constants.get("tbout")+tbinc);
+        initialValues.put(POST_BURN_TIME_SINCE_BURN_STARTS, constants.get("tbout")+tbincValue);
 
 
         Calculator calculator = new CalculatorBuilder(POST_BURN_ABSOLUTE_CHAMBER_PRESSURE_PSIG)
