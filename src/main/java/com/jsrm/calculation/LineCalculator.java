@@ -8,7 +8,7 @@ import static com.jsrm.calculation.Formula.PREVIOUS_VARIABLE_SUFFIX;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toMap;
 
-class LineCalculator {
+public class LineCalculator {
 
     private final Formula formula;
     private final Map<String, Double> constants;
@@ -19,11 +19,11 @@ class LineCalculator {
     private Map<Formula, Double> currentLineResults;
     private Map<String, Double> currentLineProvidedResult;
 
-    LineCalculator(Formula formula, Map<String, Double> constants, Map<Formula, Double> initialValues) {
+    public LineCalculator(Formula formula, Map<String, Double> constants, Map<Formula, Double> initialValues) {
         this(formula, constants, initialValues, emptySet());
     }
 
-    LineCalculator(Formula formula, Map<String, Double> constants, Map<Formula, Double> initialValues, Set<ResultLineProvider> resultLineProviders) {
+    public LineCalculator(Formula formula, Map<String, Double> constants, Map<Formula, Double> initialValues, Set<ResultLineProvider> resultLineProviders) {
         this.formula = formula;
         this.initialValues = new HashMap<>(initialValues);
         this.resultLineProviders = resultLineProviders;
@@ -36,20 +36,31 @@ class LineCalculator {
      * @param lineNumber the line number
      * @return the result of the line
      */
-    Map<Formula, Double> compute(int lineNumber) {
+    public Map<Formula, Double> compute(int lineNumber) {
         currentLineResults = new HashMap<>();
 
-        //Compute provided results
-        currentLineProvidedResult = resultLineProviders.stream()
-                .collect(toMap(ResultLineProvider::getName, resultLineProvider -> resultLineProvider.getResult(lineNumber)));
+        storeProvidedResults(lineNumber);
 
         run(formula, lineNumber);
 
+        addPreviousValues();
+
+        return currentLineResults;
+    }
+
+    private void storeProvidedResults(int lineNumber) {
+        currentLineProvidedResult = resultLineProviders.stream()
+                .collect(toMap(ResultLineProvider::getName, resultLineProvider -> resultLineProvider.getResult(lineNumber)));
+    }
+
+    private void addPreviousValues() {
         previousLineResults.clear();
+
         previousLineResults.putAll(currentLineResults.entrySet().stream()
                 .collect(toMap(o-> o.getKey().getName()+ PREVIOUS_VARIABLE_SUFFIX, Map.Entry::getValue)));
 
-        return currentLineResults;
+        previousLineResults.putAll(currentLineProvidedResult.entrySet().stream()
+                .collect(toMap(o-> o.getKey()+ PREVIOUS_VARIABLE_SUFFIX, Map.Entry::getValue)));
     }
 
     private void run(Formula formula, int lineNumber){

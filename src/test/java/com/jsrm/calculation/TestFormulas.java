@@ -19,7 +19,9 @@ public enum TestFormulas implements Formula {
 
 
     FORMULA_5("2 * FORMULA_6", of("FORMULA_6"), empty()),
-    FORMULA_6("3", empty(), empty());
+    FORMULA_6("3", empty(), empty()),
+
+    FORMULA_7("4 * PROVIDED_DATA_previous", empty(), of("PROVIDED_DATA_previous"));
 
     private final Expression expression;
     private final Set<String> dependencies;

@@ -14,8 +14,8 @@ public class MachSpeedAtNozzleExitSolver {
 
     private static final double MIN_MACH_EXIT_SPEED = 0.2;
     private static final double MAX_MACH_EXIT_SPEED = 10.0;
-    public static final double SOLVER_PRECISION = 0.0001;
-    public static final String NOZZLE_EXPANSION_RATION_VARIABLE = "nozzleExpansionRation";
+    private static final double SOLVER_PRECISION = 0.0001;
+    private static final String NOZZLE_EXPANSION_RATION_VARIABLE = "nozzleExpansionRation";
 
     private final Range<Double> EXPECTED_RESULT_RANGE = closed(-SOLVER_PRECISION, SOLVER_PRECISION);
     private final Expression expression;

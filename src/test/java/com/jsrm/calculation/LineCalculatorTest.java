@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.google.common.collect.Sets.newHashSet;
 import static com.jsrm.calculation.TestFormulas.*;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.emptySet;
@@ -86,6 +87,33 @@ class LineCalculatorTest {
 
         //THEN
         assertThat(results.get(FORMULA_6)).isEqualTo(3d);
+    }
+
+    @Test
+    void shouldUseResulLineProviderAsPreviousValue() {
+        //GIVEN
+        Map<Formula, Double> initialValues = new HashMap<>();
+        initialValues.put(FORMULA_7, 2d);
+        ResultLineProvider resultLineProvider = new ResultLineProvider() {
+            @Override
+            public String getName() {
+                return "PROVIDED_DATA";
+            }
+
+            @Override
+            public double getResult(int lineNumber) {
+                return 8;
+            }
+        };
+
+        LineCalculator lineCalculator = new LineCalculator(FORMULA_7, emptyMap(), initialValues, newHashSet(resultLineProvider));
+        lineCalculator.compute(0);
+
+        //WHEN
+        Map<Formula, Double> results = lineCalculator.compute(1);
+
+        //THEN
+        assertThat(results.get(FORMULA_7)).isEqualTo(32d);
     }
 
     @Test

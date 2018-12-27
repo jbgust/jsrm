@@ -22,12 +22,12 @@ import static java.util.stream.Collectors.toMap;
 
 public class ChamberPressureCalculation {
 
-    public static final String throatArea = "THROAT_AREA";
-    public static final String nozzleCriticalPassageArea = "NOZZLE_CRITICAL_PASSAGE_AREA";
-    public static final String timeSinceBurnStart = "TIME_SINCE_BURN_STARTS";
-    public static final String chamberPressureMPA = "CHAMBER_PRESSURE_MPA";
-    public static final String absoluteChamberPressure = "ABSOLUTE_CHAMBER_PRESSURE";
-    public static final String absoluteChamberPressurePSIG = "ABSOLUTE_CHAMBER_PRESSURE_PSIG";
+    public static final String throatArea = "throatArea";
+    public static final String nozzleCriticalPassageArea = "nozzleCriticalPassageArea";
+    public static final String timeSinceBurnStart = "timeSinceBurnStart";
+    public static final String chamberPressureMPA = "chamberPressureMPA";
+    public static final String absoluteChamberPressure = "absoluteChamberPressure";
+    public static final String absoluteChamberPressurePSIG = "absoluteChamberPressurePSIG";
 
     private static final int NB_LINE_IN_PRESSURE_SPREADSHEET = 835;
     private static final Double NB_LINE_POST_BURN_CALCULATION = 47d;

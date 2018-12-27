@@ -34,6 +34,11 @@ public enum JSRMConstant {
     tbout,
 
     //preformance spredsheet
-    exprat
+    exprat,
+    aexit,
+    me,
+    mef,
+    etanoz,
+    k2ph
     ;
 }
