@@ -94,8 +94,8 @@ class QualificationDuringBurnPressureCalculations {
 
     @ParameterizedTest
     @CsvFileSource(resources = "/SRM_2014_DURING_BURN_PRESSURE_QUALIFICATION.csv", numLinesToSkip = 1, delimiter = '|')
-    @DisplayName("Check pressure (during propellant burn) with SRM results")
-    void qualification1(@CsvToDuringBurnPressureLine Map<String, Double> expectedLine) {
+    @DisplayName("Qualify pressure (during propellant burn) with SRM results")
+    void qualification(@CsvToDuringBurnPressureLine Map<String, Double> expectedLine) {
         int lineNumber = expectedLine.get(INTERVAL).intValue();
 
         precisionByFormulas.forEach((formula, offset) ->

@@ -11,18 +11,18 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.jsrm.core.JSRMConstant.*;
-import static com.jsrm.core.pressure.ChamberPressureCalculation.*;
+import static com.jsrm.core.pressure.ChamberPressureCalculation.Results.*;
 import static java.util.stream.Stream.of;
 
 public enum PerformanceFormulas implements Formula {
 
     CHAMBER_PRESSUER_PA(new FormulaConfiguration("chamberPressureMPA * 1000000")
-            .withVariables(chamberPressureMPA)
+            .withVariables(chamberPressureMPA.name())
     ),
 
     NOZZLE_EXPANSION_RATIO(new FormulaConfiguration("aexit/throatArea")
             .withConstants(aexit)
-            .withVariables(throatArea)
+            .withVariables(throatArea.name())
     ),
 
     NOZZLE_EXIT_PRESSURE(new FormulaConfiguration("NozzleExitPressure(CHAMBER_PRESSUER_PA, k2ph, MACH_SPEED_AT_NOZZLE_EXIT, patm)")
@@ -47,12 +47,12 @@ public enum PerformanceFormulas implements Formula {
 
     THRUST(new FormulaConfiguration("DELIVERED_THRUST_COEFFICIENT * nozzleCriticalPassageArea * CHAMBER_PRESSUER_PA")
             .withDependencies("DELIVERED_THRUST_COEFFICIENT", "CHAMBER_PRESSUER_PA")
-            .withVariables(nozzleCriticalPassageArea)
+            .withVariables(nozzleCriticalPassageArea.name())
     ),
 
     DELIVERED_IMPULSE(new FormulaConfiguration("(THRUST + THRUST_previous) / 2 * (timeSinceBurnStart - timeSinceBurnStart_previous)")
             .withDependencies("THRUST")
-            .withVariables("THRUST_previous", "timeSinceBurnStart_previous", timeSinceBurnStart)
+            .withVariables("THRUST_previous", "timeSinceBurnStart_previous", timeSinceBurnStart.name())
     ),
 
     MACH_SPEED_AT_NOZZLE_EXIT(new FormulaConfiguration("MACH_SPEED_AT_NOZZLE_EXIT_previous - 1 / 834 * (me - mef)")

@@ -13,6 +13,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.jsrm.core.JSRMConstant.*;
+import static com.jsrm.core.pressure.ChamberPressureCalculation.Results.*;
 import static com.jsrm.core.pressure.IncrementTimeBurstSolver.NB_LINE_VARIABLE;
 import static com.jsrm.core.pressure.PostBurnPressureFormulas.*;
 import static com.jsrm.core.pressure.PressureFormulas.*;
@@ -21,13 +22,6 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 public class ChamberPressureCalculation {
-
-    public static final String throatArea = "throatArea";
-    public static final String nozzleCriticalPassageArea = "nozzleCriticalPassageArea";
-    public static final String timeSinceBurnStart = "timeSinceBurnStart";
-    public static final String chamberPressureMPA = "chamberPressureMPA";
-    public static final String absoluteChamberPressure = "absoluteChamberPressure";
-    public static final String absoluteChamberPressurePSIG = "absoluteChamberPressurePSIG";
 
     private static final int NB_LINE_IN_PRESSURE_SPREADSHEET = 835;
     private static final Double NB_LINE_POST_BURN_CALCULATION = 47d;
@@ -43,7 +37,7 @@ public class ChamberPressureCalculation {
         this.initialValues = initialValues;
     }
 
-    public Map<String, List<Double>> compute() {
+    public Map<Results, List<Double>> compute() {
 
         CalculatorResults pressureResults = computeChamberPressureDuringPropellantBurn();
 
@@ -54,7 +48,7 @@ public class ChamberPressureCalculation {
         return buildResults(pressureResults, postBurnPressureResults);
     }
 
-    private Map<String, List<Double>> buildResults(CalculatorResults pressureResults, CalculatorResults postBurnPressureResults) {
+    private Map<Results, List<Double>> buildResults(CalculatorResults pressureResults, CalculatorResults postBurnPressureResults) {
         int lastPressureResultsLine = NB_LINE_IN_PRESSURE_SPREADSHEET - 1;
         List<Double> throatAreaResults = new ArrayList<>(pressureResults.getResults(THROAT_AREA));
         IntStream.range(0, NB_LINE_POST_BURN_CALCULATION.intValue()+1)
@@ -76,7 +70,7 @@ public class ChamberPressureCalculation {
         absoluteChamberPressureResults.add(0d);
         absoluteChamberPressurePSIGResults.add(0d);
 
-        return ImmutableMap.<String, List<Double>>builder()
+        return ImmutableMap.<Results, List<Double>>builder()
                 .put(throatArea, throatAreaResults)
                 .put(nozzleCriticalPassageArea, nozzlePassageAreaResults)
                 .put(timeSinceBurnStart, timeSinceBurnStartResults)
@@ -141,5 +135,14 @@ public class ChamberPressureCalculation {
         tbincVariables.put(NB_LINE_VARIABLE, NB_LINE_POST_BURN_CALCULATION);
 
         return new IncrementTimeBurstSolver().solve(tbincVariables);
+    }
+
+    public enum Results {
+        throatArea,
+        nozzleCriticalPassageArea,
+        timeSinceBurnStart,
+        chamberPressureMPA,
+        absoluteChamberPressure,
+        absoluteChamberPressurePSIG;
     }
 }

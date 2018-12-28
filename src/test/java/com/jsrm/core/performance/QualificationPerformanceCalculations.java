@@ -1,11 +1,9 @@
-package com.jsrm.core.pressure;
+package com.jsrm.core.performance;
 
 import com.google.common.collect.ImmutableMap;
-import com.jsrm.calculation.CalculatorResults;
 import com.jsrm.calculation.Formula;
 import com.jsrm.calculation.LineCalculator;
-import com.jsrm.calculation.ResultLineProvider;
-import com.jsrm.core.pressure.csv.CsvToPerformanceLine;
+import com.jsrm.core.performance.csv.CsvToPerformanceLine;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -17,14 +15,13 @@ import java.util.Map;
 import static com.google.common.collect.Sets.newHashSet;
 import static com.jsrm.core.JSRMConstant.*;
 import static com.jsrm.core.performance.PerformanceFormulas.*;
-import static com.jsrm.core.pressure.ChamberPressureCalculation.*;
+import static com.jsrm.core.pressure.ChamberPressureCalculation.Results.*;
 import static com.jsrm.motor.propellant.PropellantType.KNDX;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
 
 class QualificationPerformanceCalculations {
 
-    private static CalculatorResults results;
     private static LineCalculator lineCalculator2;
 
     Map<Formula, Offset> precisionByFormulas = ImmutableMap.<Formula, Offset>builder()
@@ -49,10 +46,10 @@ class QualificationPerformanceCalculations {
 
     @BeforeAll
     static void init(){
-        chamberPressureProvider = new TestResultProvider(chamberPressureMPA);
-        throatAreaProvider = new TestResultProvider(throatArea);
-        nozzleCriticalPassageAreaProvider = new TestResultProvider(nozzleCriticalPassageArea);
-        timeSinceBurnStartProvider = new TestResultProvider(timeSinceBurnStart);;
+        chamberPressureProvider = new TestResultProvider(chamberPressureMPA.name());
+        throatAreaProvider = new TestResultProvider(throatArea.name());
+        nozzleCriticalPassageAreaProvider = new TestResultProvider(nozzleCriticalPassageArea.name());
+        timeSinceBurnStartProvider = new TestResultProvider(timeSinceBurnStart.name());
 
         Map<String, Double> constants = ImmutableMap.<String, Double>builder()
                 .put(patm.name(), 0.101)
@@ -84,46 +81,26 @@ class QualificationPerformanceCalculations {
 
     @ParameterizedTest
     @CsvFileSource(resources = "/SRM_2014_PERFORMANCE_QUALIFICATION.csv", numLinesToSkip = 2, delimiter = '|')
-    @DisplayName("Check performance with SRM results")
+    @DisplayName("Qualify performance with SRM results")
     void qualification(@CsvToPerformanceLine Map<String, Double> performanceLine) {
-        chamberPressureProvider.setCsvData(performanceLine);
-        throatAreaProvider.setCsvData(performanceLine);
-        nozzleCriticalPassageAreaProvider.setCsvData(performanceLine);
-        timeSinceBurnStartProvider.setCsvData(performanceLine);
 
-        Map<Formula, Double> lineResult = lineCalculator1.compute(line);
-        lineResult.put(OPTIMUM_NOZZLE_EXPANSION_RATIO, lineCalculator2.compute(line).get(OPTIMUM_NOZZLE_EXPANSION_RATIO));
+        //The last line should be manualy computed, so not tested here but in PerformanceCalculation
+        if(line < 882) {
+            chamberPressureProvider.setCsvData(performanceLine);
+            throatAreaProvider.setCsvData(performanceLine);
+            nozzleCriticalPassageAreaProvider.setCsvData(performanceLine);
+            timeSinceBurnStartProvider.setCsvData(performanceLine);
 
-        precisionByFormulas.forEach((formula, offset) ->
-                assertThat(lineResult.get(formula))
-                        .as(formula.getName())
-                        .isEqualTo(performanceLine.getOrDefault(formula.getName(), -111.0), offset));
+            Map<Formula, Double> lineResult = lineCalculator1.compute(line);
+            lineResult.put(OPTIMUM_NOZZLE_EXPANSION_RATIO, lineCalculator2.compute(line).get(OPTIMUM_NOZZLE_EXPANSION_RATIO));
+
+            precisionByFormulas.forEach((formula, offset) ->
+                    assertThat(lineResult.get(formula))
+                            .as(formula.getName())
+                            .isEqualTo(performanceLine.getOrDefault(formula.getName(), -111.0), offset));
+        }
 
         line++;
     }
 
-    private static class TestResultProvider implements ResultLineProvider {
-
-        private final String name;
-        private Map<String, Double> csvData;
-
-        private TestResultProvider(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String getName() {
-            return name;
-        }
-
-        @Override
-        public double getResult(int lineNumber) {
-            return csvData.get(name);
-        }
-
-        public void setCsvData(Map<String, Double> csvData){
-            this.csvData = csvData;
-        }
-
-    }
 }

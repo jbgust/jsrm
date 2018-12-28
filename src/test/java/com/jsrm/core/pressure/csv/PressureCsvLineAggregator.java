@@ -8,7 +8,7 @@ import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.jsrm.core.pressure.ChamberPressureCalculation.*;
+import static com.jsrm.core.pressure.ChamberPressureCalculation.Results.*;
 
 public class PressureCsvLineAggregator implements ArgumentsAggregator {
 
@@ -21,14 +21,14 @@ public class PressureCsvLineAggregator implements ArgumentsAggregator {
 
         csvValues.put(LINE, argumentsAccessor.getDouble(0));
 
-        csvValues.put(throatArea, argumentsAccessor.getDouble(6));
-        csvValues.put(nozzleCriticalPassageArea, argumentsAccessor.getDouble(7));
+        csvValues.put(throatArea.name(), argumentsAccessor.getDouble(6));
+        csvValues.put(nozzleCriticalPassageArea.name(), argumentsAccessor.getDouble(7));
 
-        csvValues.put(timeSinceBurnStart, argumentsAccessor.getDouble(15));
+        csvValues.put(timeSinceBurnStart.name(), argumentsAccessor.getDouble(15));
 
-        csvValues.put(chamberPressureMPA, argumentsAccessor.getDouble(26));
-        csvValues.put(absoluteChamberPressure, argumentsAccessor.getDouble(27));
-        csvValues.put(absoluteChamberPressurePSIG, argumentsAccessor.getDouble(28));
+        csvValues.put(chamberPressureMPA.name(), argumentsAccessor.getDouble(26));
+        csvValues.put(absoluteChamberPressure.name(), argumentsAccessor.getDouble(27));
+        csvValues.put(absoluteChamberPressurePSIG.name(), argumentsAccessor.getDouble(28));
 
         return csvValues;
     }

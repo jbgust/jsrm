@@ -70,7 +70,7 @@ class QualificationPostBurnPressureCalculations {
 
     @ParameterizedTest
     @CsvFileSource(resources = "/SRM_2014_POST_BURN_PRESSURE_QUALIFICATION.csv", numLinesToSkip = 1, delimiter = '|')
-    @DisplayName("Check post burn pressure with SRM results")
+    @DisplayName("Qualify post burn pressure with SRM results")
     void qualification(@CsvToPostBurnPressureLine Map<String, Double> expectedLine) {
         int lineNumber = expectedLine.get(LINE).intValue();
 

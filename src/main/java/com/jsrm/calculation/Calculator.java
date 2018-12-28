@@ -1,6 +1,7 @@
 package com.jsrm.calculation;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.IntStream;
 
 public class Calculator {
@@ -9,17 +10,19 @@ public class Calculator {
     private final Map<String, Double> constants;
     private final Map<Formula, Double> initialValues;
     private CalculatorResults calculatorResults;
+    private final Set<ResultLineProvider> resultLineProviders;
 
     /**
-     *
-     * @param formula Formula that should be compute
+     *  @param formula Formula that should be compute
      * @param constants Constants used in the formula and in its dependencies
      * @param initialValues Used by formulas that has a initial result
+     * @param resultLineProviders
      */
-    Calculator(Formula formula, Map<String, Double> constants, Map<Formula, Double> initialValues, Formula... resultsToSave) {
+    Calculator(Formula formula, Map<String, Double> constants, Map<Formula, Double> initialValues, Set<ResultLineProvider> resultLineProviders, Formula... resultsToSave) {
         this.formula = formula;
         this.constants = constants;
         this.initialValues = initialValues;
+        this.resultLineProviders = resultLineProviders;
         calculatorResults = new CalculatorResults(resultsToSave);
     }
 
@@ -32,7 +35,7 @@ public class Calculator {
     public CalculatorResults compute(int fromLine, int toLine) {
 
 
-        LineCalculator lineCalculator = new LineCalculator(formula, constants, initialValues);
+        LineCalculator lineCalculator = new LineCalculator(formula, constants, initialValues, resultLineProviders);
 
         IntStream.range(fromLine, toLine)
                 .mapToObj(lineCalculator::compute)

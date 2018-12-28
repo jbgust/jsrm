@@ -20,6 +20,7 @@ import java.util.Map;
 
 import static com.jsrm.core.JSRMConstant.cstar;
 import static com.jsrm.core.pressure.ChamberPressureCalculation.*;
+import static com.jsrm.core.pressure.ChamberPressureCalculation.Results.*;
 import static com.jsrm.core.pressure.PressureFormulas.*;
 import static com.jsrm.core.pressure.csv.PressureCsvLineAggregator.LINE;
 import static com.jsrm.motor.GrainSurface.EXPOSED;
@@ -30,9 +31,9 @@ import static org.assertj.core.data.Offset.offset;
 
 class ChamberPressureCalculationTest {
 
-    private static Map<String, List<Double>> results;
+    private static Map<Results, List<Double>> results;
 
-    Map<String, Offset> precisionByResults = ImmutableMap.<String, Offset>builder()
+    Map<Results, Offset> precisionByResults = ImmutableMap.<Results, Offset>builder()
             .put(throatArea, offset(0.1))
             .put(nozzleCriticalPassageArea, offset(0.00000001))
             .put(timeSinceBurnStart, offset(0.0001))
@@ -84,9 +85,9 @@ class ChamberPressureCalculationTest {
     void qualification1(@CsvToPressureLine Map<String, Double> expectedLine) {
         int lineNumber = expectedLine.get(LINE).intValue();
 
-        precisionByResults.forEach((resultsName, offset) ->
-                assertThat(results.get(resultsName).get(lineNumber)).as(resultsName)
-                        .isEqualTo(expectedLine.getOrDefault(resultsName,-111d), offset));
+        precisionByResults.forEach((result, offset) ->
+                assertThat(results.get(result).get(lineNumber)).as(result.name())
+                        .isEqualTo(expectedLine.getOrDefault(result.name(),-111d), offset));
     }
 
 }
