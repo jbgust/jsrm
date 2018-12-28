@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
 
-public class MotorChamberTest {
+class MotorChamberTest {
 
     @Test
-    public void shouldComputeChamberVolume() {
+    void shouldComputeChamberVolume() {
         //GIVEN
         int chamberInnerDiameter = 20;
         int ChamberLength = 70;

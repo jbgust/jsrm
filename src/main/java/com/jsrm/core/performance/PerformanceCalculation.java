@@ -94,6 +94,7 @@ public class PerformanceCalculation {
     }
 
     public enum Results {
-        thrust, deliveredImpulse;
+        thrust,
+        deliveredImpulse
     }
 }

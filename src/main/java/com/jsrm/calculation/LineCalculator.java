@@ -14,8 +14,8 @@ public class LineCalculator {
     private final Map<String, Double> constants;
     private final Map<Formula, Double> initialValues;
     private final Set<ResultLineProvider> resultLineProviders;
+    private final Map<String, Double> previousLineResults;
 
-    private Map<String, Double> previousLineResults;
     private Map<Formula, Double> currentLineResults;
     private Map<String, Double> currentLineProvidedResult;
 
@@ -96,7 +96,7 @@ public class LineCalculator {
      */
     private Map<String, Double> getPreviousVariables(Formula formula) {
         return previousLineResults.entrySet().stream()
-                .filter(resultatPrecEntry -> formula.getVariablesNames().contains(resultatPrecEntry.getKey()))
+                .filter(previousResultEntry -> formula.getVariablesNames().contains(previousResultEntry.getKey()))
                 .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
@@ -119,6 +119,6 @@ public class LineCalculator {
     private void resolveVariablesDependencies(Formula formula, int lineNumber) {
         formula.getDependencies().stream()
                 .filter(entry -> !currentLineResults.keySet().contains(entry))
-                .forEach(formule1 -> run(formule1, lineNumber));
+                .forEach(currentFormula -> run(currentFormula, lineNumber));
     }
 }

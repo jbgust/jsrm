@@ -10,14 +10,14 @@ import static java.util.regex.Pattern.compile;
 
 public class FormulaConfiguration {
 
-    static final String MISSING_DEPENDENCY_ERROR = "%s is declared as dependency, but not used in the formula : %s";
-    static final String NOT_PREVIOUS_FORMULA_REGEX = "%s(?!_previous)";
+    private static final String MISSING_DEPENDENCY_ERROR = "%s is declared as dependency, but not used in the formula : %s";
+    private static final String NOT_PREVIOUS_FORMULA_REGEX = "%s(?!_previous)";
 
-    String formula;
-    String[] dependencies = new String[0];
-    JSRMConstant[]  constants = new JSRMConstant[0];
-    String[]  variables = new String[0];
-    Function[] functions = new Function[0];
+    private final String formula;
+    private String[] dependencies = new String[0];
+    private JSRMConstant[]  constants = new JSRMConstant[0];
+    private String[]  variables = new String[0];
+    private Function[] functions = new Function[0];
 
     public FormulaConfiguration(String formula) {
         this.formula = formula;

@@ -28,11 +28,11 @@ import static com.jsrm.motor.propellant.PropellantType.KNDX;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
 
-class QualificationDuringBurnPressureCalculations {
+class QualificationDuringBurnPressureCalculationsTest {
 
     private static CalculatorResults results;
 
-    Map<Formula, Offset> precisionByFormulas = ImmutableMap.<Formula, Offset>builder()
+    private Map<Formula, Offset<Double>> precisionByFormulas = ImmutableMap.<Formula, Offset<Double>>builder()
             .put(GRAIN_CORE_DIAMETER, offset(0.01))
             .put(GRAIN_OUTSIDE_DIAMETER, offset(0.01))
             .put(GRAIN_LENGTH, offset(0.1))

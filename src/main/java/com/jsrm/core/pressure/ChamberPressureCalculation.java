@@ -143,6 +143,6 @@ public class ChamberPressureCalculation {
         timeSinceBurnStart,
         chamberPressureMPA,
         absoluteChamberPressure,
-        absoluteChamberPressurePSIG;
+        absoluteChamberPressurePSIG
     }
 }

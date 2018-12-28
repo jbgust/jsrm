@@ -34,7 +34,7 @@ import static org.assertj.core.data.Offset.offset;
 
 class PerformanceCalculationTest {
 
-    private Map<PerformanceCalculation.Results, Offset> precisionByResults = ImmutableMap.<PerformanceCalculation.Results, Offset>builder()
+    private Map<PerformanceCalculation.Results, Offset<Double>> precisionByResults = ImmutableMap.<PerformanceCalculation.Results, Offset<Double>>builder()
             .put(thrust, offset(1.0))
             .put(deliveredImpulse, offset(0.001))
             .build();

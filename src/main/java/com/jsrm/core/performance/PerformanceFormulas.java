@@ -16,7 +16,7 @@ import static java.util.stream.Stream.of;
 
 public enum PerformanceFormulas implements Formula {
 
-    CHAMBER_PRESSUER_PA(new FormulaConfiguration("chamberPressureMPA * 1000000")
+    CHAMBER_PRESSURE_PA(new FormulaConfiguration("chamberPressureMPA * 1000000")
             .withVariables(chamberPressureMPA.name())
     ),
 
@@ -25,28 +25,28 @@ public enum PerformanceFormulas implements Formula {
             .withVariables(throatArea.name())
     ),
 
-    NOZZLE_EXIT_PRESSURE(new FormulaConfiguration("NozzleExitPressure(CHAMBER_PRESSUER_PA, k2ph, MACH_SPEED_AT_NOZZLE_EXIT, patm)")
-            .withDependencies("MACH_SPEED_AT_NOZZLE_EXIT", "CHAMBER_PRESSUER_PA")
+    NOZZLE_EXIT_PRESSURE(new FormulaConfiguration("NozzleExitPressure(CHAMBER_PRESSURE_PA, k2ph, MACH_SPEED_AT_NOZZLE_EXIT, patm)")
+            .withDependencies("MACH_SPEED_AT_NOZZLE_EXIT", "CHAMBER_PRESSURE_PA")
             .withConstants(k2ph, patm)
             .withFunctions(Functions.nozzleExitPressure)
     ),
 
-    OPTIMUM_NOZZLE_EXPANSION_RATIO(new FormulaConfiguration("1/(((k2ph+1)/2)^(1/(k2ph-1))*(patm*1000000/CHAMBER_PRESSUER_PA)^(1/k2ph) * " +
-            "sqrt((k2ph+1)/(k2ph-1)*(1-(patm*1000000/CHAMBER_PRESSUER_PA)^((k2ph-1)/k2ph))))")
-            .withDependencies("CHAMBER_PRESSUER_PA")
+    OPTIMUM_NOZZLE_EXPANSION_RATIO(new FormulaConfiguration("1/(((k2ph+1)/2)^(1/(k2ph-1))*(patm*1000000/CHAMBER_PRESSURE_PA)^(1/k2ph) * " +
+            "sqrt((k2ph+1)/(k2ph-1)*(1-(patm*1000000/CHAMBER_PRESSURE_PA)^((k2ph-1)/k2ph))))")
+            .withDependencies("CHAMBER_PRESSURE_PA")
             .withConstants(patm, k2ph)
     ),
 
     DELIVERED_THRUST_COEFFICIENT(new FormulaConfiguration("etanoz * " +
             "sqrt(2*k2ph^2/(k2ph-1)*(2/(k2ph+1))^((k2ph+1)/(k2ph-1)) * " +
-            "(1-(NOZZLE_EXIT_PRESSURE / CHAMBER_PRESSUER_PA)^((k2ph-1)/k2ph)))+(NOZZLE_EXIT_PRESSURE - patm * 1000000) " +
-            "/ CHAMBER_PRESSUER_PA * NOZZLE_EXPANSION_RATIO")
+            "(1-(NOZZLE_EXIT_PRESSURE / CHAMBER_PRESSURE_PA)^((k2ph-1)/k2ph)))+(NOZZLE_EXIT_PRESSURE - patm * 1000000) " +
+            "/ CHAMBER_PRESSURE_PA * NOZZLE_EXPANSION_RATIO")
             .withConstants(etanoz, patm, k2ph)
-            .withDependencies("NOZZLE_EXPANSION_RATIO", "NOZZLE_EXIT_PRESSURE", "CHAMBER_PRESSUER_PA")
+            .withDependencies("NOZZLE_EXPANSION_RATIO", "NOZZLE_EXIT_PRESSURE", "CHAMBER_PRESSURE_PA")
     ),
 
-    THRUST(new FormulaConfiguration("DELIVERED_THRUST_COEFFICIENT * nozzleCriticalPassageArea * CHAMBER_PRESSUER_PA")
-            .withDependencies("DELIVERED_THRUST_COEFFICIENT", "CHAMBER_PRESSUER_PA")
+    THRUST(new FormulaConfiguration("DELIVERED_THRUST_COEFFICIENT * nozzleCriticalPassageArea * CHAMBER_PRESSURE_PA")
+            .withDependencies("DELIVERED_THRUST_COEFFICIENT", "CHAMBER_PRESSURE_PA")
             .withVariables(nozzleCriticalPassageArea.name())
     ),
 

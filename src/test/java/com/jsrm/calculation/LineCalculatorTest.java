@@ -76,7 +76,7 @@ class LineCalculatorTest {
     }
 
     @Test
-    void shouldResolveDependanciesWhenInitialValuesAreUsed() {
+    void shouldResolveDependenciesWhenInitialValuesAreUsed() {
         //GIVEN
         Map<Formula, Double> initialValues = new HashMap<>();
         initialValues.put(FORMULA_5, 2d);
@@ -90,7 +90,7 @@ class LineCalculatorTest {
     }
 
     @Test
-    void shouldUseResulLineProviderAsPreviousValue() {
+    void shouldUseResultLineProviderAsPreviousValue() {
         //GIVEN
         Map<Formula, Double> initialValues = new HashMap<>();
         initialValues.put(FORMULA_7, 2d);

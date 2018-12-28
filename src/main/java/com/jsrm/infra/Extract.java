@@ -37,7 +37,7 @@ public class Extract {
          constants.put(to, .95*propellantType.getChamberTemperature());
          constants.put(patm, 0.101);
          constants.put(k, propellantType.getK());
-         constants.put(propellantId, new Double(propellantType.getId()));
+         constants.put(propellantId, (double) propellantType.getId());
          constants.put(rhopgrain, propellantType.getIdealMassDensity()*.95);
         return constants;
     }

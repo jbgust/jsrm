@@ -36,14 +36,14 @@ public interface SolidPropellant {
     /**
      * @param chamberPressure in [Mpa]
      * @return Burn rate coefficient by chamber pressure  [mm/s]
-     * @throws ChamberPressureOutOfBoundException
+     * @throws ChamberPressureOutOfBoundException if a pressure data is not find
      */
     double getBurnRateCoefficient(double chamberPressure) throws ChamberPressureOutOfBoundException;
 
     /**
      * @param chamberPressure in [Mpa]
      * @return Pressure exponent valid at Po
-     * @throws ChamberPressureOutOfBoundException
+     * @throws ChamberPressureOutOfBoundException if a pressure data is not find
      */
     double getPressureExponent(double chamberPressure) throws ChamberPressureOutOfBoundException;
 

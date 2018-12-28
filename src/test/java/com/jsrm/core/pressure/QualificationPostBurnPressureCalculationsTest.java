@@ -21,11 +21,11 @@ import static com.jsrm.core.pressure.csv.PostBurnPressureCsvLineAggregator.LINE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
 
-class QualificationPostBurnPressureCalculations {
+class QualificationPostBurnPressureCalculationsTest {
 
     private static CalculatorResults results;
 
-    Map<Formula, Offset> precisionByFormulas = ImmutableMap.<Formula, Offset>builder()
+    private Map<Formula, Offset<Double>> precisionByFormulas = ImmutableMap.<Formula, Offset<Double>>builder()
             .put(POST_BURN_TIME_SINCE_BURN_STARTS, offset(0.0001))
             .put(POST_BURN_CHAMBER_PRESSURE_MPA, offset(0.001))
             .put(POST_BURN_ABSOLUTE_CHAMBER_PRESSURE, offset(0.001))
@@ -76,10 +76,9 @@ class QualificationPostBurnPressureCalculations {
 
         // line 48 should not be computed here
         if(lineNumber < 47) {
-            precisionByFormulas.forEach((formula, offset) -> {
-                assertThat(results.getResult(formula, lineNumber)).as(formula.getName())
-                        .isEqualTo(expectedLine.getOrDefault(formula.getName(), -111d), offset);
-            });
+            precisionByFormulas.forEach((formula, offset) ->
+                    assertThat(results.getResult(formula, lineNumber)).as(formula.getName())
+                            .isEqualTo(expectedLine.getOrDefault(formula.getName(), -111d), offset));
         }
 
     }

@@ -33,12 +33,11 @@ public enum JSRMConstant {
     tbinc,
     tbout,
 
-    //preformance spredsheet
+    //performance spreadsheet
     exprat,
     aexit,
     me,
     mef,
     etanoz,
     k2ph
-    ;
 }

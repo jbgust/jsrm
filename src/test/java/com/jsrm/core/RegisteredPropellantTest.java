@@ -33,7 +33,7 @@ class RegisteredPropellantTest {
     }
 
     @Test
-    void shouldThrowExceptionIfPropellantIdIsNotValid() throws UnregisteredPropellantException {
+    void shouldThrowExceptionIfPropellantIdIsNotValid() {
         //GIVEN
         assertThatThrownBy(() -> getSolidPropellant(-1))
                 .isInstanceOf(UnregisteredPropellantException.class)

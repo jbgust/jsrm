@@ -15,7 +15,7 @@ import static com.jsrm.core.JSRMConstant.*;
 class IncrementTimeBurstSolver {
 
     static final String NB_LINE_VARIABLE = "nbLine";
-    Expression tbincExpression;
+    private Expression tbincExpression;
 
     IncrementTimeBurstSolver() {
          tbincExpression = new ExpressionBuilder("(vc log(expectedPfinal / pbout)) / (-rat * to * astarf * nbLine * (1000000000/cstar))")

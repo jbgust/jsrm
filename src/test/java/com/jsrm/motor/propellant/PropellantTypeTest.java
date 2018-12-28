@@ -25,7 +25,7 @@ class PropellantTypeTest {
 
     @ParameterizedTest
     @CsvFileSource(resources = "/propellant/propellant_data.csv", numLinesToSkip = 1, delimiter = '|')
-    void checkPropellantdata(String propellantName, double idealGrainMassDensity, double k2Ph, double k, double effectiveMolecularWeight, double chamberTemperature) {
+    void checkPropellantData(String propellantName, double idealGrainMassDensity, double k2Ph, double k, double effectiveMolecularWeight, double chamberTemperature) {
         SolidPropellant propellant = PropellantType.valueOf(propellantName);
 
         assertThat(propellant.getIdealMassDensity()).isEqualTo(idealGrainMassDensity);

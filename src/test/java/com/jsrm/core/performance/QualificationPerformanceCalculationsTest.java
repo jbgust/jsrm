@@ -20,12 +20,12 @@ import static com.jsrm.motor.propellant.PropellantType.KNDX;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
 
-class QualificationPerformanceCalculations {
+class QualificationPerformanceCalculationsTest {
 
     private static LineCalculator lineCalculator2;
 
-    Map<Formula, Offset> precisionByFormulas = ImmutableMap.<Formula, Offset>builder()
-            .put(CHAMBER_PRESSUER_PA, offset(1.0))
+    private Map<Formula, Offset<Double>> precisionByFormulas = ImmutableMap.<Formula, Offset<Double>>builder()
+            .put(CHAMBER_PRESSURE_PA, offset(1.0))
             .put(NOZZLE_EXPANSION_RATIO, offset(0.001))
             .put(NOZZLE_EXIT_PRESSURE, offset(1.0))
             .put(OPTIMUM_NOZZLE_EXPANSION_RATIO, offset(0.0001))
@@ -84,7 +84,7 @@ class QualificationPerformanceCalculations {
     @DisplayName("Qualify performance with SRM results")
     void qualification(@CsvToPerformanceLine Map<String, Double> performanceLine) {
 
-        //The last line should be manualy computed, so not tested here but in PerformanceCalculation
+        //The last line should be manually computed, so not tested here but in PerformanceCalculation
         if(line < 882) {
             chamberPressureProvider.setCsvData(performanceLine);
             throatAreaProvider.setCsvData(performanceLine);

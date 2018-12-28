@@ -11,10 +11,10 @@ import static org.assertj.core.data.Offset.offset;
 
 class IncrementTimeBurstSolverTest {
 
-    public static final double tbinc_FROM_SRM_2014_XLS = 0.00153227607773698;
+    private static final double tbinc_FROM_SRM_2014_XLS = 0.00153227607773698;
 
     @Test
-    void shouldSolveTbinc() throws Exception {
+    void shouldSolveTbinc() {
         //GIVEN
         IncrementTimeBurstSolver solver = new IncrementTimeBurstSolver();
         Map<String, Double> variables = ImmutableMap.<String, Double>builder()

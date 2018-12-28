@@ -16,7 +16,7 @@ public class RegisteredPropellant {
 
     /**
      * Use to register custom propellant
-     * @param solidPropellant
+     * @param solidPropellant the propellant you want to register for usage in calculation
      * @return the id of the propellant (used by RegisteredPropellant.getSolidPropellant())
      */
     public static Integer registerPropellant(SolidPropellant solidPropellant){
@@ -27,21 +27,21 @@ public class RegisteredPropellant {
 
     /**
      * Return the propellant
-     * @param proppelantId the id of the propellant
+     * @param propellantId the id of the propellant
      * @return the propellant
-     * @throws UnregisteredPropellantException
+     * @throws UnregisteredPropellantException if the propellant is not registered
      */
-    public static SolidPropellant getSolidPropellant(int proppelantId) throws UnregisteredPropellantException {
-        SolidPropellant propellant = registeredPropellant.get(proppelantId);
+    public static SolidPropellant getSolidPropellant(int propellantId) throws UnregisteredPropellantException {
+        SolidPropellant propellant = registeredPropellant.get(propellantId);
 
         if(propellant == null){
-            throw new UnregisteredPropellantException(proppelantId);
+            throw new UnregisteredPropellantException(propellantId);
         }
 
         return propellant;
     }
 
-    public static Integer getNextId() {
-        return registeredPropellant.keySet().stream().max(Integer::compareTo).get()+1;
+    private static Integer getNextId() {
+        return registeredPropellant.keySet().stream().max(Integer::compareTo).get() + 1;
     }
 }

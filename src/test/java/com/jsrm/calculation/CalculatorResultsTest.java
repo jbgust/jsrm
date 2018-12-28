@@ -24,7 +24,7 @@ class CalculatorResultsTest {
     }
 
     @Test
-    void shouldThorwErrorIfResultIsNotStored(){
+    void shouldThrowErrorIfResultIsNotStored(){
         //GIVEN
         CalculatorResults results = new CalculatorResults(FORMULA_1);
 
@@ -33,11 +33,11 @@ class CalculatorResultsTest {
 
         //THEN
         assertThatThrownBy(() -> results.getResult(FORMULA_3, 0))
-                .isInstanceOf(UnkownResultException.class)
+                .isInstanceOf(UnknownResultException.class)
                 .hasMessage("No result is stored for formula : FORMULA_3");
 
         assertThatThrownBy(() -> results.getResults(FORMULA_3))
-                .isInstanceOf(UnkownResultException.class)
+                .isInstanceOf(UnknownResultException.class)
                 .hasMessage("No result is stored for formula : FORMULA_3");
     }
 

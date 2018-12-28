@@ -17,12 +17,12 @@ public class PropellantGrain {
     private final GrainSurface coreSurface;
 
     public double getGrainVolume() {
-        return new ExpressionBuilder("pi * (outerRadius^2 - coreRadius^2) * grainLenght")
-                .variables("outerRadius", "coreRadius", "grainLenght")
+        return new ExpressionBuilder("pi * (outerRadius^2 - coreRadius^2) * grainLength")
+                .variables("outerRadius", "coreRadius", "grainLength")
                 .build()
                 .setVariable("outerRadius", outerDiameter/2)
                 .setVariable("coreRadius", coreDiameter/2)
-                .setVariable("grainLenght", getGrainLength())
+                .setVariable("grainLength", getGrainLength())
                 .evaluate();
     }
 

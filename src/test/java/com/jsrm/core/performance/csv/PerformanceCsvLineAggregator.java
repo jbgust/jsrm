@@ -11,7 +11,7 @@ import java.util.Map;
 import static com.jsrm.core.performance.PerformanceFormulas.*;
 import static com.jsrm.core.pressure.ChamberPressureCalculation.Results.*;
 
-public class PerformanceCsvLineAggregator implements ArgumentsAggregator {
+class PerformanceCsvLineAggregator implements ArgumentsAggregator {
 
 
     @Override
@@ -20,7 +20,7 @@ public class PerformanceCsvLineAggregator implements ArgumentsAggregator {
         HashMap<String, Double> csvValues = new HashMap<>();
 
         csvValues.put(chamberPressureMPA.name(), argumentsAccessor.getDouble(0));
-        csvValues.put(CHAMBER_PRESSUER_PA.getName(), argumentsAccessor.getDouble(1));
+        csvValues.put(CHAMBER_PRESSURE_PA.getName(), argumentsAccessor.getDouble(1));
         csvValues.put(nozzleCriticalPassageArea.name(), argumentsAccessor.getDouble(2));
         csvValues.put(throatArea.name(), argumentsAccessor.getDouble(3));
         csvValues.put(NOZZLE_EXPANSION_RATIO.getName(), argumentsAccessor.getDouble(4));

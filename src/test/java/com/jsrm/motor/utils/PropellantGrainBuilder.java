@@ -11,7 +11,7 @@ import static com.jsrm.motor.propellant.PropellantType.KNDX;
 public class PropellantGrainBuilder {
 
     private int coreDiameter = 10;
-    private int segmentLenght = 50;
+    private int segmentLength = 50;
     private int numberOfSegments = 1;
     private GrainSurface outerSurface = INHIBITED;
     private GrainSurface endsSurface = INHIBITED;
@@ -20,7 +20,7 @@ public class PropellantGrainBuilder {
     private int outerDiameter = 20;
 
     public PropellantGrain build() {
-        return new PropellantGrain(propellantType, outerDiameter, coreDiameter, segmentLenght, numberOfSegments, outerSurface, endsSurface, coreSurface);
+        return new PropellantGrain(propellantType, outerDiameter, coreDiameter, segmentLength, numberOfSegments, outerSurface, endsSurface, coreSurface);
     }
 
     public PropellantGrainBuilder withCoreSurface(GrainSurface surface){

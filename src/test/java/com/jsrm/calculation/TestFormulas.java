@@ -31,7 +31,7 @@ public enum TestFormulas implements Formula {
         ExpressionBuilder expressionBuilder = new ExpressionBuilder(formula);
 
         this.dependencies = dependencies
-                .peek(s1 -> expressionBuilder.variable(s1))
+                .peek(expressionBuilder::variable)
                 .collect(Collectors.toSet());
 
         variables.forEach(expressionBuilder::variable);

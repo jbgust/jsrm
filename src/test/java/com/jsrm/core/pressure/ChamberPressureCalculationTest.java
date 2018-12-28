@@ -33,7 +33,7 @@ class ChamberPressureCalculationTest {
 
     private static Map<Results, List<Double>> results;
 
-    Map<Results, Offset> precisionByResults = ImmutableMap.<Results, Offset>builder()
+    private Map<Results, Offset<Double>> precisionByResults = ImmutableMap.<Results, Offset<Double>>builder()
             .put(throatArea, offset(0.1))
             .put(nozzleCriticalPassageArea, offset(0.00000001))
             .put(timeSinceBurnStart, offset(0.0001))
@@ -43,7 +43,7 @@ class ChamberPressureCalculationTest {
             .build();
 
     @BeforeAll
-    static void init() throws Exception {
+    static void init() {
 
         PropellantGrain propellantGrain = new PropellantGrain(KNDX, 20, 1d,
                 60d, 4d,

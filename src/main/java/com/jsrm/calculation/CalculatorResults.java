@@ -25,9 +25,9 @@ public class CalculatorResults {
         return results.get(formula).get(lineNumber);
     }
 
-    private void saveResult(Formula formula, Double resultat) {
+    private void saveResult(Formula formula, Double result) {
         if(resultsToSave.contains(formula)){
-            results.get(formula).add(resultat);
+            results.get(formula).add(result);
         }
     }
 
@@ -36,9 +36,9 @@ public class CalculatorResults {
         return results.get(formula);
     }
 
-    private void checkResultExists(Formula formula) throws UnkownResultException {
+    private void checkResultExists(Formula formula) throws UnknownResultException {
         if(!resultsToSave.contains(formula)) {
-            throw new UnkownResultException(formula);
+            throw new UnknownResultException(formula);
         }
     }
 }

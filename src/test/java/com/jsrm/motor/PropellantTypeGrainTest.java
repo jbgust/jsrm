@@ -15,11 +15,11 @@ class PropellantTypeGrainTest {
         // GIVEN
         double outerDiameter = 20;
         double coreDiameter = 6;
-        double segmentLenght = 60;
+        double segmentLength = 60;
         double numberOfSegment = 2;
 
         // WHEN
-        PropellantGrain propellantGrain = new PropellantGrain(KNDX, outerDiameter, coreDiameter, segmentLenght, numberOfSegment,
+        PropellantGrain propellantGrain = new PropellantGrain(KNDX, outerDiameter, coreDiameter, segmentLength, numberOfSegment,
                 INHIBITED, EXPOSED, INHIBITED);
 
         // THEN
@@ -37,9 +37,9 @@ class PropellantTypeGrainTest {
         // GIVEN
         double outerDiameter = 20;
         double coreDiameter = 6;
-        double segmentLenght = 60;
+        double segmentLength = 60;
         double numberOfSegment = 2;
-        PropellantGrain propellantGrain = new PropellantGrain(KNDX, outerDiameter, coreDiameter, segmentLenght, numberOfSegment,
+        PropellantGrain propellantGrain = new PropellantGrain(KNDX, outerDiameter, coreDiameter, segmentLength, numberOfSegment,
                 INHIBITED, EXPOSED, INHIBITED);
 
         // WHEN

@@ -13,7 +13,7 @@ public class ErosiveBurnFactorFunction extends Function{
         double aductDividedByThratArea = doubles[0];
         double gstar = doubles[1];
 
-        double substraction = gstar - aductDividedByThratArea;
-        return substraction < 0 ? 0 : substraction;
+        double erosiveBurnFactor = gstar - aductDividedByThratArea;
+        return erosiveBurnFactor < 0 ? 0 : erosiveBurnFactor;
     }
 }
