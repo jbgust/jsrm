@@ -2,7 +2,7 @@ package com.jsrm.infra;
 
 import com.jsrm.core.JSRMConstant;
 import com.jsrm.motor.SolidRocketMotor;
-import com.jsrm.motor.propellant.PropellantType;
+import com.jsrm.motor.propellant.SolidPropellant;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,14 +30,14 @@ public class Extract {
         constants.put(gstar, solidRocketMotor.getErosiveBurningArea());
 
         //TODO
-        PropellantType propellantType = solidRocketMotor.getPropellantGrain().getPropellantType();
+        SolidPropellant propellantType = solidRocketMotor.getPropellantGrain().getPropellantType();
         constants.put(kv, 0d);
         constants.put(pbd, 0d);
         constants.put(rat, 8314/ propellantType.getEffectiveMolecularWeight());
          constants.put(to, .95*propellantType.getChamberTemperature());
          constants.put(patm, 0.101);
          constants.put(k, propellantType.getK());
-         constants.put(propellantId, (double) propellantType.getId());
+         constants.put(propellantId, 1.0);//TODO: retrieve propellant ID
          constants.put(rhopgrain, propellantType.getIdealMassDensity()*.95);
         return constants;
     }

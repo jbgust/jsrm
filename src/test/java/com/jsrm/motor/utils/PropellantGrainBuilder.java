@@ -2,7 +2,7 @@ package com.jsrm.motor.utils;
 
 import com.jsrm.motor.GrainSurface;
 import com.jsrm.motor.PropellantGrain;
-import com.jsrm.motor.propellant.PropellantType;
+import com.jsrm.motor.propellant.SolidPropellant;
 
 import static com.jsrm.motor.GrainSurface.EXPOSED;
 import static com.jsrm.motor.GrainSurface.INHIBITED;
@@ -16,7 +16,7 @@ public class PropellantGrainBuilder {
     private GrainSurface outerSurface = INHIBITED;
     private GrainSurface endsSurface = INHIBITED;
     private GrainSurface coreSurface = EXPOSED;
-    private PropellantType propellantType = KNDX;
+    private SolidPropellant propellantType = KNDX;
     private int outerDiameter = 20;
 
     public PropellantGrain build() {

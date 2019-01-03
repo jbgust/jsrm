@@ -1,13 +1,13 @@
 package com.jsrm.motor;
 
-import com.jsrm.motor.propellant.PropellantType;
+import com.jsrm.motor.propellant.SolidPropellant;
 import lombok.Data;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
 @Data
 public class PropellantGrain {
 
-    private final PropellantType propellantType;
+    private final SolidPropellant propellantType;
     private final double outerDiameter;
     private final double coreDiameter;
     private final double segmentLength;
