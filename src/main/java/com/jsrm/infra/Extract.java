@@ -1,13 +1,12 @@
 package com.jsrm.infra;
 
-import com.jsrm.core.JSRMConstant;
-import com.jsrm.motor.SolidRocketMotor;
-import com.jsrm.motor.propellant.SolidPropellant;
+import com.jsrm.application.motor.SolidRocketMotor;
+import com.jsrm.application.motor.propellant.SolidPropellant;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.jsrm.core.JSRMConstant.*;
+import static com.jsrm.infra.JSRMConstant.*;
 import static java.util.stream.Collectors.toMap;
 
 public class Extract {

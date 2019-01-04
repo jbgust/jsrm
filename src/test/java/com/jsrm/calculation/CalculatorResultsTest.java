@@ -1,6 +1,7 @@
 package com.jsrm.calculation;
 
 import com.google.common.collect.ImmutableMap;
+import com.jsrm.application.exception.UnknownResultException;
 import org.junit.jupiter.api.Test;
 
 import static com.jsrm.calculation.TestFormulas.FORMULA_1;
