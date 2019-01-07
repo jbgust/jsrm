@@ -37,10 +37,12 @@ import com.google.common.collect.ImmutableMap;
 import com.jsrm.application.motor.SolidRocketMotor;
 import com.jsrm.application.result.JSRMResult;
 import com.jsrm.application.result.MotorClassification;
+import com.jsrm.application.result.Nozzle;
 import com.jsrm.calculation.Formula;
 import com.jsrm.infra.Extract;
 import com.jsrm.infra.JSRMConstant;
 import com.jsrm.infra.performance.PerformanceCalculation;
+import com.jsrm.infra.performance.PerformanceCalculationResult;
 import com.jsrm.infra.performance.PerformanceResultProvider;
 import com.jsrm.infra.pressure.ChamberPressureCalculation;
 
@@ -100,20 +102,22 @@ public class JSRMSimulation {
                 .put(MACH_SPEED_AT_NOZZLE_EXIT, constants2.get(me))
                 .build();
 
-        Map<PerformanceCalculation.Results, List<Double>> performanceCalculationResults = new PerformanceCalculation(constants2, initialValues2,
+        PerformanceCalculationResult performanceCalculationResult = new PerformanceCalculation(constants2, initialValues2,
                 chamberPressureProvider, throatAreaProvider,
                 nozzleCriticalPassageAreaProvider, timeSinceBurnStartProvider)
                 .compute();
 
-        double maxThrust = performanceCalculationResults.get(PerformanceCalculation.Results.thrust).stream().mapToDouble(Double::doubleValue).max().getAsDouble();
+        double maxThrust = performanceCalculationResult.getResults().get(PerformanceCalculation.Results.thrust).stream().mapToDouble(Double::doubleValue).max().getAsDouble();
         double maxChamberPressure = chamberPressureResults.get(ChamberPressureCalculation.Results.absoluteChamberPressure).stream().mapToDouble(Double::doubleValue).max().getAsDouble();
-        double totalImpulse = performanceCalculationResults.get(PerformanceCalculation.Results.deliveredImpulse).stream().mapToDouble(Double::doubleValue).sum();
+        double totalImpulse = performanceCalculationResult.getResults().get(PerformanceCalculation.Results.deliveredImpulse).stream().mapToDouble(Double::doubleValue).sum();
+
+        Nozzle nozzle = new Nozzle(performanceCalculationResult.getOptimalNozzleExpansionResult(), 0, 0, 0);
 
         //TODO calcule constants.get(vc)
         double grainMass = constants.get(rhopgrain) * 1575555.840 / 1000 / 1000;
         double specificImpulse = totalImpulse / GRAVITATIONAL_ACCELERATION / grainMass;
 
-        return new JSRMResult(maxThrust, totalImpulse, specificImpulse, maxChamberPressure, MotorClassification.getMotorClassification(totalImpulse), null, null);
+        return new JSRMResult(maxThrust, totalImpulse, specificImpulse, maxChamberPressure, MotorClassification.getMotorClassification(totalImpulse), null, nozzle);
     }
 
     public JSRMResult run() {

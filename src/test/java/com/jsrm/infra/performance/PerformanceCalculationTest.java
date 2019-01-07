@@ -1,36 +1,59 @@
 package com.jsrm.infra.performance;
 
-import com.google.common.collect.ImmutableMap;
-import com.jsrm.calculation.Formula;
-import com.jsrm.infra.JSRMConstant;
-import com.jsrm.infra.performance.csv.CsvToPerformanceLine;
-import com.jsrm.infra.pressure.ChamberPressureCalculation;
-import com.jsrm.infra.Extract;
-import com.jsrm.application.motor.MotorChamber;
-import com.jsrm.application.motor.propellant.PropellantGrain;
-import com.jsrm.application.motor.SolidRocketMotor;
+import static com.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
+import static com.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
+import static com.jsrm.infra.JSRMConstant.aexit;
+import static com.jsrm.infra.JSRMConstant.cstar;
+import static com.jsrm.infra.JSRMConstant.etanoz;
+import static com.jsrm.infra.JSRMConstant.k2ph;
+import static com.jsrm.infra.JSRMConstant.me;
+import static com.jsrm.infra.JSRMConstant.mef;
+import static com.jsrm.infra.JSRMConstant.patm;
+import static com.jsrm.infra.performance.PerformanceCalculation.Results.deliveredImpulse;
+import static com.jsrm.infra.performance.PerformanceCalculation.Results.thrust;
+import static com.jsrm.infra.performance.PerformanceFormulas.DELIVERED_IMPULSE;
+import static com.jsrm.infra.performance.PerformanceFormulas.DELIVERED_THRUST_COEFFICIENT;
+import static com.jsrm.infra.performance.PerformanceFormulas.MACH_SPEED_AT_NOZZLE_EXIT;
+import static com.jsrm.infra.performance.PerformanceFormulas.OPTIMUM_NOZZLE_EXPANSION_RATIO;
+import static com.jsrm.infra.performance.PerformanceFormulas.THRUST;
+import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results;
+import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.chamberPressureMPA;
+import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.nozzleCriticalPassageArea;
+import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.throatArea;
+import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.timeSinceBurnStart;
+import static com.jsrm.infra.pressure.PressureFormulas.DENSITY_COMBUSTION_PRODUCTS;
+import static com.jsrm.infra.pressure.PressureFormulas.GRAIN_CORE_DIAMETER;
+import static com.jsrm.infra.pressure.PressureFormulas.GRAIN_LENGTH;
+import static com.jsrm.infra.pressure.PressureFormulas.GRAIN_OUTSIDE_DIAMETER;
+import static com.jsrm.infra.pressure.PressureFormulas.MASS_COMBUSTION_PRODUCTS;
+import static com.jsrm.infra.pressure.PressureFormulas.MASS_GENERATION_RATE;
+import static com.jsrm.infra.pressure.PressureFormulas.MASS_STORAGE_RATE;
+import static com.jsrm.infra.pressure.PressureFormulas.NOZZLE_MASS_FLOW_RATE;
+import static com.jsrm.infra.pressure.PressureFormulas.TEMPORARY_CHAMBER_PRESSURE;
+import static com.jsrm.infra.pressure.PressureFormulas.TIME_SINCE_BURN_STARTS;
+import static com.jsrm.infra.propellant.PropellantType.KNDX;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.data.Offset.offset;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static com.jsrm.infra.JSRMConstant.*;
-import static com.jsrm.infra.performance.PerformanceCalculation.Results.deliveredImpulse;
-import static com.jsrm.infra.performance.PerformanceCalculation.Results.thrust;
-import static com.jsrm.infra.performance.PerformanceFormulas.*;
-import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results;
-import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.*;
-import static com.jsrm.infra.pressure.PressureFormulas.*;
-import static com.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
-import static com.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
-import static com.jsrm.infra.propellant.PropellantType.KNDX;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.data.Offset.offset;
+import com.google.common.collect.ImmutableMap;
+import com.jsrm.application.motor.MotorChamber;
+import com.jsrm.application.motor.SolidRocketMotor;
+import com.jsrm.application.motor.propellant.PropellantGrain;
+import com.jsrm.calculation.Formula;
+import com.jsrm.infra.Extract;
+import com.jsrm.infra.JSRMConstant;
+import com.jsrm.infra.performance.csv.CsvToPerformanceLine;
+import com.jsrm.infra.pressure.ChamberPressureCalculation;
 
 class PerformanceCalculationTest {
 
@@ -75,7 +98,8 @@ class PerformanceCalculationTest {
         performanceResults = new PerformanceCalculation(constants, initialValues,
                 chamberPressureProvider, throatAreaProvider,
                 nozzleCriticalPassageAreaProvider, timeSinceBurnStartProvider)
-                .compute();
+                .compute()
+                .getResults();
 
     }
 

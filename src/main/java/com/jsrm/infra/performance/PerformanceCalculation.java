@@ -1,17 +1,5 @@
 package com.jsrm.infra.performance;
 
-import com.google.common.collect.ImmutableMap;
-import com.jsrm.calculation.CalculatorBuilder;
-import com.jsrm.calculation.CalculatorResults;
-import com.jsrm.calculation.Formula;
-import com.jsrm.calculation.ResultLineProvider;
-import com.jsrm.infra.JSRMConstant;
-import com.jsrm.infra.Extract;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static com.jsrm.calculation.Formula.PREVIOUS_VARIABLE_SUFFIX;
 import static com.jsrm.infra.performance.PerformanceCalculation.Results.deliveredImpulse;
 import static com.jsrm.infra.performance.PerformanceCalculation.Results.thrust;
@@ -19,6 +7,18 @@ import static com.jsrm.infra.performance.PerformanceFormulas.DELIVERED_IMPULSE;
 import static com.jsrm.infra.performance.PerformanceFormulas.OPTIMUM_NOZZLE_EXPANSION_RATIO;
 import static com.jsrm.infra.performance.PerformanceFormulas.THRUST;
 import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.timeSinceBurnStart;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.google.common.collect.ImmutableMap;
+import com.jsrm.calculation.CalculatorBuilder;
+import com.jsrm.calculation.CalculatorResults;
+import com.jsrm.calculation.Formula;
+import com.jsrm.calculation.ResultLineProvider;
+import com.jsrm.infra.Extract;
+import com.jsrm.infra.JSRMConstant;
 
 public class PerformanceCalculation {
 
@@ -47,11 +47,10 @@ public class PerformanceCalculation {
         this.timeResultProvider = timeResultProvider;
     }
 
-    public Map<Results, List<Double>> compute() {
+    public PerformanceCalculationResult compute() {
         int lastLine = NB_LINE_IN_PERFORMANCE_SPREADSHEET + NB_LINE_POST_BURN_CALCULATION.intValue();
 
-        //TODO : USING ONLY FOR FINDING OPTIMAL_NOZZLE_RATIO
-        getOptimalNozzleRatio(lastLine);
+        //TODO : implémenter tuyère optimal
 
         CalculatorResults performanceResults = new CalculatorBuilder(DELIVERED_IMPULSE)
                 .withConstants(Extract.toCalculationFormat(constants))
@@ -63,10 +62,10 @@ public class PerformanceCalculation {
 
         performanceResults.addResult(computeLastLine(lastLine, performanceResults));
 
-       return ImmutableMap.<Results, List<Double>>builder()
+       return new PerformanceCalculationResult(ImmutableMap.<Results, List<Double>>builder()
                .put(thrust, performanceResults.getResults(THRUST))
                .put(deliveredImpulse, performanceResults.getResults(DELIVERED_IMPULSE))
-               .build();
+               .build(), getOptimalNozzleExpansionRatio(lastLine));
     }
 
     private Map<Formula, Double> computeLastLine(int lastLine, CalculatorResults performanceResults) {
@@ -81,7 +80,7 @@ public class PerformanceCalculation {
         return lastResultLine;
     }
 
-    private void getOptimalNozzleRatio(int lastLine) {
+    private double getOptimalNozzleExpansionRatio(int lastLine) {
         List<Double> optimalNozzleRatioByTime = new CalculatorBuilder(OPTIMUM_NOZZLE_EXPANSION_RATIO)
                 .withConstants(Extract.toCalculationFormat(constants))
                 .withInitialValues(initialValues)
@@ -89,8 +88,8 @@ public class PerformanceCalculation {
                 .createCalculator()
                 .compute(START_LINE, lastLine)
                 .getResults(OPTIMUM_NOZZLE_EXPANSION_RATIO);
-        Double optimalNozzleRatioAtPoMax = optimalNozzleRatioByTime.stream().mapToDouble(Double::doubleValue).max().getAsDouble();
-        Double averageOptimalNozzleRatio = optimalNozzleRatioByTime.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
+//        Double optimalNozzleRatioAtPoMax = optimalNozzleRatioByTime.stream().mapToDouble(Double::doubleValue).max().getAsDouble();
+        return optimalNozzleRatioByTime.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
     }
 
     public enum Results {

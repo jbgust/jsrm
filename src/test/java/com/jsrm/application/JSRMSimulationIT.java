@@ -56,5 +56,9 @@ class JSRMSimulationIT {
                 .isEqualTo(130.6, offset(0.1d));
 
         // TODO: Assert Nozzle,  avg Thrust, thrust time
+        assertThat(jsrmResult.getNozzle().getOptimalNozzleExpansionRatio())
+                .describedAs("Optimal nozzle expansion ratio")
+                .isEqualTo(9.633, offset(0.001d));
+
     }
 }
