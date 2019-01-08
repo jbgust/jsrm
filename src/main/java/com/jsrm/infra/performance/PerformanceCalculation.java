@@ -1,17 +1,5 @@
 package com.jsrm.infra.performance;
 
-import static com.jsrm.calculation.Formula.PREVIOUS_VARIABLE_SUFFIX;
-import static com.jsrm.infra.performance.PerformanceCalculation.Results.deliveredImpulse;
-import static com.jsrm.infra.performance.PerformanceCalculation.Results.thrust;
-import static com.jsrm.infra.performance.PerformanceFormulas.DELIVERED_IMPULSE;
-import static com.jsrm.infra.performance.PerformanceFormulas.OPTIMUM_NOZZLE_EXPANSION_RATIO;
-import static com.jsrm.infra.performance.PerformanceFormulas.THRUST;
-import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.timeSinceBurnStart;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.google.common.collect.ImmutableMap;
 import com.jsrm.calculation.CalculatorBuilder;
 import com.jsrm.calculation.CalculatorResults;
@@ -19,6 +7,16 @@ import com.jsrm.calculation.Formula;
 import com.jsrm.calculation.ResultLineProvider;
 import com.jsrm.infra.Extract;
 import com.jsrm.infra.JSRMConstant;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.jsrm.calculation.Formula.PREVIOUS_VARIABLE_SUFFIX;
+import static com.jsrm.infra.performance.PerformanceCalculation.Results.deliveredImpulse;
+import static com.jsrm.infra.performance.PerformanceCalculation.Results.thrust;
+import static com.jsrm.infra.performance.PerformanceFormulas.*;
+import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.timeSinceBurnStart;
 
 public class PerformanceCalculation {
 
@@ -62,7 +60,7 @@ public class PerformanceCalculation {
 
         performanceResults.addResult(computeLastLine(lastLine, performanceResults));
 
-       return new PerformanceCalculationResult(ImmutableMap.<Results, List<Double>>builder()
+        return new PerformanceCalculationResult(ImmutableMap.<Results, List<Double>>builder()
                .put(thrust, performanceResults.getResults(THRUST))
                .put(deliveredImpulse, performanceResults.getResults(DELIVERED_IMPULSE))
                .build(), getOptimalNozzleExpansionRatio(lastLine));

@@ -24,4 +24,8 @@ public class PerformanceResultProvider implements ResultLineProvider {
     public double getResult(int lineNumber) {
         return results.get(lineNumber);
     }
+
+    public double getSize() {
+        return results.size();
+    }
 }

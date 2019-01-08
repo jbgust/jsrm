@@ -10,7 +10,10 @@ public class JSRMResult {
     private double totalImpulseInNewtonSecond;
     private double specificImpulseInSecond;
     private double maxChamberPressureInMPa;
+    private double thrustTimeInSecond;
     private MotorClassification motorClassification;
     private List<ThrustResult> thrustResults;
     private Nozzle nozzle;
+    private long averageThrustInNewton;
+
 }

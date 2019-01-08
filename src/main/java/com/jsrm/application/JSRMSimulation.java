@@ -1,43 +1,11 @@
 package com.jsrm.application;
 
-import static com.jsrm.infra.JSRMConstant.aexit;
-import static com.jsrm.infra.JSRMConstant.cstar;
-import static com.jsrm.infra.JSRMConstant.etanoz;
-import static com.jsrm.infra.JSRMConstant.k2ph;
-import static com.jsrm.infra.JSRMConstant.me;
-import static com.jsrm.infra.JSRMConstant.mef;
-import static com.jsrm.infra.JSRMConstant.patm;
-import static com.jsrm.infra.JSRMConstant.rhopgrain;
-import static com.jsrm.infra.performance.PerformanceFormulas.DELIVERED_IMPULSE;
-import static com.jsrm.infra.performance.PerformanceFormulas.DELIVERED_THRUST_COEFFICIENT;
-import static com.jsrm.infra.performance.PerformanceFormulas.MACH_SPEED_AT_NOZZLE_EXIT;
-import static com.jsrm.infra.performance.PerformanceFormulas.OPTIMUM_NOZZLE_EXPANSION_RATIO;
-import static com.jsrm.infra.performance.PerformanceFormulas.THRUST;
-import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.chamberPressureMPA;
-import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.nozzleCriticalPassageArea;
-import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.throatArea;
-import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.timeSinceBurnStart;
-import static com.jsrm.infra.pressure.PressureFormulas.DENSITY_COMBUSTION_PRODUCTS;
-import static com.jsrm.infra.pressure.PressureFormulas.GRAIN_CORE_DIAMETER;
-import static com.jsrm.infra.pressure.PressureFormulas.GRAIN_LENGTH;
-import static com.jsrm.infra.pressure.PressureFormulas.GRAIN_OUTSIDE_DIAMETER;
-import static com.jsrm.infra.pressure.PressureFormulas.MASS_COMBUSTION_PRODUCTS;
-import static com.jsrm.infra.pressure.PressureFormulas.MASS_GENERATION_RATE;
-import static com.jsrm.infra.pressure.PressureFormulas.MASS_STORAGE_RATE;
-import static com.jsrm.infra.pressure.PressureFormulas.NOZZLE_MASS_FLOW_RATE;
-import static com.jsrm.infra.pressure.PressureFormulas.TEMPORARY_CHAMBER_PRESSURE;
-import static com.jsrm.infra.pressure.PressureFormulas.TIME_SINCE_BURN_STARTS;
-import static com.jsrm.infra.propellant.PropellantType.KNDX;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.google.common.collect.ImmutableMap;
 import com.jsrm.application.motor.SolidRocketMotor;
 import com.jsrm.application.result.JSRMResult;
 import com.jsrm.application.result.MotorClassification;
 import com.jsrm.application.result.Nozzle;
+import com.jsrm.application.result.ThrustResult;
 import com.jsrm.calculation.Formula;
 import com.jsrm.infra.Extract;
 import com.jsrm.infra.JSRMConstant;
@@ -46,12 +14,24 @@ import com.jsrm.infra.performance.PerformanceCalculationResult;
 import com.jsrm.infra.performance.PerformanceResultProvider;
 import com.jsrm.infra.pressure.ChamberPressureCalculation;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.jsrm.infra.JSRMConstant.*;
+import static com.jsrm.infra.performance.PerformanceFormulas.*;
+import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.*;
+import static com.jsrm.infra.pressure.PressureFormulas.*;
+import static com.jsrm.infra.propellant.PropellantType.KNDX;
+
 public class JSRMSimulation {
 
     private static final double GRAVITATIONAL_ACCELERATION = 9.806;
 
     private final SolidRocketMotor motor;
     private JSRMConfig config;
+    private double thrustTime;
 
     public JSRMSimulation(SolidRocketMotor motor) {
         this.motor = motor;
@@ -110,18 +90,33 @@ public class JSRMSimulation {
         double maxThrust = performanceCalculationResult.getResults().get(PerformanceCalculation.Results.thrust).stream().mapToDouble(Double::doubleValue).max().getAsDouble();
         double maxChamberPressure = chamberPressureResults.get(ChamberPressureCalculation.Results.absoluteChamberPressure).stream().mapToDouble(Double::doubleValue).max().getAsDouble();
         double totalImpulse = performanceCalculationResult.getResults().get(PerformanceCalculation.Results.deliveredImpulse).stream().mapToDouble(Double::doubleValue).sum();
+        double thrustTime = getThrustTime(timeSinceBurnStartProvider);
 
-        Nozzle nozzle = new Nozzle(performanceCalculationResult.getOptimalNozzleExpansionResult(), 0, 0, 0);
+        long averageThrust = Math.round(totalImpulse/thrustTime);
+
+        Nozzle nozzle = new Nozzle(performanceCalculationResult.getOptimalNozzleExpansionResult(), 0, config.getNozzleExpansionRatio(), 0);
 
         //TODO calcule constants.get(vc)
         double grainMass = constants.get(rhopgrain) * 1575555.840 / 1000 / 1000;
         double specificImpulse = totalImpulse / GRAVITATIONAL_ACCELERATION / grainMass;
 
-        return new JSRMResult(maxThrust, totalImpulse, specificImpulse, maxChamberPressure, MotorClassification.getMotorClassification(totalImpulse), null, nozzle);
+        List<ThrustResult> thrustResults = new ArrayList<>();
+        for(int i = 0; i < 883; i++){
+            thrustResults.add(new ThrustResult(
+                    performanceCalculationResult.getResults().get(PerformanceCalculation.Results.thrust).get(i),
+                    timeSinceBurnStartProvider.getResult(i)));
+        }
+
+        return new JSRMResult(maxThrust, totalImpulse, specificImpulse, maxChamberPressure, thrustTime,
+                MotorClassification.getMotorClassification(totalImpulse), thrustResults, nozzle, averageThrust);
     }
 
     public JSRMResult run() {
         return run(config);
+    }
+
+    private double getThrustTime(PerformanceResultProvider timeSinceBurnStartProvider) {
+        return timeSinceBurnStartProvider.getResult((int) (timeSinceBurnStartProvider.getSize()-2));
     }
 
     //TODO: nozzle desing result

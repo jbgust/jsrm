@@ -1,5 +1,18 @@
 package com.jsrm.application;
 
+import com.jsrm.application.csv.CsvToThrustResult;
+import com.jsrm.application.motor.MotorChamber;
+import com.jsrm.application.motor.SolidRocketMotor;
+import com.jsrm.application.motor.propellant.PropellantGrain;
+import com.jsrm.application.result.JSRMResult;
+import com.jsrm.application.result.ThrustResult;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+
 import static com.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
 import static com.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
 import static com.jsrm.application.result.MotorClassification.L;
@@ -7,17 +20,14 @@ import static com.jsrm.infra.propellant.PropellantType.KNDX;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
 
-import org.junit.jupiter.api.Test;
-
-import com.jsrm.application.motor.MotorChamber;
-import com.jsrm.application.motor.SolidRocketMotor;
-import com.jsrm.application.motor.propellant.PropellantGrain;
-import com.jsrm.application.result.JSRMResult;
-
+@DisplayName("JSRM Integration test")
 class JSRMSimulationIT {
 
-    @Test
-    void shouldRunJSRMSimulation() {
+    private static JSRMResult jsrmResult;
+    private static int lineToAssert = 0;
+
+    @BeforeAll
+    static void shouldRunJSRMSimulation() {
         // GIVEN
         PropellantGrain propellantGrain = new PropellantGrain(KNDX, 69d, 20d,
                 115d, 4d,
@@ -30,35 +40,82 @@ class JSRMSimulationIT {
                 6d, throatDiameter, 0d);
 
         JSRMSimulation jsrmSimulation = new JSRMSimulation(solidRocketMotor);
+        //see SRM_2014.xls
+        JSRMConfig jsrmConfig = new JSRMConfig.Builder()
+                .withNozzleExpansionRatio(8)
+                .createJSRMConfig();
 
         // WHEN
-        JSRMResult jsrmResult = jsrmSimulation.run();
+        jsrmResult = jsrmSimulation.run(jsrmConfig);
+    }
 
-        // THEN
-        assertThat(jsrmResult.getMotorClassification())
-                .describedAs("Motor classification")
-                .isEqualTo(L);
+    @Nested
+    @DisplayName("Check results")
+    class CheckingResults {
 
-        assertThat(jsrmResult.getMaxChamberPressureInMPa())
-                .describedAs("Max chamber pressure")
-                .isEqualTo(5.93, offset(0.01d));
+        @Test
+        @DisplayName("Motor performance")
+        void checkPerformanceResults() {
+            assertThat(jsrmResult.getMotorClassification())
+                    .describedAs("Motor classification")
+                    .isEqualTo(L);
 
-        assertThat(jsrmResult.getMaxThrustInNewton())
-                .describedAs("Max thrust")
-                .isEqualTo(2060, offset(1d));
+            assertThat(jsrmResult.getMaxChamberPressureInMPa())
+                    .describedAs("Max chamber pressure")
+                    .isEqualTo(5.93, offset(0.01d));
 
-        assertThat(jsrmResult.getTotalImpulseInNewtonSecond())
-                .describedAs("Total impluse")
-                .isEqualTo(3602,  offset(1d));
+            assertThat(jsrmResult.getMaxThrustInNewton())
+                    .describedAs("Max thrust")
+                    .isEqualTo(2060, offset(1d));
 
-        assertThat(jsrmResult.getSpecificImpulseInSecond())
-                .describedAs("Specific impulse")
-                .isEqualTo(130.6, offset(0.1d));
+            assertThat(jsrmResult.getTotalImpulseInNewtonSecond())
+                    .describedAs("Total impluse")
+                    .isEqualTo(3602,  offset(1d));
 
-        // TODO: Assert Nozzle,  avg Thrust, thrust time
-        assertThat(jsrmResult.getNozzle().getOptimalNozzleExpansionRatio())
-                .describedAs("Optimal nozzle expansion ratio")
-                .isEqualTo(9.633, offset(0.001d));
+            assertThat(jsrmResult.getSpecificImpulseInSecond())
+                    .describedAs("Specific impulse")
+                    .isEqualTo(130.6, offset(0.1d));
+
+            assertThat(jsrmResult.getSpecificImpulseInSecond())
+                    .describedAs("Specific impulse")
+                    .isEqualTo(130.6, offset(0.1d));
+
+            assertThat(jsrmResult.getThrustTimeInSecond())
+                    .describedAs("Thrust time")
+                    .isEqualTo(2.1575, offset(0.0001d));
+
+            assertThat(jsrmResult.getAverageThrustInNewton())
+                    .describedAs("Average thrust")
+                    .isEqualTo(1670);
+        }
+
+        @Test
+        @DisplayName("Nozzle configuration")
+        void checkNozzleResults() {
+
+            // TODO: Assert Nozzle (diemnsion de la tuyère en fonction des angles alpha et beta
+            assertThat(jsrmResult.getNozzle().getOptimalNozzleExpansionRatio())
+                    .describedAs("Optimal nozzle expansion ratio")
+                    .isEqualTo(9.633, offset(0.001d));
+            assertThat(jsrmResult.getNozzle().getNozzleExpansionRatio())
+                    .describedAs("nozzle expansion ratio")
+                    .isEqualTo(8);
+        }
+
+        @ParameterizedTest
+        @DisplayName("Thrust by time")
+        @CsvFileSource(resources = "/SRM_2014_THRUST_BY_TIME.csv", numLinesToSkip = 2, delimiter = '|')
+        void checkThrustDataResults(@CsvToThrustResult ThrustResult expectedThrustResult) {
+
+            ThrustResult thrustResult = jsrmResult.getThrustResults().get(lineToAssert++);
+
+            assertThat(thrustResult.getTimeSinceBurnStartInSecond())
+                    .isEqualTo(expectedThrustResult.getTimeSinceBurnStartInSecond(), offset(0.0001d));
+
+            assertThat(thrustResult.getThrustInNewton())
+                    .isEqualTo(expectedThrustResult.getThrustInNewton(), offset(1d));
+
+        }
 
     }
 }
