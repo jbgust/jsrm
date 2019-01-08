@@ -5,6 +5,9 @@ import com.jsrm.application.motor.propellant.SolidPropellant;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import static com.google.common.collect.Range.closed;
 import static com.jsrm.infra.JSRMConstant.k;
 
@@ -51,5 +54,18 @@ public class MachSpeedAtNozzleExitSolver {
         }
 
         return initialMachSpeedAtNozzle;
+    }
+
+    public double solve2(double nozzleExpansionRation, SolidPropellant solidPropellant){
+        expression.setVariable(k.name(), solidPropellant.getK());
+        expression.setVariable(NOZZLE_EXPANSION_RATION_VARIABLE, nozzleExpansionRation);
+        Map<Double, Double> result = new LinkedHashMap<>();
+
+        for(double exprat = 0.5 ; exprat < 10 ; exprat+=0.0001){
+            result.put(exprat,
+                    Math.abs(expression.setVariable(INITIAL_MACH_SPEED_VARIABLE, exprat).evaluate()));
+        }
+
+        return result.entrySet().stream().min((doubleDoubleEntry, t1) -> Double.compare(doubleDoubleEntry.getValue(), t1.getValue())).get().getKey();
     }
 }
