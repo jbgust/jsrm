@@ -29,15 +29,7 @@ class JSRMSimulationIT {
 
     @BeforeAll
     static void shouldRunJSRMSimulation() {
-        PropellantGrain propellantGrain = new PropellantGrain(KNDX, 69d, 20d,
-                115d, 4d,
-                INHIBITED, EXPOSED, EXPOSED);
-        MotorChamber motorChamber = new MotorChamber(75d, 470d);
-
-        double throatDiameter = 17.3985248919802;
-
-        SolidRocketMotor solidRocketMotor = new SolidRocketMotor(propellantGrain, motorChamber,
-                6d, throatDiameter, 0d);
+        SolidRocketMotor solidRocketMotor = createMotorAsSRM_2014ExcelFile();
 
         JSRMSimulation jsrmSimulation = new JSRMSimulation(solidRocketMotor);
         //see SRM_2014.xls
@@ -131,30 +123,15 @@ class JSRMSimulationIT {
     @Test
     @DisplayName("Optimal nozzle design")
     void shoulduseOptimalNozzleDesing(){
-
         // GIVEN
-        PropellantGrain propellantGrain = new PropellantGrain(KNDX, 69d, 20d,
-                115d, 4d,
-                INHIBITED, EXPOSED, EXPOSED);
-        MotorChamber motorChamber = new MotorChamber(75d, 470d);
-
-        double throatDiameter = 17.3985248919802;
-
-        SolidRocketMotor solidRocketMotor = new SolidRocketMotor(propellantGrain, motorChamber,
-                6d, throatDiameter, 0d);
+        SolidRocketMotor solidRocketMotor = createMotorAsSRM_2014ExcelFile();
 
         JSRMSimulation jsrmSimulation = new JSRMSimulation(solidRocketMotor);
-        //see SRM_2014.xls
-        JSRMConfig config = new JSRMConfig
-                .Builder()
-                .createJSRMConfig();
 
         // WHEN
-        JSRMResult result = jsrmSimulation.run(config);
+        JSRMResult result = jsrmSimulation.run();
 
         //THEN
-        assertThat(config.isOptimalNozzleDesign()).isTrue();
-
         Nozzle nozzle = result.getNozzle();
 
         assertThat(nozzle.getNozzleExpansionRatio())
@@ -165,5 +142,17 @@ class JSRMSimulationIT {
 
         assertThat(nozzle.getFinalNozzleExitSpeedInMach())
                 .isEqualTo(3.065, offset(0.001d));
+    }
+
+    private static SolidRocketMotor createMotorAsSRM_2014ExcelFile() {
+        PropellantGrain propellantGrain = new PropellantGrain(KNDX, 69d, 20d,
+                115d, 4d,
+                INHIBITED, EXPOSED, EXPOSED);
+        MotorChamber motorChamber = new MotorChamber(75d, 470d);
+
+        double throatDiameter = 17.3985248919802;
+
+        return new SolidRocketMotor(propellantGrain, motorChamber,
+                6d, throatDiameter, 0d);
     }
 }
