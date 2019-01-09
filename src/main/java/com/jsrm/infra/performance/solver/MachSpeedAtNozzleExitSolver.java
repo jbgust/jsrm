@@ -22,15 +22,21 @@ public class MachSpeedAtNozzleExitSolver {
 
     private final Range<Double> EXPECTED_RESULT_RANGE = closed(-SOLVER_PRECISION, SOLVER_PRECISION);
     private final Expression expression;
+    private final SolidPropellant solidPropellant;
 
 
-    public MachSpeedAtNozzleExitSolver() {
+    public MachSpeedAtNozzleExitSolver(SolidPropellant solidPropellant) {
+        this.solidPropellant = solidPropellant;
         expression = new ExpressionBuilder("nozzleExpansionRation-1/me*((1+(k-1)/2*me^2)/(1+(k-1)/2))^((k+1)/2/(k-1))")
                 .variables(NOZZLE_EXPANSION_RATION_VARIABLE, k.name(), INITIAL_MACH_SPEED_VARIABLE)
                 .build();
     }
 
-    public double solve(double nozzleExpansionRation, SolidPropellant solidPropellant) {
+    public double solve(double nozzleExpansionRation) {
+        return nozzleExpansionRation < 2 ? under2RationSolver(nozzleExpansionRation) : over2RatioSolver(nozzleExpansionRation);
+    }
+
+    private double over2RatioSolver(double nozzleExpansionRation) {
         boolean isSolved = false;
         expression.setVariable(k.name(), solidPropellant.getK());
         expression.setVariable(NOZZLE_EXPANSION_RATION_VARIABLE, nozzleExpansionRation);
@@ -56,7 +62,12 @@ public class MachSpeedAtNozzleExitSolver {
         return initialMachSpeedAtNozzle;
     }
 
-    public double solve2(double nozzleExpansionRation, SolidPropellant solidPropellant){
+    public double under2RationSolver(double nozzleExpansionRation){
+
+        if(nozzleExpansionRation == 1){
+            return 1;
+        }
+
         expression.setVariable(k.name(), solidPropellant.getK());
         expression.setVariable(NOZZLE_EXPANSION_RATION_VARIABLE, nozzleExpansionRation);
         Map<Double, Double> result = new LinkedHashMap<>();

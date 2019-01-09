@@ -12,6 +12,7 @@ import com.jsrm.infra.JSRMConstant;
 import com.jsrm.infra.performance.PerformanceCalculation;
 import com.jsrm.infra.performance.PerformanceCalculationResult;
 import com.jsrm.infra.performance.PerformanceResultProvider;
+import com.jsrm.infra.performance.solver.MachSpeedAtNozzleExitSolver;
 import com.jsrm.infra.pressure.ChamberPressureCalculation;
 
 import java.util.ArrayList;
@@ -64,13 +65,19 @@ public class JSRMSimulation {
         PerformanceResultProvider timeSinceBurnStartProvider = new PerformanceResultProvider(timeSinceBurnStart, chamberPressureResults.get(timeSinceBurnStart));
 
         // TODO: extraire constante2
+        MachSpeedAtNozzleExitSolver machSpeedAtNozzleExitSolver = new MachSpeedAtNozzleExitSolver(KNDX);
+
+        //TODO : a recupérer
+        int finalNozzleExpansionRation = 8;
+
+
         Map<JSRMConstant, Double> constants2 = ImmutableMap.<JSRMConstant, Double>builder()
                 .put(patm, 0.101)
                 .put(etanoz, 0.85)
                 .put(k2ph, KNDX.getK2Ph())
                 .put(aexit, 1901.974657752680)
-                .put(me, 2.95455756202289)
-                .put(mef, 2.95455756202289)
+                .put(me, machSpeedAtNozzleExitSolver.solve(config.getNozzleExpansionRatio()))
+                .put(mef, machSpeedAtNozzleExitSolver.solve(finalNozzleExpansionRation))
                 .build();
 
         // TODO: extraire les initials values proprement
