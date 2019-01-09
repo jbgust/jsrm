@@ -15,5 +15,4 @@ public class JSRMResult {
     private List<ThrustResult> thrustResults;
     private Nozzle nozzle;
     private long averageThrustInNewton;
-
 }

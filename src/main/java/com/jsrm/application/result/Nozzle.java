@@ -8,4 +8,6 @@ public class Nozzle {
     private double optimalNozzleExitDiameterInMillimeter;
     private double nozzleExpansionRatio;
     private double nozzleExitDiameterInMillimeter;
+    private double initialNozzleExitSpeedInMach;
+    private double finalNozzleExitSpeedInMach;
 }

@@ -5,6 +5,7 @@ import com.jsrm.application.motor.MotorChamber;
 import com.jsrm.application.motor.SolidRocketMotor;
 import com.jsrm.application.motor.propellant.PropellantGrain;
 import com.jsrm.application.result.JSRMResult;
+import com.jsrm.application.result.Nozzle;
 import com.jsrm.application.result.ThrustResult;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +29,6 @@ class JSRMSimulationIT {
 
     @BeforeAll
     static void shouldRunJSRMSimulation() {
-        // GIVEN
         PropellantGrain propellantGrain = new PropellantGrain(KNDX, 69d, 20d,
                 115d, 4d,
                 INHIBITED, EXPOSED, EXPOSED);
@@ -45,12 +45,11 @@ class JSRMSimulationIT {
                 .withNozzleExpansionRatio(8)
                 .createJSRMConfig();
 
-        // WHEN
         jsrmResult = jsrmSimulation.run(jsrmConfig);
     }
 
     @Nested
-    @DisplayName("Check results")
+    @DisplayName("Check SRM_2014.xls results")
     class CheckingResults {
 
         @Test
@@ -94,12 +93,22 @@ class JSRMSimulationIT {
         void checkNozzleResults() {
 
             // TODO: Assert Nozzle (diemnsion de la tuyère en fonction des angles alpha et beta
-            assertThat(jsrmResult.getNozzle().getOptimalNozzleExpansionRatio())
+            Nozzle nozzle = jsrmResult.getNozzle();
+
+            assertThat(nozzle.getOptimalNozzleExpansionRatio())
                     .describedAs("Optimal nozzle expansion ratio")
                     .isEqualTo(9.633, offset(0.001d));
-            assertThat(jsrmResult.getNozzle().getNozzleExpansionRatio())
+            assertThat(nozzle.getNozzleExpansionRatio())
                     .describedAs("nozzle expansion ratio")
                     .isEqualTo(8);
+
+            assertThat(nozzle.getInitialNozzleExitSpeedInMach())
+                    .describedAs("Mach No. at nozzle exit (initial)")
+                    .isEqualTo(2.955, offset(0.001d));
+
+            assertThat(nozzle.getFinalNozzleExitSpeedInMach())
+                    .describedAs("Mach No. at nozzle exit (final)")
+                    .isEqualTo(2.955, offset(0.001d));
         }
 
         @ParameterizedTest
@@ -117,5 +126,44 @@ class JSRMSimulationIT {
 
         }
 
+    }
+
+    @Test
+    @DisplayName("Optimal nozzle design")
+    void shoulduseOptimalNozzleDesing(){
+
+        // GIVEN
+        PropellantGrain propellantGrain = new PropellantGrain(KNDX, 69d, 20d,
+                115d, 4d,
+                INHIBITED, EXPOSED, EXPOSED);
+        MotorChamber motorChamber = new MotorChamber(75d, 470d);
+
+        double throatDiameter = 17.3985248919802;
+
+        SolidRocketMotor solidRocketMotor = new SolidRocketMotor(propellantGrain, motorChamber,
+                6d, throatDiameter, 0d);
+
+        JSRMSimulation jsrmSimulation = new JSRMSimulation(solidRocketMotor);
+        //see SRM_2014.xls
+        JSRMConfig config = new JSRMConfig
+                .Builder()
+                .createJSRMConfig();
+
+        // WHEN
+        JSRMResult result = jsrmSimulation.run(config);
+
+        //THEN
+        assertThat(config.isOptimalNozzleDesign()).isTrue();
+
+        Nozzle nozzle = result.getNozzle();
+
+        assertThat(nozzle.getNozzleExpansionRatio())
+                .isEqualTo(9.632509, offset(0.0001d));
+
+        assertThat(nozzle.getInitialNozzleExitSpeedInMach())
+                .isEqualTo(3.065, offset(0.001d));
+
+        assertThat(nozzle.getFinalNozzleExitSpeedInMach())
+                .isEqualTo(3.065, offset(0.001d));
     }
 }

@@ -205,6 +205,7 @@ public class JSRMConfig {
          */
         public Builder withNozzleExpansionRatio(double nozzleExpansionRatio) {
             this.nozzleExpansionRatio = nozzleExpansionRatio;
+            this.optimalNozzleDesign = false;
             return this;
         }
 

@@ -1,18 +1,22 @@
 package com.jsrm.infra.performance;
 
 import com.google.common.collect.ImmutableMap;
+import com.jsrm.application.JSRMConfig;
 import com.jsrm.calculation.CalculatorBuilder;
 import com.jsrm.calculation.CalculatorResults;
 import com.jsrm.calculation.Formula;
 import com.jsrm.calculation.ResultLineProvider;
 import com.jsrm.infra.Extract;
 import com.jsrm.infra.JSRMConstant;
+import com.jsrm.infra.performance.solver.MachSpeedAtNozzleExitSolver;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.jsrm.calculation.Formula.PREVIOUS_VARIABLE_SUFFIX;
+import static com.jsrm.infra.JSRMConstant.*;
+import static com.jsrm.infra.RegisteredPropellant.getSolidPropellant;
 import static com.jsrm.infra.performance.PerformanceCalculation.Results.deliveredImpulse;
 import static com.jsrm.infra.performance.PerformanceCalculation.Results.thrust;
 import static com.jsrm.infra.performance.PerformanceFormulas.*;
@@ -22,6 +26,7 @@ public class PerformanceCalculation {
 
     private static final int NB_LINE_IN_PERFORMANCE_SPREADSHEET = 835;
     private static final Double NB_LINE_POST_BURN_CALCULATION = 47d;
+    public static final int LAST_LINE = NB_LINE_IN_PERFORMANCE_SPREADSHEET + NB_LINE_POST_BURN_CALCULATION.intValue();
 
     private static final int START_LINE = 0;
 
@@ -37,18 +42,17 @@ public class PerformanceCalculation {
                                   ResultLineProvider throatAreaResultProvider,
                                   ResultLineProvider nozzleCriticalPassageAreaResultProvider,
                                   ResultLineProvider timeResultProvider) {
-        this.constants = constants;
-        this.initialValues = initialValues;
+        this.constants = new HashMap<>(constants);
+        this.initialValues = new HashMap<>(initialValues);
         this.chamberPressureMpaResultProvider = chamberPressureMpaResultProvider;
         this.throatAreaResultProvider = throatAreaResultProvider;
         this.nozzleCriticalPassageAreaResultProvider = nozzleCriticalPassageAreaResultProvider;
         this.timeResultProvider = timeResultProvider;
     }
 
-    public PerformanceCalculationResult compute() {
-        int lastLine = NB_LINE_IN_PERFORMANCE_SPREADSHEET + NB_LINE_POST_BURN_CALCULATION.intValue();
-
-        //TODO : implémenter tuyère optimal
+    public PerformanceCalculationResult compute(JSRMConfig config) {
+        double optimalNozzleExpansionRatio = getOptimalNozzleExpansionRatio();
+        computeNozzleExitSpeed(config, optimalNozzleExpansionRatio);
 
         CalculatorResults performanceResults = new CalculatorBuilder(DELIVERED_IMPULSE)
                 .withConstants(Extract.toCalculationFormat(constants))
@@ -56,14 +60,39 @@ public class PerformanceCalculation {
                 .withResultLineProviders(chamberPressureMpaResultProvider, throatAreaResultProvider, nozzleCriticalPassageAreaResultProvider, timeResultProvider)
                 .withResultsToSave(THRUST, DELIVERED_IMPULSE)
                 .createCalculator()
-                .compute(START_LINE, lastLine);
+                .compute(START_LINE, LAST_LINE);
 
-        performanceResults.addResult(computeLastLine(lastLine, performanceResults));
+        performanceResults.addResult(computeLastLine(LAST_LINE, performanceResults));
 
         return new PerformanceCalculationResult(ImmutableMap.<Results, List<Double>>builder()
                .put(thrust, performanceResults.getResults(THRUST))
                .put(deliveredImpulse, performanceResults.getResults(DELIVERED_IMPULSE))
-               .build(), getOptimalNozzleExpansionRatio(lastLine));
+               .build(), optimalNozzleExpansionRatio,
+                constants.get(me), constants.get(mef));
+    }
+
+    private void computeNozzleExitSpeed(JSRMConfig config, double optimalNozzleExpansionRatio) {
+        double initialNozzleExpansionRatio;
+        initialNozzleExpansionRatio = computeInitialNozzleExpansionRatio(config, optimalNozzleExpansionRatio);
+
+        double nozzleExitArea = constants.get(at) * initialNozzleExpansionRatio;
+        MachSpeedAtNozzleExitSolver machSpeedAtNozzleExitSolver = new MachSpeedAtNozzleExitSolver(getSolidPropellant(constants.get(propellantId).intValue()));
+        double finalNozzleExpansionRation = nozzleExitArea / constants.get(atfinal);
+
+        constants.put(aexit, nozzleExitArea);
+        constants.put(me, machSpeedAtNozzleExitSolver.solve(initialNozzleExpansionRatio));
+        constants.put(mef, machSpeedAtNozzleExitSolver.solve(finalNozzleExpansionRation));
+        initialValues.put(MACH_SPEED_AT_NOZZLE_EXIT, constants.get(me));
+    }
+
+    private double computeInitialNozzleExpansionRatio(JSRMConfig config, double optimalNozzleExpansionRatio) {
+        double initialNozzleExpansionRatio;
+        if(config.isOptimalNozzleDesign()){
+            initialNozzleExpansionRatio = optimalNozzleExpansionRatio;
+        } else {
+            initialNozzleExpansionRatio = config.getNozzleExpansionRatio();
+        }
+        return initialNozzleExpansionRatio;
     }
 
     private Map<Formula, Double> computeLastLine(int lastLine, CalculatorResults performanceResults) {
@@ -78,15 +107,14 @@ public class PerformanceCalculation {
         return lastResultLine;
     }
 
-    private double getOptimalNozzleExpansionRatio(int lastLine) {
+    private double getOptimalNozzleExpansionRatio() {
         List<Double> optimalNozzleRatioByTime = new CalculatorBuilder(OPTIMUM_NOZZLE_EXPANSION_RATIO)
                 .withConstants(Extract.toCalculationFormat(constants))
                 .withInitialValues(initialValues)
                 .withResultLineProviders(chamberPressureMpaResultProvider)
                 .createCalculator()
-                .compute(START_LINE, lastLine)
+                .compute(START_LINE, LAST_LINE)
                 .getResults(OPTIMUM_NOZZLE_EXPANSION_RATIO);
-//        Double optimalNozzleRatioAtPoMax = optimalNozzleRatioByTime.stream().mapToDouble(Double::doubleValue).max().getAsDouble();
         return optimalNozzleRatioByTime.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
     }
 

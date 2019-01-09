@@ -13,7 +13,6 @@ import com.jsrm.infra.JSRMConstant;
 import com.jsrm.infra.performance.PerformanceCalculation;
 import com.jsrm.infra.performance.PerformanceCalculationResult;
 import com.jsrm.infra.performance.PerformanceResultProvider;
-import com.jsrm.infra.performance.solver.MachSpeedAtNozzleExitSolver;
 import com.jsrm.infra.pressure.ChamberPressureCalculation;
 
 import java.util.ArrayList;
@@ -66,20 +65,13 @@ public class JSRMSimulation {
         PerformanceResultProvider timeSinceBurnStartProvider = new PerformanceResultProvider(timeSinceBurnStart, chamberPressureResults.get(timeSinceBurnStart));
 
         // TODO: extraire constante2
-        MachSpeedAtNozzleExitSolver machSpeedAtNozzleExitSolver = new MachSpeedAtNozzleExitSolver(propellant);
-
-        //TODO : a recupérer
-        double nozzleExitArea = throatAreaProvider.getResult(0) * config.getNozzleExpansionRatio();
-        double finalNozzleExpansionRation = nozzleExitArea / throatAreaProvider.getResult((int) (throatAreaProvider.getSize()-1));
-
-
         Map<JSRMConstant, Double> constants2 = ImmutableMap.<JSRMConstant, Double>builder()
                 .put(patm, config.getAmbiantPressureInMPa())
                 .put(etanoz, config.getNozzleEfficiency())
                 .put(k2ph, propellant.getK2Ph())
-                .put(aexit, nozzleExitArea)
-                .put(me, machSpeedAtNozzleExitSolver.solve(config.getNozzleExpansionRatio()))
-                .put(mef, machSpeedAtNozzleExitSolver.solve(finalNozzleExpansionRation))
+                .put(propellantId, constants.get(propellantId))
+                .put(at, throatAreaProvider.getResult(0))
+                .put(atfinal, throatAreaProvider.getResult((int) (throatAreaProvider.getSize()-1)))
                 .build();
 
         // TODO : extraire les initials values proprement
@@ -88,13 +80,12 @@ public class JSRMSimulation {
                 .put(DELIVERED_THRUST_COEFFICIENT, constants2.get(etanoz))
                 .put(THRUST, 0.0)
                 .put(DELIVERED_IMPULSE, 0.0)
-                .put(MACH_SPEED_AT_NOZZLE_EXIT, constants2.get(me))
                 .build();
 
         PerformanceCalculationResult performanceCalculationResult = new PerformanceCalculation(constants2, initialValues2,
                 chamberPressureProvider, throatAreaProvider,
                 nozzleCriticalPassageAreaProvider, timeSinceBurnStartProvider)
-                .compute();
+                .compute(config);
 
         double maxThrust = performanceCalculationResult.getResults().get(PerformanceCalculation.Results.thrust).stream().mapToDouble(Double::doubleValue).max().getAsDouble();
         double maxChamberPressure = chamberPressureResults.get(ChamberPressureCalculation.Results.absoluteChamberPressure).stream().mapToDouble(Double::doubleValue).max().getAsDouble();
@@ -103,7 +94,9 @@ public class JSRMSimulation {
 
         long averageThrust = Math.round(totalImpulse/thrustTime);
 
-        Nozzle nozzle = new Nozzle(performanceCalculationResult.getOptimalNozzleExpansionResult(), 0, config.getNozzleExpansionRatio(), 0);
+        Nozzle nozzle = new Nozzle(performanceCalculationResult.getOptimalNozzleExpansionResult(), 0,
+                getNozzleExpansionRatioResult(config, performanceCalculationResult), 0,
+                performanceCalculationResult.getInitialNozzleExitSpeedInMach(), performanceCalculationResult.getFinalNozzleExitSpeedInMach());
 
         //TODO calcule constants.get(vc)
         double grainMass = constants.get(rhopgrain) * 1575555.840 / 1000 / 1000;
@@ -118,6 +111,10 @@ public class JSRMSimulation {
 
         return new JSRMResult(maxThrust, totalImpulse, specificImpulse, maxChamberPressure, thrustTime,
                 MotorClassification.getMotorClassification(totalImpulse), thrustResults, nozzle, averageThrust);
+    }
+
+    private double getNozzleExpansionRatioResult(JSRMConfig config, PerformanceCalculationResult performanceCalculationResult) {
+        return config.isOptimalNozzleDesign()?performanceCalculationResult.getOptimalNozzleExpansionResult() : config.getNozzleExpansionRatio();
     }
 
     public JSRMResult run() {

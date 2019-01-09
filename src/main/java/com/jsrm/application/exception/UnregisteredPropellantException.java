@@ -1,6 +1,6 @@
 package com.jsrm.application.exception;
 
-public class UnregisteredPropellantException extends Throwable {
+public class UnregisteredPropellantException extends RuntimeException {
 
     public UnregisteredPropellantException(int propellantId) {
         super("The propellant with id ("+propellantId+") is not registered.\n " +
