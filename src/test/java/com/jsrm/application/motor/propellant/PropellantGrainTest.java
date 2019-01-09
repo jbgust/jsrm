@@ -23,7 +23,7 @@ class PropellantGrainTest {
                 INHIBITED, EXPOSED, INHIBITED);
 
         // THEN
-        assertThat(propellantGrain.getPropellantType()).isEqualTo(KNDX);
+        assertThat(propellantGrain.getPropellant()).isEqualTo(KNDX);
 
         assertThat(propellantGrain.getOuterSurface()).isEqualTo(INHIBITED);
         assertThat(propellantGrain.getEndsSurface()).isEqualTo(EXPOSED);

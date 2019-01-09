@@ -6,7 +6,7 @@ import net.objecthunter.exp4j.ExpressionBuilder;
 @Data
 public class PropellantGrain {
 
-    private final SolidPropellant propellantType;
+    private final SolidPropellant propellant;
     private final double outerDiameter;
     private final double coreDiameter;
     private final double segmentLength;

@@ -2,6 +2,7 @@ package com.jsrm.application;
 
 import com.google.common.collect.ImmutableMap;
 import com.jsrm.application.motor.SolidRocketMotor;
+import com.jsrm.application.motor.propellant.SolidPropellant;
 import com.jsrm.application.result.JSRMResult;
 import com.jsrm.application.result.MotorClassification;
 import com.jsrm.application.result.Nozzle;
@@ -24,7 +25,6 @@ import static com.jsrm.infra.JSRMConstant.*;
 import static com.jsrm.infra.performance.PerformanceFormulas.*;
 import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.*;
 import static com.jsrm.infra.pressure.PressureFormulas.*;
-import static com.jsrm.infra.propellant.PropellantType.KNDX;
 
 public class JSRMSimulation {
 
@@ -32,7 +32,6 @@ public class JSRMSimulation {
 
     private final SolidRocketMotor motor;
     private JSRMConfig config;
-    private double thrustTime;
 
     public JSRMSimulation(SolidRocketMotor motor) {
         this.motor = motor;
@@ -40,6 +39,8 @@ public class JSRMSimulation {
     }
 
     public JSRMResult run(JSRMConfig config) {
+        SolidPropellant propellant = motor.getPropellantGrain().getPropellant();
+
         Map<JSRMConstant, Double> constants = Extract.extractConstants(motor);
         // TODO: A calculer
         constants.put(cstar, 889.279521360202);
@@ -65,22 +66,23 @@ public class JSRMSimulation {
         PerformanceResultProvider timeSinceBurnStartProvider = new PerformanceResultProvider(timeSinceBurnStart, chamberPressureResults.get(timeSinceBurnStart));
 
         // TODO: extraire constante2
-        MachSpeedAtNozzleExitSolver machSpeedAtNozzleExitSolver = new MachSpeedAtNozzleExitSolver(KNDX);
+        MachSpeedAtNozzleExitSolver machSpeedAtNozzleExitSolver = new MachSpeedAtNozzleExitSolver(propellant);
 
         //TODO : a recupérer
-        int finalNozzleExpansionRation = 8;
+        double nozzleExitArea = throatAreaProvider.getResult(0) * config.getNozzleExpansionRatio();
+        double finalNozzleExpansionRation = nozzleExitArea / throatAreaProvider.getResult((int) (throatAreaProvider.getSize()-1));
 
 
         Map<JSRMConstant, Double> constants2 = ImmutableMap.<JSRMConstant, Double>builder()
-                .put(patm, 0.101)
-                .put(etanoz, 0.85)
-                .put(k2ph, KNDX.getK2Ph())
-                .put(aexit, 1901.974657752680)
+                .put(patm, config.getAmbiantPressureInMPa())
+                .put(etanoz, config.getNozzleEfficiency())
+                .put(k2ph, propellant.getK2Ph())
+                .put(aexit, nozzleExitArea)
                 .put(me, machSpeedAtNozzleExitSolver.solve(config.getNozzleExpansionRatio()))
                 .put(mef, machSpeedAtNozzleExitSolver.solve(finalNozzleExpansionRation))
                 .build();
 
-        // TODO: extraire les initials values proprement
+        // TODO : extraire les initials values proprement
         Map<Formula, Double> initialValues2 = ImmutableMap.<Formula, Double>builder()
                 .put(OPTIMUM_NOZZLE_EXPANSION_RATIO, 1.0)
                 .put(DELIVERED_THRUST_COEFFICIENT, constants2.get(etanoz))

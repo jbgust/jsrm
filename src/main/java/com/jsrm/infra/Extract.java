@@ -29,7 +29,7 @@ public class Extract {
         constants.put(gstar, solidRocketMotor.getErosiveBurningArea());
 
         //TODO
-        SolidPropellant propellantType = solidRocketMotor.getPropellantGrain().getPropellantType();
+        SolidPropellant propellantType = solidRocketMotor.getPropellantGrain().getPropellant();
         constants.put(kv, 0d);
         constants.put(pbd, 0d);
         constants.put(rat, 8314/ propellantType.getEffectiveMolecularWeight());
