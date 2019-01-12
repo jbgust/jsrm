@@ -59,8 +59,6 @@ class ChamberPressureCalculationTest {
         initialValues.put(MASS_COMBUSTION_PRODUCTS, 0d);
         initialValues.put(DENSITY_COMBUSTION_PRODUCTS, 0d);
 
-
-
         ChamberPressureCalculation chamberPressureCalculation = new ChamberPressureCalculation(constants, initialValues);
 
         results = chamberPressureCalculation.compute();

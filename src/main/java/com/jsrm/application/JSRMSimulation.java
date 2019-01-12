@@ -64,32 +64,45 @@ public class JSRMSimulation {
                 nozzleCriticalPassageAreaProvider, timeSinceBurnStartProvider)
                 .compute(config);
 
-        //TODO : a extraire
+        return buildResult(config, constants, chamberPressureResults, timeSinceBurnStartProvider, performanceCalculationResult);
+    }
+
+    private JSRMResult buildResult(JSRMConfig config, Map<JSRMConstant, Double> constants, Map<ChamberPressureCalculation.Results, List<Double>> chamberPressureResults, PerformanceResultProvider timeSinceBurnStartProvider, PerformanceCalculationResult performanceCalculationResult) {
         double maxThrust = performanceCalculationResult.getResults().get(PerformanceCalculation.Results.thrust).stream().mapToDouble(Double::doubleValue).max().getAsDouble();
         double maxChamberPressure = chamberPressureResults.get(ChamberPressureCalculation.Results.absoluteChamberPressure).stream().mapToDouble(Double::doubleValue).max().getAsDouble();
         double totalImpulse = performanceCalculationResult.getResults().get(PerformanceCalculation.Results.deliveredImpulse).stream().mapToDouble(Double::doubleValue).sum();
         double thrustTime = getThrustTime(timeSinceBurnStartProvider);
-
         long averageThrust = Math.round(totalImpulse/thrustTime);
-
-        //TODO: nozzle desing result
-        Nozzle nozzle = new Nozzle(performanceCalculationResult.getOptimalNozzleExpansionResult(), 0,
-                getNozzleExpansionRatioResult(config, performanceCalculationResult), 0,
-                performanceCalculationResult.getInitialNozzleExitSpeedInMach(), performanceCalculationResult.getFinalNozzleExitSpeedInMach());
-
         double specificImpulse = getSpecificImpulse(constants, totalImpulse);
 
+        return new JSRMResult(
+                maxThrust,
+                totalImpulse,
+                specificImpulse,
+                maxChamberPressure,
+                thrustTime,
+                MotorClassification.getMotorClassification(totalImpulse),
+                buildThrustResult(timeSinceBurnStartProvider, performanceCalculationResult),
+                buildNozzleResult(config, performanceCalculationResult),
+                averageThrust);
+    }
+
+    private Nozzle buildNozzleResult(JSRMConfig config, PerformanceCalculationResult performanceCalculationResult) {
+        //TODO: nozzle desing result
+        return new Nozzle(performanceCalculationResult.getOptimalNozzleExpansionResult(), 0,
+                getNozzleExpansionRatioResult(config, performanceCalculationResult), 0,
+                performanceCalculationResult.getInitialNozzleExitSpeedInMach(), performanceCalculationResult.getFinalNozzleExitSpeedInMach());
+    }
+
+    private List<ThrustResult> buildThrustResult(PerformanceResultProvider timeSinceBurnStartProvider, PerformanceCalculationResult performanceCalculationResult) {
         List<ThrustResult> thrustResults = new ArrayList<>();
 
-        //TODO : magic number
-        for(int i = 0; i < 883; i++){
+        for(int i = 0; i < LAST_CALCULATION_LINE+1; i++){
             thrustResults.add(new ThrustResult(
                     performanceCalculationResult.getResults().get(PerformanceCalculation.Results.thrust).get(i),
                     timeSinceBurnStartProvider.getResult(i)));
         }
-
-        return new JSRMResult(maxThrust, totalImpulse, specificImpulse, maxChamberPressure, thrustTime,
-                MotorClassification.getMotorClassification(totalImpulse), thrustResults, nozzle, averageThrust);
+        return thrustResults;
     }
 
     private double getSpecificImpulse(Map<JSRMConstant, Double> constants, double totalImpulse) {

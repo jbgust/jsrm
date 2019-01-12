@@ -51,16 +51,13 @@ class PerformanceCalculationTest {
 
     @BeforeAll
     static void init(){
-        fillResultProviders();
+        SolidRocketMotor solidRocketMotor = createMotorAsSRM_2014ExcelFile();
+        fillResultProviders(solidRocketMotor);
 
         Map<JSRMConstant, Double> constants = ImmutableMap.<JSRMConstant, Double>builder()
-                .put(patm, 0.101)
-                .put(etanoz, 0.85)
-                .put(k2ph, KNDX.getK2Ph())
-                .put(aexit, 1901.974657752680)
+                .putAll(ConstantsExtractor.extract(solidRocketMotor, new JSRMConfig.Builder().createJSRMConfig(), KNDX.getId()))
                 .put(at, 237.74683)
                 .put(atfinal, 237.74683)
-                .put(propellantId, ((double) KNDX.getId()))
                 .build();
 
         Map<Formula, Double> initialValues = ImmutableMap.<Formula, Double>builder()
@@ -90,13 +87,12 @@ class PerformanceCalculationTest {
         lineNumber++;
     }
 
-    private static void fillResultProviders() {
+    private static void fillResultProviders(SolidRocketMotor solidRocketMotor) {
         Map<Formula, Double> initialValuesChamberPressure = new HashMap<>();
         initialValuesChamberPressure.put(GRAIN_CORE_DIAMETER, 20d);
         initialValuesChamberPressure.put(GRAIN_OUTSIDE_DIAMETER, 69d);
         initialValuesChamberPressure.put(GRAIN_LENGTH, 460d);
 
-        //TODO
         initialValuesChamberPressure.put(TIME_SINCE_BURN_STARTS, 0d);
         initialValuesChamberPressure.put(TEMPORARY_CHAMBER_PRESSURE, 0.101);
         initialValuesChamberPressure.put(MASS_GENERATION_RATE, 0d);
@@ -104,8 +100,6 @@ class PerformanceCalculationTest {
         initialValuesChamberPressure.put(MASS_STORAGE_RATE, 0d);
         initialValuesChamberPressure.put(MASS_COMBUSTION_PRODUCTS, 0d);
         initialValuesChamberPressure.put(DENSITY_COMBUSTION_PRODUCTS, 0d);
-
-        SolidRocketMotor solidRocketMotor = createMotorAsSRM_2014ExcelFile();
 
         Map<JSRMConstant, Double> constantsChamberPressure = ConstantsExtractor.extract(solidRocketMotor, new JSRMConfig.Builder().createJSRMConfig(), KNDX.getId());
 

@@ -113,7 +113,6 @@ public class ChamberPressureCalculation {
         constants.put(tbout, pressureResults.getResult(TIME_SINCE_BURN_STARTS, lastPressureResultsLine));
         constants.put(pbout, pressureResults.getResult(CHAMBER_PRESSURE_MPA, lastPressureResultsLine));
         constants.put(astarf, pressureResults.getResult(NOZZLE_CRITICAL_PASSAGE_AREA, lastPressureResultsLine));
-
         constants.put(expectedPfinal, 2 * constants.get(patm) + PMAXPERC / 100 * getPmax(pressureResults));
         constants.put(tbinc, getTbinc(constants));
     }
