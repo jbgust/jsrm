@@ -3,7 +3,6 @@ package com.jsrm.infra.performance;
 import com.google.common.collect.ImmutableMap;
 import com.jsrm.application.JSRMConfig;
 import com.jsrm.application.motor.SolidRocketMotor;
-import com.jsrm.calculation.Formula;
 import com.jsrm.infra.ConstantsExtractor;
 import com.jsrm.infra.JSRMConstant;
 import com.jsrm.infra.performance.csv.CsvToPerformanceLine;
@@ -14,18 +13,18 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.jsrm.application.JSRMSimulationIT.createMotorAsSRM_2014ExcelFile;
-import static com.jsrm.infra.JSRMConstant.*;
+import static com.jsrm.infra.JSRMConstant.at;
+import static com.jsrm.infra.JSRMConstant.atfinal;
 import static com.jsrm.infra.performance.PerformanceCalculation.Results.deliveredImpulse;
 import static com.jsrm.infra.performance.PerformanceCalculation.Results.thrust;
-import static com.jsrm.infra.performance.PerformanceFormulas.*;
+import static com.jsrm.infra.performance.PerformanceFormulas.DELIVERED_IMPULSE;
+import static com.jsrm.infra.performance.PerformanceFormulas.THRUST;
 import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results;
 import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.*;
-import static com.jsrm.infra.pressure.PressureFormulas.*;
 import static com.jsrm.infra.propellant.PropellantType.KNDX;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
@@ -60,14 +59,7 @@ class PerformanceCalculationTest {
                 .put(atfinal, 237.74683)
                 .build();
 
-        Map<Formula, Double> initialValues = ImmutableMap.<Formula, Double>builder()
-                .put(OPTIMUM_NOZZLE_EXPANSION_RATIO, 1.0)
-                .put(DELIVERED_THRUST_COEFFICIENT, constants.get(etanoz))
-                .put(THRUST, 0.0)
-                .put(DELIVERED_IMPULSE, 0.0)
-                .build();
-
-        performanceResults = new PerformanceCalculation(constants, initialValues,
+        performanceResults = new PerformanceCalculation(constants,
                 chamberPressureProvider, throatAreaProvider,
                 nozzleCriticalPassageAreaProvider, timeSinceBurnStartProvider)
                 .compute(new JSRMConfig.Builder().withNozzleExpansionRatio(8).createJSRMConfig())
@@ -88,22 +80,10 @@ class PerformanceCalculationTest {
     }
 
     private static void fillResultProviders(SolidRocketMotor solidRocketMotor) {
-        Map<Formula, Double> initialValuesChamberPressure = new HashMap<>();
-        initialValuesChamberPressure.put(GRAIN_CORE_DIAMETER, 20d);
-        initialValuesChamberPressure.put(GRAIN_OUTSIDE_DIAMETER, 69d);
-        initialValuesChamberPressure.put(GRAIN_LENGTH, 460d);
+        JSRMConfig config = new JSRMConfig.Builder().createJSRMConfig();
+        Map<JSRMConstant, Double> constantsChamberPressure = ConstantsExtractor.extract(solidRocketMotor, config, KNDX.getId());
 
-        initialValuesChamberPressure.put(TIME_SINCE_BURN_STARTS, 0d);
-        initialValuesChamberPressure.put(TEMPORARY_CHAMBER_PRESSURE, 0.101);
-        initialValuesChamberPressure.put(MASS_GENERATION_RATE, 0d);
-        initialValuesChamberPressure.put(NOZZLE_MASS_FLOW_RATE, 0d);
-        initialValuesChamberPressure.put(MASS_STORAGE_RATE, 0d);
-        initialValuesChamberPressure.put(MASS_COMBUSTION_PRODUCTS, 0d);
-        initialValuesChamberPressure.put(DENSITY_COMBUSTION_PRODUCTS, 0d);
-
-        Map<JSRMConstant, Double> constantsChamberPressure = ConstantsExtractor.extract(solidRocketMotor, new JSRMConfig.Builder().createJSRMConfig(), KNDX.getId());
-
-        Map<Results, List<Double>> chamberPressureResults = new ChamberPressureCalculation(constantsChamberPressure, initialValuesChamberPressure).compute();
+        Map<Results, List<Double>> chamberPressureResults = new ChamberPressureCalculation(solidRocketMotor, config, constantsChamberPressure).compute();
 
         chamberPressureProvider = new PerformanceResultProvider(chamberPressureMPA, chamberPressureResults.get(chamberPressureMPA));
         throatAreaProvider = new PerformanceResultProvider(throatArea, chamberPressureResults.get(throatArea));

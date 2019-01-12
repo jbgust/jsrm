@@ -1,12 +1,15 @@
 package com.jsrm.infra.pressure;
 
 import com.google.common.collect.ImmutableMap;
+import com.jsrm.application.JSRMConfig;
+import com.jsrm.application.motor.SolidRocketMotor;
 import com.jsrm.calculation.CalculatorBuilder;
 import com.jsrm.calculation.CalculatorResults;
 import com.jsrm.calculation.Formula;
 import com.jsrm.infra.JSRMConstant;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
@@ -26,9 +29,9 @@ public class ChamberPressureCalculation {
     private final Map<JSRMConstant, Double> constants;
     private final Map<Formula, Double> initialValues;
 
-    public ChamberPressureCalculation(Map<JSRMConstant, Double> constants, Map<Formula, Double> initialValues) {
+    public ChamberPressureCalculation(SolidRocketMotor motor, JSRMConfig config, Map<JSRMConstant, Double> constants) {
         this.constants = constants;
-        this.initialValues = initialValues;
+        initialValues = getInitialValues(motor, config);
     }
 
     public Map<Results, List<Double>> compute() {
@@ -130,12 +133,27 @@ public class ChamberPressureCalculation {
         return new IncrementTimeBurstSolver().solve(tbincVariables);
     }
 
+    private  Map<Formula, Double> getInitialValues(SolidRocketMotor motor, JSRMConfig config) {
+        Map<Formula, Double> initialValues = new HashMap<>();
+        initialValues.put(GRAIN_CORE_DIAMETER, motor.getPropellantGrain().getCoreDiameter());
+        initialValues.put(GRAIN_OUTSIDE_DIAMETER, motor.getPropellantGrain().getOuterDiameter());
+        initialValues.put(GRAIN_LENGTH, motor.getPropellantGrain().getGrainLength());
+        initialValues.put(TEMPORARY_CHAMBER_PRESSURE, config.getAmbiantPressureInMPa());
+        initialValues.put(TIME_SINCE_BURN_STARTS, 0d);
+        initialValues.put(MASS_GENERATION_RATE, 0d);
+        initialValues.put(NOZZLE_MASS_FLOW_RATE, 0d);
+        initialValues.put(MASS_STORAGE_RATE, 0d);
+        initialValues.put(MASS_COMBUSTION_PRODUCTS, 0d);
+        initialValues.put(DENSITY_COMBUSTION_PRODUCTS, 0d);
+        return initialValues;
+    }
+
     public enum Results {
         throatArea,
         nozzleCriticalPassageArea,
         timeSinceBurnStart,
         chamberPressureMPA,
         absoluteChamberPressure,
-        absoluteChamberPressurePSIG
+        absoluteChamberPressurePSIG;
     }
 }

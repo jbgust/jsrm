@@ -22,12 +22,10 @@ public enum PostBurnPressureFormulas implements Formula {
             .withDependencies("POST_BURN_TIME_SINCE_BURN_STARTS")
             .withConstants(pbout, rat, to, astarf, tbout, vc, cstar)),
 
-    //TODO : formule  utile?
     POST_BURN_ABSOLUTE_CHAMBER_PRESSURE(new FormulaConfiguration("POST_BURN_CHAMBER_PRESSURE_MPA-patm")
             .withDependencies("POST_BURN_CHAMBER_PRESSURE_MPA")
             .withConstants(patm)),
 
-    //TODO : formule  utile?
     POST_BURN_ABSOLUTE_CHAMBER_PRESSURE_PSIG(new FormulaConfiguration("POST_BURN_ABSOLUTE_CHAMBER_PRESSURE*1000000/6895")
             .withDependencies("POST_BURN_ABSOLUTE_CHAMBER_PRESSURE"));
 

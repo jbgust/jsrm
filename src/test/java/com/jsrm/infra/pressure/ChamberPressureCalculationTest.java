@@ -3,7 +3,6 @@ package com.jsrm.infra.pressure;
 import com.google.common.collect.ImmutableMap;
 import com.jsrm.application.JSRMConfig;
 import com.jsrm.application.motor.SolidRocketMotor;
-import com.jsrm.calculation.Formula;
 import com.jsrm.infra.ConstantsExtractor;
 import com.jsrm.infra.JSRMConstant;
 import com.jsrm.infra.pressure.csv.CsvToPressureLine;
@@ -13,14 +12,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.jsrm.application.JSRMSimulationIT.createMotorAsSRM_2014ExcelFile;
 import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results;
 import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.*;
-import static com.jsrm.infra.pressure.PressureFormulas.*;
 import static com.jsrm.infra.pressure.csv.PressureCsvLineAggregator.LINE;
 import static com.jsrm.infra.propellant.PropellantType.KNDX;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,24 +39,11 @@ class ChamberPressureCalculationTest {
     @BeforeAll
     static void init() {
         SolidRocketMotor solidRocketMotor = createMotorAsSRM_2014ExcelFile();
+        JSRMConfig config = new JSRMConfig.Builder().createJSRMConfig();
 
-        Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(solidRocketMotor, new JSRMConfig.Builder().createJSRMConfig(), KNDX.getId());
+        Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(solidRocketMotor, config, KNDX.getId());
 
-        Map<Formula, Double> initialValues = new HashMap<>();
-        initialValues.put(GRAIN_CORE_DIAMETER, 20d);
-        initialValues.put(GRAIN_OUTSIDE_DIAMETER, 69d);
-        initialValues.put(GRAIN_LENGTH, 460d);
-
-        //TODO
-        initialValues.put(TIME_SINCE_BURN_STARTS, 0d);
-        initialValues.put(TEMPORARY_CHAMBER_PRESSURE, 0.101);
-        initialValues.put(MASS_GENERATION_RATE, 0d);
-        initialValues.put(NOZZLE_MASS_FLOW_RATE, 0d);
-        initialValues.put(MASS_STORAGE_RATE, 0d);
-        initialValues.put(MASS_COMBUSTION_PRODUCTS, 0d);
-        initialValues.put(DENSITY_COMBUSTION_PRODUCTS, 0d);
-
-        ChamberPressureCalculation chamberPressureCalculation = new ChamberPressureCalculation(constants, initialValues);
+        ChamberPressureCalculation chamberPressureCalculation = new ChamberPressureCalculation(solidRocketMotor, config, constants);
 
         results = chamberPressureCalculation.compute();
     }

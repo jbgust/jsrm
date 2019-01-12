@@ -63,10 +63,8 @@ class QualificationDuringBurnPressureCalculationsTest {
         initialValues.put(GRAIN_CORE_DIAMETER, 20d);
         initialValues.put(GRAIN_OUTSIDE_DIAMETER, 69d);
         initialValues.put(GRAIN_LENGTH, 460d);
-
-        //TODO
         initialValues.put(TIME_SINCE_BURN_STARTS, 0d);
-        initialValues.put(TEMPORARY_CHAMBER_PRESSURE, 0.101);//patm?
+        initialValues.put(TEMPORARY_CHAMBER_PRESSURE, 0.101);
         initialValues.put(MASS_GENERATION_RATE, 0d);
         initialValues.put(NOZZLE_MASS_FLOW_RATE, 0d);
         initialValues.put(MASS_STORAGE_RATE, 0d);
