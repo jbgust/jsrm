@@ -31,10 +31,12 @@ public enum PostBurnPressureFormulas implements Formula {
 
     private final Expression expression;
     private final Set<String> dependencies;
+    private final String expressionAsString;
 
     PostBurnPressureFormulas(FormulaConfiguration config) {
 
-        ExpressionBuilder expressionBuilder = new ExpressionBuilder(config.getFormula());
+        expressionAsString = config.getFormula();
+        ExpressionBuilder expressionBuilder = new ExpressionBuilder(expressionAsString);
 
         this.dependencies = of(config.getDependencies())
                 .peek(expressionBuilder::variable)
@@ -52,6 +54,11 @@ public enum PostBurnPressureFormulas implements Formula {
     @Override
     public String getName() {
         return name();
+    }
+
+    @Override
+    public String getExpressionAsString() {
+        return expressionAsString;
     }
 
     @Override

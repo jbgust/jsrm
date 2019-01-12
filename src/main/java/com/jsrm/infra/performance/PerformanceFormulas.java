@@ -62,10 +62,12 @@ public enum PerformanceFormulas implements Formula {
 
     private final Expression expression;
     private final Set<String> dependencies;
+    private final String expressionAsString;
 
     PerformanceFormulas(FormulaConfiguration config) {
 
-        ExpressionBuilder expressionBuilder = new ExpressionBuilder(config.getFormula());
+        expressionAsString = config.getFormula();
+        ExpressionBuilder expressionBuilder = new ExpressionBuilder(expressionAsString);
 
         this.dependencies = of(config.getDependencies())
                 .peek(expressionBuilder::variable)
@@ -80,6 +82,8 @@ public enum PerformanceFormulas implements Formula {
         expression = expressionBuilder.build();
     }
 
+
+
     @Override
     public String getName() {
         return name();
@@ -88,6 +92,11 @@ public enum PerformanceFormulas implements Formula {
     @Override
     public Expression getExpression() {
         return expression;
+    }
+
+    @Override
+    public String getExpressionAsString() {
+        return expressionAsString;
     }
 
     @Override

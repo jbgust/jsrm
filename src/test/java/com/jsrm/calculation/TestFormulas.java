@@ -25,10 +25,12 @@ public enum TestFormulas implements Formula {
 
     private final Expression expression;
     private final Set<String> dependencies;
+    private final String expressionAsString;
 
     TestFormulas(String formula, Stream<String> dependencies, Stream<String>  variables) {
 
-        ExpressionBuilder expressionBuilder = new ExpressionBuilder(formula);
+        expressionAsString = formula;
+        ExpressionBuilder expressionBuilder = new ExpressionBuilder(expressionAsString);
 
         this.dependencies = dependencies
                 .peek(expressionBuilder::variable)
@@ -37,6 +39,11 @@ public enum TestFormulas implements Formula {
         variables.forEach(expressionBuilder::variable);
 
         expression = expressionBuilder.build();
+    }
+
+    @Override
+    public String getExpressionAsString() {
+        return expressionAsString;
     }
 
     @Override

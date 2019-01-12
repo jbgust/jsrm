@@ -1,10 +1,16 @@
 package com.jsrm.calculation;
 
+import com.google.common.collect.ImmutableMap;
+import com.jsrm.calculation.exception.InvalidResultException;
+import com.jsrm.calculation.exception.LineCalculatorException;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.jsrm.calculation.Formula.PREVIOUS_VARIABLE_SUFFIX;
+import static java.util.Collections.emptyMap;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toMap;
 
@@ -70,17 +76,27 @@ public class LineCalculator {
         if(hasInitialValue(formula)) {
             currentLineResults.put(formula, initialValues.remove(formula));
         } else {
+            Map<String, Double> variables = emptyMap();
             try {
+                variables = new ImmutableMap.Builder<String, Double>()
+                        .putAll(currentLineProvidedResult)
+                        .putAll(getVariablesFromDependentCalculations(formula))
+                        .putAll(getPreviousVariables(formula))
+                        .putAll(constants)
+                        .build();
                 double result = formula.getExpression()
-                        .setVariables(currentLineProvidedResult)
-                        .setVariables(getVariablesFromDependentCalculations(formula))
-                        .setVariables(getPreviousVariables(formula))
-                        .setVariables(constants)
+                        .setVariables(variables)
                         .evaluate();
 
+                if(Double.isNaN(result)){
+                    throw new InvalidResultException("The result is not a number");
+                }
                 currentLineResults.put(formula, result);
             } catch (Exception e){
-                e.printStackTrace();
+                Map<String, Double> collect = variables.entrySet().stream()
+                        .filter(entry -> formula.getExpression().getVariableNames().contains(entry.getKey()))
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                throw new LineCalculatorException(formula, collect, lineNumber, e);
             }
         }
     }

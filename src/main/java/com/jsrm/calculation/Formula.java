@@ -10,7 +10,9 @@ public interface Formula {
 
     String getName();
 
-    Expression getExpression() ;
+    Expression getExpression();
+
+    String getExpressionAsString();
 
     Set<Formula> getDependencies();
 

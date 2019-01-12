@@ -1,17 +1,17 @@
 package com.jsrm.infra.pressure.function;
 
-import net.objecthunter.exp4j.function.Function;
+import com.jsrm.infra.function.NaNThrowExceptionFunction;
 
 import static java.lang.Math.pow;
 
-public class GrainMassFunction extends Function{
+public class GrainMassFunction extends NaNThrowExceptionFunction{
 
     public GrainMassFunction() {
         super("GrainMass", 2);
     }
 
     @Override
-    public double apply(double... doubles) {
+    public double runFunction(double... doubles) {
         double grainDensity = doubles[0];
         double grainVolumeInCubicMillimeter = doubles[1];
 

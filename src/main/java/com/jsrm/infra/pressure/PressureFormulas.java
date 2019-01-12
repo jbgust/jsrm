@@ -111,10 +111,12 @@ public enum PressureFormulas implements Formula {
 
     private final Expression expression;
     private final Set<String> dependencies;
+    private final String expressionAsString;
 
     PressureFormulas(FormulaConfiguration config) {
 
-        ExpressionBuilder expressionBuilder = new ExpressionBuilder(config.getFormula());
+        expressionAsString = config.getFormula();
+        ExpressionBuilder expressionBuilder = new ExpressionBuilder(expressionAsString);
 
         this.dependencies = of(config.getDependencies())
                 .peek(expressionBuilder::variable)
@@ -137,6 +139,11 @@ public enum PressureFormulas implements Formula {
     @Override
     public Expression getExpression() {
         return expression;
+    }
+
+    @Override
+    public String getExpressionAsString() {
+        return expressionAsString;
     }
 
     @Override

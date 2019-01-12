@@ -1,8 +1,8 @@
 package com.jsrm.application;
 
 import com.google.common.collect.ImmutableMap;
+import com.jsrm.application.exception.SimulationFailedException;
 import com.jsrm.application.motor.SolidRocketMotor;
-import com.jsrm.application.motor.propellant.SolidPropellant;
 import com.jsrm.application.result.JSRMResult;
 import com.jsrm.application.result.MotorClassification;
 import com.jsrm.application.result.Nozzle;
@@ -13,6 +13,7 @@ import com.jsrm.infra.performance.PerformanceCalculation;
 import com.jsrm.infra.performance.PerformanceCalculationResult;
 import com.jsrm.infra.performance.PerformanceResultProvider;
 import com.jsrm.infra.pressure.ChamberPressureCalculation;
+import com.jsrm.infra.propellant.PropellantType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,31 +37,35 @@ public class JSRMSimulation {
     }
 
     public JSRMResult run(JSRMConfig config) {
-        //TODO : get propellantID or register it
-        SolidPropellant propellant = motor.getPropellantGrain().getPropellant();
+        try {
+            //TODO : get propellantID or register it
+            PropellantType propellant = (PropellantType) motor.getPropellantGrain().getPropellant();
 
-        Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(motor, new JSRMConfig.Builder().createJSRMConfig(), 1);
+            Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(motor, new JSRMConfig.Builder().createJSRMConfig(), propellant.getId());
 
-        Map<ChamberPressureCalculation.Results, List<Double>> chamberPressureResults = new ChamberPressureCalculation(motor, config, constants).compute();
+            Map<ChamberPressureCalculation.Results, List<Double>> chamberPressureResults = new ChamberPressureCalculation(motor, config, constants).compute();
 
-        PerformanceResultProvider chamberPressureProvider = new PerformanceResultProvider(chamberPressureMPA, chamberPressureResults.get(chamberPressureMPA));
-        PerformanceResultProvider throatAreaProvider = new PerformanceResultProvider(throatArea, chamberPressureResults.get(throatArea));
-        PerformanceResultProvider nozzleCriticalPassageAreaProvider = new PerformanceResultProvider(nozzleCriticalPassageArea, chamberPressureResults.get(nozzleCriticalPassageArea));
-        PerformanceResultProvider timeSinceBurnStartProvider = new PerformanceResultProvider(timeSinceBurnStart, chamberPressureResults.get(timeSinceBurnStart));
+            PerformanceResultProvider chamberPressureProvider = new PerformanceResultProvider(chamberPressureMPA, chamberPressureResults.get(chamberPressureMPA));
+            PerformanceResultProvider throatAreaProvider = new PerformanceResultProvider(throatArea, chamberPressureResults.get(throatArea));
+            PerformanceResultProvider nozzleCriticalPassageAreaProvider = new PerformanceResultProvider(nozzleCriticalPassageArea, chamberPressureResults.get(nozzleCriticalPassageArea));
+            PerformanceResultProvider timeSinceBurnStartProvider = new PerformanceResultProvider(timeSinceBurnStart, chamberPressureResults.get(timeSinceBurnStart));
 
-        Map<JSRMConstant, Double> performanceConstants = ImmutableMap.<JSRMConstant, Double>builder()
-                .putAll(constants)
-                .put(at, throatAreaProvider.getResult(0))
-                .put(atfinal, throatAreaProvider.getResult((int) (throatAreaProvider.getSize()-1)))
-                .build();
+            Map<JSRMConstant, Double> performanceConstants = ImmutableMap.<JSRMConstant, Double>builder()
+                    .putAll(constants)
+                    .put(at, throatAreaProvider.getResult(0))
+                    .put(atfinal, throatAreaProvider.getResult((int) (throatAreaProvider.getSize()-1)))
+                    .build();
 
 
-        PerformanceCalculationResult performanceCalculationResult = new PerformanceCalculation(performanceConstants,
-                chamberPressureProvider, throatAreaProvider,
-                nozzleCriticalPassageAreaProvider, timeSinceBurnStartProvider)
-                .compute(config);
+            PerformanceCalculationResult performanceCalculationResult = new PerformanceCalculation(performanceConstants,
+                    chamberPressureProvider, throatAreaProvider,
+                    nozzleCriticalPassageAreaProvider, timeSinceBurnStartProvider)
+                    .compute(config);
 
-        return buildResult(config, constants, chamberPressureResults, timeSinceBurnStartProvider, performanceCalculationResult);
+            return buildResult(config, constants, chamberPressureResults, timeSinceBurnStartProvider, performanceCalculationResult);
+        } catch (Exception e) {
+           throw new SimulationFailedException(e);
+        }
     }
 
     private JSRMResult buildResult(JSRMConfig config, Map<JSRMConstant, Double> constants, Map<ChamberPressureCalculation.Results, List<Double>> chamberPressureResults, PerformanceResultProvider timeSinceBurnStartProvider, PerformanceCalculationResult performanceCalculationResult) {

@@ -1,10 +1,10 @@
 package com.jsrm.infra.performance.function;
 
-import net.objecthunter.exp4j.function.Function;
+import com.jsrm.infra.function.NaNThrowExceptionFunction;
 
 import static java.lang.Math.pow;
 
-public class NozzleExitPressureFunction extends Function {
+public class NozzleExitPressureFunction extends NaNThrowExceptionFunction {
     //EXCEL FUNCTION
     //=IF(C28/(1+(k2ph-1)/2*N28^2)^(k2ph/(k2ph-1))<patm*1000000;
     //          patm*1000000;
@@ -16,7 +16,7 @@ public class NozzleExitPressureFunction extends Function {
     }
 
     @Override
-    public double apply(double... doubles) {
+    public double runFunction(double... doubles) {
         double chamberPressureMpa = doubles[0];
         double k2ph = doubles[1];
         double machSpeedAtNozzleExit = doubles[2];

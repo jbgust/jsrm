@@ -1,15 +1,15 @@
 package com.jsrm.infra.pressure.function;
 
-import net.objecthunter.exp4j.function.Function;
+import com.jsrm.infra.function.NaNThrowExceptionFunction;
 
-public class ErosiveBurnFactorFunction extends Function{
+public class ErosiveBurnFactorFunction extends NaNThrowExceptionFunction{
 
     public ErosiveBurnFactorFunction() {
         super("ErosiveBurnFactor", 2);
     }
 
     @Override
-    public double apply(double... doubles) {
+    public double runFunction(double... doubles) {
         double aductDividedByThratArea = doubles[0];
         double gstar = doubles[1];
 

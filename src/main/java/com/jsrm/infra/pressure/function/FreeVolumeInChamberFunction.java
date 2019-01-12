@@ -1,17 +1,17 @@
 package com.jsrm.infra.pressure.function;
 
-import net.objecthunter.exp4j.function.Function;
+import com.jsrm.infra.function.NaNThrowExceptionFunction;
 
 import static java.lang.Math.pow;
 
-public class FreeVolumeInChamberFunction extends Function{
+public class FreeVolumeInChamberFunction extends NaNThrowExceptionFunction{
 
     public FreeVolumeInChamberFunction() {
         super("FreeVolumeInChamber", 2);
     }
 
     @Override
-    public double apply(double... doubles) {
+    public double runFunction(double... doubles) {
         double volumeChamber = doubles[0];
         double grainVolumeInCubicMillimeter = doubles[1];
 

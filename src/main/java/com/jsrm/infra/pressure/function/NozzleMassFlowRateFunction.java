@@ -1,15 +1,15 @@
 package com.jsrm.infra.pressure.function;
 
-import net.objecthunter.exp4j.function.Function;
+import com.jsrm.infra.function.NaNThrowExceptionFunction;
 
-public class NozzleMassFlowRateFunction extends Function {
+public class NozzleMassFlowRateFunction extends NaNThrowExceptionFunction {
 
     public NozzleMassFlowRateFunction() {
         super("NozzleMassFlowRate", 4);
     }
 
     @Override
-    public double apply(double... doubles) {
+    public double runFunction(double... doubles) {
         double pbd = doubles[0];
         double mass_generation_rate = doubles[1];
         double chamber_pressure_previous = doubles[2];
