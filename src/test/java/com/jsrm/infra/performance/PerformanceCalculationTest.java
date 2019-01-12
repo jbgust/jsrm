@@ -2,11 +2,9 @@ package com.jsrm.infra.performance;
 
 import com.google.common.collect.ImmutableMap;
 import com.jsrm.application.JSRMConfig;
-import com.jsrm.application.motor.MotorChamber;
 import com.jsrm.application.motor.SolidRocketMotor;
-import com.jsrm.application.motor.propellant.PropellantGrain;
 import com.jsrm.calculation.Formula;
-import com.jsrm.infra.Extract;
+import com.jsrm.infra.ConstantsExtractor;
 import com.jsrm.infra.JSRMConstant;
 import com.jsrm.infra.performance.csv.CsvToPerformanceLine;
 import com.jsrm.infra.pressure.ChamberPressureCalculation;
@@ -20,8 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
-import static com.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
+import static com.jsrm.application.JSRMSimulationIT.createMotorAsSRM_2014ExcelFile;
 import static com.jsrm.infra.JSRMConstant.*;
 import static com.jsrm.infra.performance.PerformanceCalculation.Results.deliveredImpulse;
 import static com.jsrm.infra.performance.PerformanceCalculation.Results.thrust;
@@ -107,17 +104,10 @@ class PerformanceCalculationTest {
         initialValuesChamberPressure.put(MASS_STORAGE_RATE, 0d);
         initialValuesChamberPressure.put(MASS_COMBUSTION_PRODUCTS, 0d);
         initialValuesChamberPressure.put(DENSITY_COMBUSTION_PRODUCTS, 0d);
-        PropellantGrain propellantGrain = new PropellantGrain(KNDX, 20, 1d,
-                60d, 4d,
-                INHIBITED, EXPOSED, EXPOSED);
-        MotorChamber motorChamber = new MotorChamber(75d, 470d);
 
-        double throatDiameter = 17.3985248919802;
+        SolidRocketMotor solidRocketMotor = createMotorAsSRM_2014ExcelFile();
 
-        SolidRocketMotor solidRocketMotor = new SolidRocketMotor(propellantGrain, motorChamber,
-                6d, throatDiameter, 0d);
-
-        Map<JSRMConstant, Double> constantsChamberPressure = Extract.extractConstants(solidRocketMotor);
+        Map<JSRMConstant, Double> constantsChamberPressure = ConstantsExtractor.extract(solidRocketMotor, new JSRMConfig.Builder().createJSRMConfig(), KNDX.getId());
         constantsChamberPressure.put(cstar, 889.279521360202);
 
         Map<Results, List<Double>> chamberPressureResults = new ChamberPressureCalculation(constantsChamberPressure, initialValuesChamberPressure).compute();

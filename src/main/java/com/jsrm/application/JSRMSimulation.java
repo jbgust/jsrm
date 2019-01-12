@@ -8,7 +8,7 @@ import com.jsrm.application.result.MotorClassification;
 import com.jsrm.application.result.Nozzle;
 import com.jsrm.application.result.ThrustResult;
 import com.jsrm.calculation.Formula;
-import com.jsrm.infra.Extract;
+import com.jsrm.infra.ConstantsExtractor;
 import com.jsrm.infra.JSRMConstant;
 import com.jsrm.infra.performance.PerformanceCalculation;
 import com.jsrm.infra.performance.PerformanceCalculationResult;
@@ -27,8 +27,6 @@ import static com.jsrm.infra.pressure.PressureFormulas.*;
 
 public class JSRMSimulation {
 
-    private static final double GRAVITATIONAL_ACCELERATION = 9.806;
-
     private final SolidRocketMotor motor;
     private JSRMConfig config;
 
@@ -40,7 +38,9 @@ public class JSRMSimulation {
     public JSRMResult run(JSRMConfig config) {
         SolidPropellant propellant = motor.getPropellantGrain().getPropellant();
 
-        Map<JSRMConstant, Double> constants = Extract.extractConstants(motor);
+        //TODO : get propellantID or register it
+        Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(motor, new JSRMConfig.Builder().createJSRMConfig(), 1);
+
         // TODO: A calculer
         constants.put(cstar, 889.279521360202);
 

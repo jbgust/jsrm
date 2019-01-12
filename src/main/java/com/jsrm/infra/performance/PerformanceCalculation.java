@@ -6,7 +6,7 @@ import com.jsrm.calculation.CalculatorBuilder;
 import com.jsrm.calculation.CalculatorResults;
 import com.jsrm.calculation.Formula;
 import com.jsrm.calculation.ResultLineProvider;
-import com.jsrm.infra.Extract;
+import com.jsrm.infra.ConstantsExtractor;
 import com.jsrm.infra.JSRMConstant;
 import com.jsrm.infra.performance.solver.MachSpeedAtNozzleExitSolver;
 
@@ -23,12 +23,6 @@ import static com.jsrm.infra.performance.PerformanceFormulas.*;
 import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.timeSinceBurnStart;
 
 public class PerformanceCalculation {
-
-    private static final int NB_LINE_IN_PERFORMANCE_SPREADSHEET = 835;
-    private static final Double NB_LINE_POST_BURN_CALCULATION = 47d;
-    public static final int LAST_LINE = NB_LINE_IN_PERFORMANCE_SPREADSHEET + NB_LINE_POST_BURN_CALCULATION.intValue();
-
-    private static final int START_LINE = 0;
 
     private final Map<JSRMConstant, Double> constants;
     private final Map<Formula, Double> initialValues;
@@ -55,14 +49,14 @@ public class PerformanceCalculation {
         computeNozzleExitSpeed(config, optimalNozzleExpansionRatio);
 
         CalculatorResults performanceResults = new CalculatorBuilder(DELIVERED_IMPULSE)
-                .withConstants(Extract.toCalculationFormat(constants))
+                .withConstants(ConstantsExtractor.toCalculationFormat(constants))
                 .withInitialValues(initialValues)
                 .withResultLineProviders(chamberPressureMpaResultProvider, throatAreaResultProvider, nozzleCriticalPassageAreaResultProvider, timeResultProvider)
                 .withResultsToSave(THRUST, DELIVERED_IMPULSE)
                 .createCalculator()
-                .compute(START_LINE, LAST_LINE);
+                .compute(START_CALCULATION_LINE, LAST_CALCULATION_LINE);
 
-        performanceResults.addResult(computeLastLine(LAST_LINE, performanceResults));
+        performanceResults.addResult(computeLastLine(LAST_CALCULATION_LINE, performanceResults));
 
         return new PerformanceCalculationResult(ImmutableMap.<Results, List<Double>>builder()
                .put(thrust, performanceResults.getResults(THRUST))
@@ -109,11 +103,11 @@ public class PerformanceCalculation {
 
     private double getOptimalNozzleExpansionRatio() {
         List<Double> optimalNozzleRatioByTime = new CalculatorBuilder(OPTIMUM_NOZZLE_EXPANSION_RATIO)
-                .withConstants(Extract.toCalculationFormat(constants))
+                .withConstants(ConstantsExtractor.toCalculationFormat(constants))
                 .withInitialValues(initialValues)
                 .withResultLineProviders(chamberPressureMpaResultProvider)
                 .createCalculator()
-                .compute(START_LINE, LAST_LINE)
+                .compute(START_CALCULATION_LINE, LAST_CALCULATION_LINE)
                 .getResults(OPTIMUM_NOZZLE_EXPANSION_RATIO);
         return optimalNozzleRatioByTime.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
     }

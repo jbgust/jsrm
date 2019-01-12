@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
 
 @DisplayName("JSRM Integration test")
-class JSRMSimulationIT {
+public class JSRMSimulationIT {
 
     private static JSRMResult jsrmResult;
     private static int lineToAssert = 0;
@@ -144,15 +144,25 @@ class JSRMSimulationIT {
                 .isEqualTo(3.065, offset(0.001d));
     }
 
-    private static SolidRocketMotor createMotorAsSRM_2014ExcelFile() {
-        PropellantGrain propellantGrain = new PropellantGrain(KNDX, 69d, 20d,
-                115d, 4d,
+    /**
+     * Create same solid rocket motor that is used in SRM_2014.xls @see <a href="https://www.nakka-rocketry.net/softw.html">SRM_2014.xls</a>
+     * @return the solid rocket motor described in SRM_2014.xls
+     */
+    public static SolidRocketMotor createMotorAsSRM_2014ExcelFile() {
+        double grainOuterDiameter = 69d;
+        double grainCoreDiameter = 20d;
+        double grainSegmentLength = 115d;
+        double numberOfSegment = 4d;
+        PropellantGrain propellantGrain = new PropellantGrain(KNDX, grainOuterDiameter, grainCoreDiameter,
+                grainSegmentLength, numberOfSegment,
                 INHIBITED, EXPOSED, EXPOSED);
-        MotorChamber motorChamber = new MotorChamber(75d, 470d);
+
+        double chamberInnerDiameter = 75d;
+        double chamberLength = 470d;
+        MotorChamber motorChamber = new MotorChamber(chamberInnerDiameter, chamberLength);
 
         double throatDiameter = 17.3985248919802;
 
-        return new SolidRocketMotor(propellantGrain, motorChamber,
-                6d, throatDiameter, 0d);
+        return new SolidRocketMotor(propellantGrain, motorChamber, throatDiameter);
     }
 }

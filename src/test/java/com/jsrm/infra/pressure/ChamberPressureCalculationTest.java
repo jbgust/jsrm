@@ -1,13 +1,12 @@
 package com.jsrm.infra.pressure;
 
 import com.google.common.collect.ImmutableMap;
+import com.jsrm.application.JSRMConfig;
+import com.jsrm.application.motor.SolidRocketMotor;
 import com.jsrm.calculation.Formula;
+import com.jsrm.infra.ConstantsExtractor;
 import com.jsrm.infra.JSRMConstant;
 import com.jsrm.infra.pressure.csv.CsvToPressureLine;
-import com.jsrm.infra.Extract;
-import com.jsrm.application.motor.MotorChamber;
-import com.jsrm.application.motor.propellant.PropellantGrain;
-import com.jsrm.application.motor.SolidRocketMotor;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -18,13 +17,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.jsrm.application.JSRMSimulationIT.createMotorAsSRM_2014ExcelFile;
 import static com.jsrm.infra.JSRMConstant.cstar;
-import static com.jsrm.infra.pressure.ChamberPressureCalculation.*;
+import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results;
 import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.*;
 import static com.jsrm.infra.pressure.PressureFormulas.*;
 import static com.jsrm.infra.pressure.csv.PressureCsvLineAggregator.LINE;
-import static com.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
-import static com.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
 import static com.jsrm.infra.propellant.PropellantType.KNDX;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
@@ -44,18 +42,9 @@ class ChamberPressureCalculationTest {
 
     @BeforeAll
     static void init() {
+        SolidRocketMotor solidRocketMotor = createMotorAsSRM_2014ExcelFile();
 
-        PropellantGrain propellantGrain = new PropellantGrain(KNDX, 20, 1d,
-                60d, 4d,
-                INHIBITED, EXPOSED, EXPOSED);
-        MotorChamber motorChamber = new MotorChamber(75d, 470d);
-
-        double throatDiameter = 17.3985248919802;
-
-        SolidRocketMotor solidRocketMotor = new SolidRocketMotor(propellantGrain, motorChamber,
-                6d, throatDiameter, 0d);
-
-        Map<JSRMConstant, Double> constants = Extract.extractConstants(solidRocketMotor);
+        Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(solidRocketMotor, new JSRMConfig.Builder().createJSRMConfig(), KNDX.getId());
         constants.put(cstar, 889.279521360202);
 
         Map<Formula, Double> initialValues = new HashMap<>();
