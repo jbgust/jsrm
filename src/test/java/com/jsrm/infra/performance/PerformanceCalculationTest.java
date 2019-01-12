@@ -108,7 +108,6 @@ class PerformanceCalculationTest {
         SolidRocketMotor solidRocketMotor = createMotorAsSRM_2014ExcelFile();
 
         Map<JSRMConstant, Double> constantsChamberPressure = ConstantsExtractor.extract(solidRocketMotor, new JSRMConfig.Builder().createJSRMConfig(), KNDX.getId());
-        constantsChamberPressure.put(cstar, 889.279521360202);
 
         Map<Results, List<Double>> chamberPressureResults = new ChamberPressureCalculation(constantsChamberPressure, initialValuesChamberPressure).compute();
 

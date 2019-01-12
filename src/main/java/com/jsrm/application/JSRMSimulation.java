@@ -26,8 +26,8 @@ import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.*;
 import static com.jsrm.infra.pressure.PressureFormulas.*;
 
 public class JSRMSimulation {
-
     private final SolidRocketMotor motor;
+
     private JSRMConfig config;
 
     public JSRMSimulation(SolidRocketMotor motor) {
@@ -35,54 +35,31 @@ public class JSRMSimulation {
         config = new JSRMConfig.Builder().createJSRMConfig();
     }
 
+    public JSRMResult run() {
+        return run(config);
+    }
+
     public JSRMResult run(JSRMConfig config) {
+        //TODO : get propellantID or register it
         SolidPropellant propellant = motor.getPropellantGrain().getPropellant();
 
-        //TODO : get propellantID or register it
         Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(motor, new JSRMConfig.Builder().createJSRMConfig(), 1);
 
-        // TODO: A calculer
-        constants.put(cstar, 889.279521360202);
-
-        // TODO: extraire les initials values proprement
-        Map<Formula, Double> initialValues = new HashMap<>();
-        initialValues.put(GRAIN_CORE_DIAMETER, motor.getPropellantGrain().getCoreDiameter());
-        initialValues.put(GRAIN_OUTSIDE_DIAMETER, motor.getPropellantGrain().getOuterDiameter());
-        initialValues.put(GRAIN_LENGTH, motor.getPropellantGrain().getGrainLength());
-        initialValues.put(TEMPORARY_CHAMBER_PRESSURE, config.getAmbiantPressureInMPa());
-        initialValues.put(TIME_SINCE_BURN_STARTS, 0d);
-        initialValues.put(MASS_GENERATION_RATE, 0d);
-        initialValues.put(NOZZLE_MASS_FLOW_RATE, 0d);
-        initialValues.put(MASS_STORAGE_RATE, 0d);
-        initialValues.put(MASS_COMBUSTION_PRODUCTS, 0d);
-        initialValues.put(DENSITY_COMBUSTION_PRODUCTS, 0d);
-
-        Map<ChamberPressureCalculation.Results, List<Double>> chamberPressureResults = new ChamberPressureCalculation(constants, initialValues).compute();
+        Map<ChamberPressureCalculation.Results, List<Double>> chamberPressureResults = new ChamberPressureCalculation(constants, getChamberPressureInitialValues(config)).compute();
 
         PerformanceResultProvider chamberPressureProvider = new PerformanceResultProvider(chamberPressureMPA, chamberPressureResults.get(chamberPressureMPA));
         PerformanceResultProvider throatAreaProvider = new PerformanceResultProvider(throatArea, chamberPressureResults.get(throatArea));
         PerformanceResultProvider nozzleCriticalPassageAreaProvider = new PerformanceResultProvider(nozzleCriticalPassageArea, chamberPressureResults.get(nozzleCriticalPassageArea));
         PerformanceResultProvider timeSinceBurnStartProvider = new PerformanceResultProvider(timeSinceBurnStart, chamberPressureResults.get(timeSinceBurnStart));
 
-        // TODO: extraire constante2
-        Map<JSRMConstant, Double> constants2 = ImmutableMap.<JSRMConstant, Double>builder()
-                .put(patm, config.getAmbiantPressureInMPa())
-                .put(etanoz, config.getNozzleEfficiency())
-                .put(k2ph, propellant.getK2Ph())
-                .put(propellantId, constants.get(propellantId))
+        Map<JSRMConstant, Double> performanceConstants = ImmutableMap.<JSRMConstant, Double>builder()
+                .putAll(constants)
                 .put(at, throatAreaProvider.getResult(0))
                 .put(atfinal, throatAreaProvider.getResult((int) (throatAreaProvider.getSize()-1)))
                 .build();
 
-        // TODO : extraire les initials values proprement
-        Map<Formula, Double> initialValues2 = ImmutableMap.<Formula, Double>builder()
-                .put(OPTIMUM_NOZZLE_EXPANSION_RATIO, 1.0)
-                .put(DELIVERED_THRUST_COEFFICIENT, constants2.get(etanoz))
-                .put(THRUST, 0.0)
-                .put(DELIVERED_IMPULSE, 0.0)
-                .build();
 
-        PerformanceCalculationResult performanceCalculationResult = new PerformanceCalculation(constants2, initialValues2,
+        PerformanceCalculationResult performanceCalculationResult = new PerformanceCalculation(performanceConstants,  getPerformanceInitialValues(performanceConstants),
                 chamberPressureProvider, throatAreaProvider,
                 nozzleCriticalPassageAreaProvider, timeSinceBurnStartProvider)
                 .compute(config);
@@ -95,15 +72,16 @@ public class JSRMSimulation {
 
         long averageThrust = Math.round(totalImpulse/thrustTime);
 
+        //TODO: nozzle desing result
         Nozzle nozzle = new Nozzle(performanceCalculationResult.getOptimalNozzleExpansionResult(), 0,
                 getNozzleExpansionRatioResult(config, performanceCalculationResult), 0,
                 performanceCalculationResult.getInitialNozzleExitSpeedInMach(), performanceCalculationResult.getFinalNozzleExitSpeedInMach());
 
-        //TODO calcule constants.get(vc)
-        double grainMass = constants.get(rhopgrain) * 1575555.840 / 1000 / 1000;
-        double specificImpulse = totalImpulse / GRAVITATIONAL_ACCELERATION / grainMass;
+        double specificImpulse = getSpecificImpulse(constants, totalImpulse);
 
         List<ThrustResult> thrustResults = new ArrayList<>();
+
+        //TODO : magic number
         for(int i = 0; i < 883; i++){
             thrustResults.add(new ThrustResult(
                     performanceCalculationResult.getResults().get(PerformanceCalculation.Results.thrust).get(i),
@@ -114,18 +92,40 @@ public class JSRMSimulation {
                 MotorClassification.getMotorClassification(totalImpulse), thrustResults, nozzle, averageThrust);
     }
 
-    private double getNozzleExpansionRatioResult(JSRMConfig config, PerformanceCalculationResult performanceCalculationResult) {
-        return config.isOptimalNozzleDesign()?performanceCalculationResult.getOptimalNozzleExpansionResult() : config.getNozzleExpansionRatio();
+    private double getSpecificImpulse(Map<JSRMConstant, Double> constants, double totalImpulse) {
+        return totalImpulse / GRAVITATIONAL_ACCELERATION / constants.get(mgrain);
     }
 
-    public JSRMResult run() {
-        return run(config);
+    private Map<Formula, Double> getPerformanceInitialValues(Map<JSRMConstant, Double> performanceConstants) {
+        return ImmutableMap.<Formula, Double>builder()
+                    .put(OPTIMUM_NOZZLE_EXPANSION_RATIO, 1.0)
+                    .put(DELIVERED_THRUST_COEFFICIENT, performanceConstants.get(etanoz))
+                    .put(THRUST, 0.0)
+                    .put(DELIVERED_IMPULSE, 0.0)
+                    .build();
+    }
+
+    private Map<Formula, Double> getChamberPressureInitialValues(JSRMConfig config) {
+        Map<Formula, Double> initialValues = new HashMap<>();
+        initialValues.put(GRAIN_CORE_DIAMETER, motor.getPropellantGrain().getCoreDiameter());
+        initialValues.put(GRAIN_OUTSIDE_DIAMETER, motor.getPropellantGrain().getOuterDiameter());
+        initialValues.put(GRAIN_LENGTH, motor.getPropellantGrain().getGrainLength());
+        initialValues.put(TEMPORARY_CHAMBER_PRESSURE, config.getAmbiantPressureInMPa());
+        initialValues.put(TIME_SINCE_BURN_STARTS, 0d);
+        initialValues.put(MASS_GENERATION_RATE, 0d);
+        initialValues.put(NOZZLE_MASS_FLOW_RATE, 0d);
+        initialValues.put(MASS_STORAGE_RATE, 0d);
+        initialValues.put(MASS_COMBUSTION_PRODUCTS, 0d);
+        initialValues.put(DENSITY_COMBUSTION_PRODUCTS, 0d);
+        return initialValues;
+    }
+
+    private double getNozzleExpansionRatioResult(JSRMConfig config, PerformanceCalculationResult performanceCalculationResult) {
+        return config.isOptimalNozzleDesign()?performanceCalculationResult.getOptimalNozzleExpansionResult() : config.getNozzleExpansionRatio();
     }
 
     private double getThrustTime(PerformanceResultProvider timeSinceBurnStartProvider) {
         return timeSinceBurnStartProvider.getResult((int) (timeSinceBurnStartProvider.getSize()-2));
     }
-
-    //TODO: nozzle desing result
 
 }

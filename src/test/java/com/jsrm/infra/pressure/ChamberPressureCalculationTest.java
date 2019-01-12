@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.jsrm.application.JSRMSimulationIT.createMotorAsSRM_2014ExcelFile;
-import static com.jsrm.infra.JSRMConstant.cstar;
 import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results;
 import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.*;
 import static com.jsrm.infra.pressure.PressureFormulas.*;
@@ -45,7 +44,6 @@ class ChamberPressureCalculationTest {
         SolidRocketMotor solidRocketMotor = createMotorAsSRM_2014ExcelFile();
 
         Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(solidRocketMotor, new JSRMConfig.Builder().createJSRMConfig(), KNDX.getId());
-        constants.put(cstar, 889.279521360202);
 
         Map<Formula, Double> initialValues = new HashMap<>();
         initialValues.put(GRAIN_CORE_DIAMETER, 20d);

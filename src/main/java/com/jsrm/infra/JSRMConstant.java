@@ -13,6 +13,7 @@ public enum JSRMConstant {
     dc,
     vc,
     propellantId,
+    mgrain,
 
     //not form motor value
     gstar,
