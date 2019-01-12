@@ -93,10 +93,10 @@ public class LineCalculator {
                 }
                 currentLineResults.put(formula, result);
             } catch (Exception e){
-                Map<String, Double> collect = variables.entrySet().stream()
+                Map<String, Double> variablesUsed = variables.entrySet().stream()
                         .filter(entry -> formula.getExpression().getVariableNames().contains(entry.getKey()))
                         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-                throw new LineCalculatorException(formula, collect, lineNumber, e);
+                throw new LineCalculatorException(formula, variablesUsed, lineNumber, previousLineResults, currentLineResults, e);
             }
         }
     }
