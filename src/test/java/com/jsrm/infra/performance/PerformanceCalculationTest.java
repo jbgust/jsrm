@@ -59,7 +59,7 @@ class PerformanceCalculationTest {
                 .put(atfinal, 237.74683)
                 .build();
 
-        performanceResults = new PerformanceCalculation(constants,
+        performanceResults = new PerformanceCalculation(solidRocketMotor, constants,
                 chamberPressureProvider, throatAreaProvider,
                 nozzleCriticalPassageAreaProvider, timeSinceBurnStartProvider)
                 .compute(new JSRMConfig.Builder().withNozzleExpansionRatio(8).createJSRMConfig())

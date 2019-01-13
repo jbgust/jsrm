@@ -56,7 +56,7 @@ public class JSRMSimulation {
                     .build();
 
 
-            PerformanceCalculationResult performanceCalculationResult = new PerformanceCalculation(performanceConstants,
+            PerformanceCalculationResult performanceCalculationResult = new PerformanceCalculation(motor, performanceConstants,
                     chamberPressureProvider, throatAreaProvider,
                     nozzleCriticalPassageAreaProvider, timeSinceBurnStartProvider)
                     .compute(config);
@@ -88,9 +88,8 @@ public class JSRMSimulation {
     }
 
     private Nozzle buildNozzleResult(JSRMConfig config, PerformanceCalculationResult performanceCalculationResult) {
-        //TODO: nozzle desing result
-        return new Nozzle(performanceCalculationResult.getOptimalNozzleExpansionResult(), 0,
-                getNozzleExpansionRatioResult(config, performanceCalculationResult), 0,
+        return new Nozzle(performanceCalculationResult.getOptimalNozzleExpansionResult(), performanceCalculationResult.getOptimalNozzleExitDiameterInMillimeter(),
+                getNozzleExpansionRatioResult(config, performanceCalculationResult), performanceCalculationResult.getNozzleExitDiameterInMillimeter(),
                 performanceCalculationResult.getInitialNozzleExitSpeedInMach(), performanceCalculationResult.getFinalNozzleExitSpeedInMach());
     }
 

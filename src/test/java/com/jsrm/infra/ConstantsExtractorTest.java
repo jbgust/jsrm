@@ -35,5 +35,5 @@ class ConstantsExtractorTest {
     }
 
     //TODO Test extraction
-    //TODO test sir les inhibited and exposed
+    //TODO test sur les inhibited and exposed
 }

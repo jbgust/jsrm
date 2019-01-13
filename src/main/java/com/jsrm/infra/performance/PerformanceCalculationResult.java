@@ -11,4 +11,6 @@ public class PerformanceCalculationResult {
     double optimalNozzleExpansionResult;
     private double initialNozzleExitSpeedInMach;
     private double finalNozzleExitSpeedInMach;
+    private double optimalNozzleExitDiameterInMillimeter;
+    private double nozzleExitDiameterInMillimeter;
 }

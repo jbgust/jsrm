@@ -53,7 +53,7 @@ public class JSRMSimulationIT {
 
             assertThat(jsrmResult.getMaxChamberPressureInMPa())
                     .describedAs("Max chamber pressure")
-                    .isEqualTo(5.93, offset(0.01d));
+                    .isEqualTo(5.93, offset(0.01));
 
             assertThat(jsrmResult.getMaxThrustInNewton())
                     .describedAs("Max thrust")
@@ -65,15 +65,15 @@ public class JSRMSimulationIT {
 
             assertThat(jsrmResult.getSpecificImpulseInSecond())
                     .describedAs("Specific impulse")
-                    .isEqualTo(130.6, offset(0.1d));
+                    .isEqualTo(130.6, offset(0.1));
 
             assertThat(jsrmResult.getSpecificImpulseInSecond())
                     .describedAs("Specific impulse")
-                    .isEqualTo(130.6, offset(0.1d));
+                    .isEqualTo(130.6, offset(0.1));
 
             assertThat(jsrmResult.getThrustTimeInSecond())
                     .describedAs("Thrust time")
-                    .isEqualTo(2.1575, offset(0.0001d));
+                    .isEqualTo(2.1575, offset(0.0001));
 
             assertThat(jsrmResult.getAverageThrustInNewton())
                     .describedAs("Average thrust")
@@ -84,23 +84,30 @@ public class JSRMSimulationIT {
         @DisplayName("Nozzle configuration")
         void checkNozzleResults() {
 
-            // TODO: Assert Nozzle (diemnsion de la tuyère en fonction des angles alpha et beta
             Nozzle nozzle = jsrmResult.getNozzle();
 
             assertThat(nozzle.getOptimalNozzleExpansionRatio())
                     .describedAs("Optimal nozzle expansion ratio")
-                    .isEqualTo(9.633, offset(0.001d));
+                    .isEqualTo(9.633, offset(0.001));
             assertThat(nozzle.getNozzleExpansionRatio())
                     .describedAs("nozzle expansion ratio")
                     .isEqualTo(8);
 
+            assertThat(nozzle.getNozzleExitDiameterInMillimeter())
+                    .describedAs("Nozzle exit diameter")
+                    .isEqualTo(49.21, offset(0.01));
+
+            assertThat(nozzle.getOptimalNozzleExitDiameterInMillimeter())
+                    .describedAs("Optimal nozzle exit diameter")
+                    .isEqualTo(54, offset(0.01));
+
             assertThat(nozzle.getInitialNozzleExitSpeedInMach())
                     .describedAs("Mach No. at nozzle exit (initial)")
-                    .isEqualTo(2.955, offset(0.001d));
+                    .isEqualTo(2.955, offset(0.001));
 
             assertThat(nozzle.getFinalNozzleExitSpeedInMach())
                     .describedAs("Mach No. at nozzle exit (final)")
-                    .isEqualTo(2.955, offset(0.001d));
+                    .isEqualTo(2.955, offset(0.001));
         }
 
         @ParameterizedTest
@@ -111,7 +118,7 @@ public class JSRMSimulationIT {
             ThrustResult thrustResult = jsrmResult.getThrustResults().get(lineToAssert++);
 
             assertThat(thrustResult.getTimeSinceBurnStartInSecond())
-                    .isEqualTo(expectedThrustResult.getTimeSinceBurnStartInSecond(), offset(0.0001d));
+                    .isEqualTo(expectedThrustResult.getTimeSinceBurnStartInSecond(), offset(0.0001));
 
             assertThat(thrustResult.getThrustInNewton())
                     .isEqualTo(expectedThrustResult.getThrustInNewton(), offset(1d));

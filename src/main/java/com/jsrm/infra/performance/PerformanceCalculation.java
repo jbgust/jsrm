@@ -2,6 +2,7 @@ package com.jsrm.infra.performance;
 
 import com.google.common.collect.ImmutableMap;
 import com.jsrm.application.JSRMConfig;
+import com.jsrm.application.motor.SolidRocketMotor;
 import com.jsrm.calculation.CalculatorBuilder;
 import com.jsrm.calculation.CalculatorResults;
 import com.jsrm.calculation.Formula;
@@ -24,6 +25,7 @@ import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.timeSin
 
 public class PerformanceCalculation {
 
+    private final SolidRocketMotor motor;
     private final Map<JSRMConstant, Double> constants;
     private final Map<Formula, Double> initialValues;
     private final ResultLineProvider chamberPressureMpaResultProvider;
@@ -31,11 +33,12 @@ public class PerformanceCalculation {
     private final ResultLineProvider nozzleCriticalPassageAreaResultProvider;
     private final ResultLineProvider timeResultProvider;
 
-    public PerformanceCalculation(Map<JSRMConstant, Double> constants,
+    public PerformanceCalculation(SolidRocketMotor motor, Map<JSRMConstant, Double> constants,
                                   ResultLineProvider chamberPressureMpaResultProvider,
                                   ResultLineProvider throatAreaResultProvider,
                                   ResultLineProvider nozzleCriticalPassageAreaResultProvider,
                                   ResultLineProvider timeResultProvider) {
+        this.motor = motor;
         this.constants = new HashMap<>(constants);
         this.initialValues = getInitialValues(constants);
         this.chamberPressureMpaResultProvider = chamberPressureMpaResultProvider;
@@ -62,7 +65,9 @@ public class PerformanceCalculation {
                 .put(thrust, performanceResults.getResults(THRUST))
                 .put(deliveredImpulse, performanceResults.getResults(DELIVERED_IMPULSE))
                 .build(), optimalNozzleExpansionRatio,
-                constants.get(me), constants.get(mef));
+                constants.get(me), constants.get(mef),
+                Math.sqrt(optimalNozzleExpansionRatio)*motor.getThroatDiameter(),
+                Math.sqrt(4*constants.get(aexit)/Math.PI));//=RACINE(4*aexit/PI())
     }
 
     private void computeNozzleExitSpeed(JSRMConfig config, double optimalNozzleExpansionRatio) {

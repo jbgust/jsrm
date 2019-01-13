@@ -10,4 +10,6 @@ public class Nozzle {
     private double nozzleExitDiameterInMillimeter;
     private double initialNozzleExitSpeedInMach;
     private double finalNozzleExitSpeedInMach;
+
+
 }
