@@ -10,6 +10,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 
 import static com.jsrm.infra.RegisteredPropellant.getSolidPropellant;
 import static com.jsrm.infra.RegisteredPropellant.registerPropellant;
+import static com.jsrm.infra.propellant.PropellantType.KNDX;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -22,7 +23,7 @@ class RegisteredPropellantTest {
     }
 
     @Test
-    void shouldRegisterPropellant() throws UnregisteredPropellantException {
+    void shouldRegisterPropellant() {
         //GIVEN
         TestSolidPropellant solidPropellant = new TestSolidPropellant();
 
@@ -31,6 +32,15 @@ class RegisteredPropellantTest {
 
         //THEN
         assertThat(getSolidPropellant(propellantId)).isEqualTo(solidPropellant);
+    }
+
+    @Test
+    void shouldNotRegisterPropellantThatHasBeenAlreadyRegistered() {
+        //WHEN
+        Integer propellantId = registerPropellant(KNDX);
+
+        //THEN
+        assertThat(propellantId).isEqualTo(KNDX.getId());
     }
 
     @Test

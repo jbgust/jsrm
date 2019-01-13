@@ -5,6 +5,7 @@ import com.jsrm.infra.propellant.PropellantType;
 import com.jsrm.application.motor.propellant.SolidPropellant;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -16,14 +17,26 @@ public class RegisteredPropellant {
             .collect(toMap(PropellantType::getId, Function.identity()));
 
     /**
-     * Use to register custom propellant
+     * Use to register custom propellant, if the propellant is already registered the function return it's ID
      * @param solidPropellant the propellant you want to register for usage in calculation
      * @return the id of the propellant (used by RegisteredPropellant.getSolidPropellant())
      */
     public static Integer registerPropellant(SolidPropellant solidPropellant){
+        return findPropellant(solidPropellant)
+                .orElseGet(() -> register(solidPropellant));
+    }
+
+    private static Integer register(SolidPropellant solidPropellant) {
         Integer nextId = getNextId();
         registeredPropellant.put(nextId, solidPropellant);
         return nextId;
+    }
+
+    private static Optional<Integer> findPropellant(SolidPropellant solidPropellant) {
+        return registeredPropellant.entrySet().stream()
+                .filter(entry -> solidPropellant.equals(entry.getValue()))
+                .map(Map.Entry::getKey)
+                .findFirst();
     }
 
     /**
@@ -32,7 +45,7 @@ public class RegisteredPropellant {
      * @return the propellant
      * @throws UnregisteredPropellantException if the propellant is not registered
      */
-    public static SolidPropellant getSolidPropellant(int propellantId) throws UnregisteredPropellantException {
+    public static SolidPropellant getSolidPropellant(int propellantId) {
         SolidPropellant propellant = registeredPropellant.get(propellantId);
 
         if(propellant == null){

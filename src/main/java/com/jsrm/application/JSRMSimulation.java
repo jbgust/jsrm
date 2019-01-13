@@ -13,13 +13,13 @@ import com.jsrm.infra.performance.PerformanceCalculation;
 import com.jsrm.infra.performance.PerformanceCalculationResult;
 import com.jsrm.infra.performance.PerformanceResultProvider;
 import com.jsrm.infra.pressure.ChamberPressureCalculation;
-import com.jsrm.infra.propellant.PropellantType;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static com.jsrm.infra.JSRMConstant.*;
+import static com.jsrm.infra.RegisteredPropellant.registerPropellant;
 import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.*;
 
 public class JSRMSimulation {
@@ -38,10 +38,9 @@ public class JSRMSimulation {
 
     public JSRMResult run(JSRMConfig config) {
         try {
-            //TODO : get propellantID or register it
-            PropellantType propellant = (PropellantType) motor.getPropellantGrain().getPropellant();
+            int propellantId = registerPropellant(motor.getPropellantGrain().getPropellant());
 
-            Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(motor, new JSRMConfig.Builder().createJSRMConfig(), propellant.getId());
+            Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(motor, new JSRMConfig.Builder().createJSRMConfig(), propellantId);
 
             Map<ChamberPressureCalculation.Results, List<Double>> chamberPressureResults = new ChamberPressureCalculation(motor, config, constants).compute();
 
