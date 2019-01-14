@@ -5,6 +5,7 @@ import com.jsrm.application.motor.propellant.SolidPropellant;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -18,6 +19,7 @@ public class MachSpeedAtNozzleExitSolver {
     private static final double MIN_MACH_EXIT_SPEED = 0.2;
     private static final double MAX_MACH_EXIT_SPEED = 10.0;
     private static final double SOLVER_PRECISION = 0.0001;
+    private static final int MAX_DICHOTOMIC_LOOP = 100;
     private static final String NOZZLE_EXPANSION_RATION_VARIABLE = "nozzleExpansionRation";
 
     private final Range<Double> EXPECTED_RESULT_RANGE = closed(-SOLVER_PRECISION, SOLVER_PRECISION);
@@ -33,36 +35,55 @@ public class MachSpeedAtNozzleExitSolver {
     }
 
     public double solve(double nozzleExpansionRation) {
-        return nozzleExpansionRation < 2 ? under2RationSolver(nozzleExpansionRation) : over2RatioSolver(nozzleExpansionRation);
+        return nozzleExpansionRation < 2 ? slowMachSpeedSolver(nozzleExpansionRation) : fastMachSpeedSolverSolver(nozzleExpansionRation);
     }
 
-    private double over2RatioSolver(double nozzleExpansionRation) {
+    /**
+     * This solver doesn't work for expand ratio near 1
+     * @param nozzleExpansionRation
+     * @return mach exit speed
+     */
+    private double fastMachSpeedSolverSolver(double nozzleExpansionRation) {
         boolean isSolved = false;
         expression.setVariable(k.name(), solidPropellant.getK());
         expression.setVariable(NOZZLE_EXPANSION_RATION_VARIABLE, nozzleExpansionRation);
 
         Range<Double> initialMachSpeedAtNozzleExitRange = closed(MIN_MACH_EXIT_SPEED, MAX_MACH_EXIT_SPEED);
 
-        double initialMachSpeedAtNozzle = -1;
+        double machSpeedAtNozzleExit = 0;
+        try {
+            return dichotomicSolve(isSolved, initialMachSpeedAtNozzleExitRange);
+        } catch (DichotomicSolveFailedException e) {
+            //fallback if solver failed
+            return slowMachSpeedSolver(nozzleExpansionRation);
+        }
+    }
+
+    private double dichotomicSolve(boolean isSolved, Range<Double> initialMachSpeedAtNozzleExitRange) throws DichotomicSolveFailedException {
+        double machSpeedAtNozzleExit = -1;
+        int iteration=0;
         while(!isSolved) {
 
-            initialMachSpeedAtNozzle = initialMachSpeedAtNozzleExitRange.lowerEndpoint() + (initialMachSpeedAtNozzleExitRange.upperEndpoint() - initialMachSpeedAtNozzleExitRange.lowerEndpoint()) / 2;
-            double result = expression.setVariable(INITIAL_MACH_SPEED_VARIABLE, initialMachSpeedAtNozzle).evaluate();
+            if(iteration > MAX_DICHOTOMIC_LOOP){
+                throw new DichotomicSolveFailedException();
+            }
+
+            machSpeedAtNozzleExit = initialMachSpeedAtNozzleExitRange.lowerEndpoint() + (initialMachSpeedAtNozzleExitRange.upperEndpoint() - initialMachSpeedAtNozzleExitRange.lowerEndpoint()) / 2;
+            double result = expression.setVariable(INITIAL_MACH_SPEED_VARIABLE, machSpeedAtNozzleExit).evaluate();
 
             if(EXPECTED_RESULT_RANGE.contains(result)){
                 isSolved = true;
             } else if (result < 0){
-                initialMachSpeedAtNozzleExitRange = closed(initialMachSpeedAtNozzleExitRange.lowerEndpoint(), initialMachSpeedAtNozzle);
+                initialMachSpeedAtNozzleExitRange = closed(initialMachSpeedAtNozzleExitRange.lowerEndpoint(), machSpeedAtNozzleExit);
             } else {
-                initialMachSpeedAtNozzleExitRange = closed(initialMachSpeedAtNozzle, initialMachSpeedAtNozzleExitRange.upperEndpoint());
+                initialMachSpeedAtNozzleExitRange = closed(machSpeedAtNozzleExit, initialMachSpeedAtNozzleExitRange.upperEndpoint());
             }
-
+            iteration++;
         }
-
-        return initialMachSpeedAtNozzle;
+        return machSpeedAtNozzleExit;
     }
 
-    public double under2RationSolver(double nozzleExpansionRation){
+    private double slowMachSpeedSolver(double nozzleExpansionRation){
 
         if(nozzleExpansionRation == 1){
             return 1;
@@ -72,11 +93,14 @@ public class MachSpeedAtNozzleExitSolver {
         expression.setVariable(NOZZLE_EXPANSION_RATION_VARIABLE, nozzleExpansionRation);
         Map<Double, Double> result = new LinkedHashMap<>();
 
-        for(double exprat = 0.5 ; exprat < 10 ; exprat+=0.0001){
-            result.put(exprat,
-                    Math.abs(expression.setVariable(INITIAL_MACH_SPEED_VARIABLE, exprat).evaluate()));
+        for(double machSpeedAtNozzleExit = 0.5 ; machSpeedAtNozzleExit < 10 ; machSpeedAtNozzleExit+=0.0001){
+            result.put(machSpeedAtNozzleExit,
+                    Math.abs(expression.setVariable(INITIAL_MACH_SPEED_VARIABLE, machSpeedAtNozzleExit).evaluate()));
         }
 
-        return result.entrySet().stream().min((doubleDoubleEntry, t1) -> Double.compare(doubleDoubleEntry.getValue(), t1.getValue())).get().getKey();
+        return result.entrySet().stream().min(Comparator.comparingDouble(Map.Entry::getValue)).get().getKey();
+    }
+
+    private class DichotomicSolveFailedException extends Exception {
     }
 }
