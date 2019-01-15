@@ -108,6 +108,18 @@ public class JSRMSimulationIT {
             assertThat(nozzle.getFinalNozzleExitSpeedInMach())
                     .describedAs("Mach No. at nozzle exit (final)")
                     .isEqualTo(2.955, offset(0.001));
+
+            assertThat(nozzle.getConvergenceLenghtInMillimeter(35))
+                    .describedAs("Convergence length")
+                    .isEqualTo(41.13, offset(0.01));
+
+            assertThat(nozzle.getDivergenceLenghtInMillimeter(12))
+                    .describedAs("Divergence length")
+                    .isEqualTo(74.83, offset(0.01));
+
+            assertThat(nozzle.getOptimalDivergenceLenghtInMillimeter(12))
+                    .describedAs("Optimal divergence length")
+                    .isEqualTo(86.10, offset(0.01));
         }
 
         @ParameterizedTest
