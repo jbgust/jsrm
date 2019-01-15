@@ -15,7 +15,7 @@ public enum JSRMConstant {
     propellantId,
     mgrain,
 
-    //not form motor value
+    //not from motor value
     gstar,
     kv,
     pbd,
