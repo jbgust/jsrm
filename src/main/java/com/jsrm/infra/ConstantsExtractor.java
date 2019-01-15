@@ -4,6 +4,7 @@ import com.jsrm.application.JSRMConfig;
 import com.jsrm.application.motor.SolidRocketMotor;
 import com.jsrm.application.motor.propellant.PropellantGrain;
 import com.jsrm.application.motor.propellant.SolidPropellant;
+import com.jsrm.infra.function.CircleAreaFunction;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
 import java.util.HashMap;
@@ -14,7 +15,7 @@ import static java.util.stream.Collectors.toMap;
 
 public class ConstantsExtractor {
 
-    public static Map<JSRMConstant, Double> extract(SolidRocketMotor solidRocketMotor, JSRMConfig config, int propellantId) {
+    public static Map<JSRMConstant, Double> extract(SolidRocketMotor solidRocketMotor, JSRMConfig config) {
         PropellantGrain propellantGrain = solidRocketMotor.getPropellantGrain();
 
         double twoValue = (propellantGrain.getOuterDiameter() - propellantGrain.getCoreDiameter()) / 2;
@@ -30,6 +31,7 @@ public class ConstantsExtractor {
         constants.put(vc, solidRocketMotor.getMotorChamber().getVolume());
         constants.put(dto, solidRocketMotor.getThroatDiameter());
         constants.put(two, twoValue);
+        constants.put(at, new CircleAreaFunction().runFunction(solidRocketMotor.getThroatDiameter()));
 
         constants.put(erate, config.getNozzleErosionInMillimeter());
         constants.put(gstar, config.getErosiveBurningAreaRatioThreshold());
@@ -41,8 +43,8 @@ public class ConstantsExtractor {
 
         constants.put(pbd, PBD);
         constants.put(rat, UNIVERSAL_GAS_CONSTANT / propellant.getEffectiveMolecularWeight());
-        constants.put(JSRMConstant.k, propellant.getK());
-        constants.put(JSRMConstant.propellantId, new Double(propellantId));
+        constants.put(k, propellant.getK());
+        constants.put(propellantId, Double.valueOf(RegisteredPropellant.registerPropellant(propellant)));
         constants.put(cstar, computeCstarValue(constants));
         constants.put(k2ph, propellant.getK2Ph());
         constants.put(mgrain, computeGrainMass(constants.get(rhopgrain), propellantGrain));

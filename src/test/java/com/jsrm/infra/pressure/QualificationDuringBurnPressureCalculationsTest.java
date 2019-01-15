@@ -22,7 +22,6 @@ import java.util.Map;
 import static com.jsrm.application.JSRMSimulationIT.createMotorAsSRM_2014ExcelFile;
 import static com.jsrm.infra.pressure.PressureFormulas.*;
 import static com.jsrm.infra.pressure.csv.DuringBurnPressureCsvLineAggregator.INTERVAL;
-import static com.jsrm.infra.propellant.PropellantType.KNDX;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
 
@@ -57,7 +56,7 @@ class QualificationDuringBurnPressureCalculationsTest {
     static void init(){
         SolidRocketMotor solidRocketMotor = createMotorAsSRM_2014ExcelFile();
 
-        Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(solidRocketMotor, new JSRMConfig.Builder().createJSRMConfig(), KNDX.getId());
+        Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(solidRocketMotor, new JSRMConfig.Builder().createJSRMConfig());
 
         Map<Formula, Double> initialValues = new HashMap<>();
         initialValues.put(GRAIN_CORE_DIAMETER, 20d);

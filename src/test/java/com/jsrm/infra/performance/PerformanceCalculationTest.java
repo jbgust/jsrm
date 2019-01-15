@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.jsrm.application.JSRMSimulationIT.createMotorAsSRM_2014ExcelFile;
-import static com.jsrm.infra.JSRMConstant.at;
 import static com.jsrm.infra.JSRMConstant.atfinal;
 import static com.jsrm.infra.performance.PerformanceCalculation.Results.deliveredImpulse;
 import static com.jsrm.infra.performance.PerformanceCalculation.Results.thrust;
@@ -25,7 +24,6 @@ import static com.jsrm.infra.performance.PerformanceFormulas.DELIVERED_IMPULSE;
 import static com.jsrm.infra.performance.PerformanceFormulas.THRUST;
 import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results;
 import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.*;
-import static com.jsrm.infra.propellant.PropellantType.KNDX;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
 
@@ -54,8 +52,7 @@ class PerformanceCalculationTest {
         fillResultProviders(solidRocketMotor);
 
         Map<JSRMConstant, Double> constants = ImmutableMap.<JSRMConstant, Double>builder()
-                .putAll(ConstantsExtractor.extract(solidRocketMotor, new JSRMConfig.Builder().createJSRMConfig(), KNDX.getId()))
-                .put(at, 237.74683)
+                .putAll(ConstantsExtractor.extract(solidRocketMotor, new JSRMConfig.Builder().createJSRMConfig()))
                 .put(atfinal, 237.74683)
                 .build();
 
@@ -81,7 +78,7 @@ class PerformanceCalculationTest {
 
     private static void fillResultProviders(SolidRocketMotor solidRocketMotor) {
         JSRMConfig config = new JSRMConfig.Builder().createJSRMConfig();
-        Map<JSRMConstant, Double> constantsChamberPressure = ConstantsExtractor.extract(solidRocketMotor, config, KNDX.getId());
+        Map<JSRMConstant, Double> constantsChamberPressure = ConstantsExtractor.extract(solidRocketMotor, config);
 
         Map<Results, List<Double>> chamberPressureResults = new ChamberPressureCalculation(solidRocketMotor, config, constantsChamberPressure).compute();
 

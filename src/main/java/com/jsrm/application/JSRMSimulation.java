@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.jsrm.infra.JSRMConstant.*;
-import static com.jsrm.infra.RegisteredPropellant.registerPropellant;
 import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.*;
 
 public class JSRMSimulation {
@@ -38,9 +37,7 @@ public class JSRMSimulation {
 
     public JSRMResult run(JSRMConfig config) {
         try {
-            int propellantId = registerPropellant(motor.getPropellantGrain().getPropellant());
-
-            Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(motor, new JSRMConfig.Builder().createJSRMConfig(), propellantId);
+            Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(motor, new JSRMConfig.Builder().createJSRMConfig());
 
             Map<ChamberPressureCalculation.Results, List<Double>> chamberPressureResults = new ChamberPressureCalculation(motor, config, constants).compute();
 
@@ -51,7 +48,6 @@ public class JSRMSimulation {
 
             Map<JSRMConstant, Double> performanceConstants = ImmutableMap.<JSRMConstant, Double>builder()
                     .putAll(constants)
-                    .put(at, throatAreaProvider.getResult(0))
                     .put(atfinal, throatAreaProvider.getResult((int) (throatAreaProvider.getSize()-1)))
                     .build();
 

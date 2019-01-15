@@ -19,7 +19,6 @@ import static com.jsrm.application.JSRMSimulationIT.createMotorAsSRM_2014ExcelFi
 import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results;
 import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.*;
 import static com.jsrm.infra.pressure.csv.PressureCsvLineAggregator.LINE;
-import static com.jsrm.infra.propellant.PropellantType.KNDX;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
 
@@ -41,7 +40,7 @@ class ChamberPressureCalculationTest {
         SolidRocketMotor solidRocketMotor = createMotorAsSRM_2014ExcelFile();
         JSRMConfig config = new JSRMConfig.Builder().createJSRMConfig();
 
-        Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(solidRocketMotor, config, KNDX.getId());
+        Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(solidRocketMotor, config);
 
         ChamberPressureCalculation chamberPressureCalculation = new ChamberPressureCalculation(solidRocketMotor, config, constants);
 

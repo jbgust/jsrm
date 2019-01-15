@@ -20,7 +20,6 @@ import static com.jsrm.application.JSRMSimulationIT.createMotorAsSRM_2014ExcelFi
 import static com.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
 import static com.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
 import static com.jsrm.infra.JSRMConstant.*;
-import static com.jsrm.infra.propellant.PropellantType.KNDX;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
 
@@ -31,10 +30,11 @@ class ConstantsExtractorTest {
         SolidRocketMotor solidRocketMotor = createMotorAsSRM_2014ExcelFile();
         JSRMConfig config = new JSRMConfig.Builder().createJSRMConfig();
 
-        Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(solidRocketMotor, config, KNDX.getId());
+        Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(solidRocketMotor, config);
+
+        assertThat(constants.size()).isEqualTo(numberOfConstantThatShouldBeInitialized());
 
         assertThat(constants.get(two)).isEqualTo(24.5);
-
         assertThat(constants.get(xincp)).isEqualTo(0.0293764988009578, offset(0.00000000000001d));
         assertThat(constants.get(cstar)).isEqualTo(889.279521360202, offset(0.000000000001));
         assertThat(constants.get(patm)).isEqualTo(config.getAmbiantPressureInMPa());
@@ -42,6 +42,7 @@ class ConstantsExtractorTest {
         assertThat(constants.get(ci)).isEqualTo(EXPOSED.value());
         assertThat(constants.get(osi)).isEqualTo(INHIBITED.value());
         assertThat(constants.get(ei)).isEqualTo(EXPOSED.value());
+        assertThat(constants.get(at)).isEqualTo(237.746832, offset(0.000001));
 
         assertThat(constants.get(n)).isEqualTo(4);
         assertThat(constants.get(dto)).isEqualTo(solidRocketMotor.getThroatDiameter());
@@ -64,17 +65,6 @@ class ConstantsExtractorTest {
 
         assertThat(constants.get(mgrain)).isEqualTo(2.812445952, offset(0.000000001));
         assertThat(constants.get(rhopgrain)).isEqualTo(config.getDensityRatio()*propellant.getIdealMassDensity());
-
-//TODO a voir si on peut pas mettre certaines de cs constantes dans ConstantsExtractor.class
-//        assertThat(constants.get(astarf)).isEqualTo(, offset());
-//        assertThat(constants.get(tbinc)).isEqualTo(, offset());
-//        assertThat(constants.get(tbout)).isEqualTo(, offset());
-//        assertThat(constants.get(aexit)).isEqualTo(, offset());
-//        assertThat(constants.get(at)).isEqualTo(, offset());
-//        assertThat(constants.get(atfinal)).isEqualTo(, offset());
-//        assertThat(constants.get(me)).isEqualTo(, offset());
-//        assertThat(constants.get(mef)).isEqualTo(, offset());
-//        assertThat(constants.get(pbout)).isEqualTo(, offset());
     }
 
     @ParameterizedTest
@@ -88,7 +78,7 @@ class ConstantsExtractorTest {
 
         SolidRocketMotor motor = new SolidRocketMotor(propellantGrain, new MotorChamber(1, 1), 1.0);
 
-        Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(motor, new JSRMConfig.Builder().createJSRMConfig(), KNDX.getId());
+        Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(motor, new JSRMConfig.Builder().createJSRMConfig());
 
         assertThat(constants.get(osi)).isEqualTo(value.getOsi());
         assertThat(constants.get(ci)).isEqualTo(value.getCi());
@@ -115,5 +105,11 @@ class ConstantsExtractorTest {
 
         GrainSurface endSurface;
         int ei;
+    }
+
+    private long numberOfConstantThatShouldBeInitialized(){
+        return Stream.of(JSRMConstant.values())
+                .filter(constant -> !constant.isConstantExtractedDuringCalculation())
+                .count();
     }
 }
