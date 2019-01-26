@@ -66,7 +66,7 @@ public class PerformanceCalculation {
                 .put(deliveredImpulse, performanceResults.getResults(DELIVERED_IMPULSE))
                 .build(), optimalNozzleExpansionRatio,
                 constants.get(me), constants.get(mef),
-                Math.sqrt(optimalNozzleExpansionRatio)*motor.getThroatDiameter(),
+                Math.sqrt(optimalNozzleExpansionRatio)*motor.getThroatDiameterInMillimeter(),
                 Math.sqrt(4*constants.get(aexit)/Math.PI));//=RACINE(4*aexit/PI())
     }
 

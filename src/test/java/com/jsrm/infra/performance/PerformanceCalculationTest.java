@@ -2,6 +2,7 @@ package com.jsrm.infra.performance;
 
 import com.google.common.collect.ImmutableMap;
 import com.jsrm.application.JSRMConfig;
+import com.jsrm.application.JSRMConfigBuilder;
 import com.jsrm.application.motor.SolidRocketMotor;
 import com.jsrm.infra.ConstantsExtractor;
 import com.jsrm.infra.JSRMConstant;
@@ -52,14 +53,14 @@ class PerformanceCalculationTest {
         fillResultProviders(solidRocketMotor);
 
         Map<JSRMConstant, Double> constants = ImmutableMap.<JSRMConstant, Double>builder()
-                .putAll(ConstantsExtractor.extract(solidRocketMotor, new JSRMConfig.Builder().createJSRMConfig()))
+                .putAll(ConstantsExtractor.extract(solidRocketMotor, new JSRMConfigBuilder().createJSRMConfig()))
                 .put(atfinal, 237.74683)
                 .build();
 
         performanceResults = new PerformanceCalculation(solidRocketMotor, constants,
                 chamberPressureProvider, throatAreaProvider,
                 nozzleCriticalPassageAreaProvider, timeSinceBurnStartProvider)
-                .compute(new JSRMConfig.Builder().withNozzleExpansionRatio(8).createJSRMConfig())
+                .compute(new JSRMConfigBuilder().withNozzleExpansionRatio(8).createJSRMConfig())
                 .getResults();
 
     }
@@ -77,7 +78,7 @@ class PerformanceCalculationTest {
     }
 
     private static void fillResultProviders(SolidRocketMotor solidRocketMotor) {
-        JSRMConfig config = new JSRMConfig.Builder().createJSRMConfig();
+        JSRMConfig config = new JSRMConfigBuilder().createJSRMConfig();
         Map<JSRMConstant, Double> constantsChamberPressure = ConstantsExtractor.extract(solidRocketMotor, config);
 
         Map<Results, List<Double>> chamberPressureResults = new ChamberPressureCalculation(solidRocketMotor, config, constantsChamberPressure).compute();

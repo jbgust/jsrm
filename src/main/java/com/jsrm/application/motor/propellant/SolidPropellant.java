@@ -2,6 +2,9 @@ package com.jsrm.application.motor.propellant;
 
 import com.jsrm.application.exception.ChamberPressureOutOfBoundException;
 
+/**
+ * This interface allow you to create your own propellant.
+ */
 public interface SolidPropellant {
 
     /**

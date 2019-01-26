@@ -1,5 +1,8 @@
 package com.jsrm.application.motor.propellant;
 
+/**
+ * To define if a surface is exposed to the combustion or not
+ */
 public enum GrainSurface {
     EXPOSED(1),
     INHIBITED(0);

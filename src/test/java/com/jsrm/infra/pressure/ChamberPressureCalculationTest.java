@@ -2,6 +2,7 @@ package com.jsrm.infra.pressure;
 
 import com.google.common.collect.ImmutableMap;
 import com.jsrm.application.JSRMConfig;
+import com.jsrm.application.JSRMConfigBuilder;
 import com.jsrm.application.motor.SolidRocketMotor;
 import com.jsrm.infra.ConstantsExtractor;
 import com.jsrm.infra.JSRMConstant;
@@ -38,7 +39,7 @@ class ChamberPressureCalculationTest {
     @BeforeAll
     static void init() {
         SolidRocketMotor solidRocketMotor = createMotorAsSRM_2014ExcelFile();
-        JSRMConfig config = new JSRMConfig.Builder().createJSRMConfig();
+        JSRMConfig config = new JSRMConfigBuilder().createJSRMConfig();
 
         Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(solidRocketMotor, config);
 

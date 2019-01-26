@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
 
-class MotorChamberTest {
+class CombustionChamberTest {
 
     @Test
     void shouldComputeChamberVolume() {
@@ -14,7 +14,7 @@ class MotorChamberTest {
         int ChamberLength = 70;
 
         //WHEN
-        double volume = new MotorChamber(chamberInnerDiameter, ChamberLength).getVolume();
+        double volume = new CombustionChamber(chamberInnerDiameter, ChamberLength).getVolume();
 
         //THEN
         assertThat(volume).isEqualTo(21991.14857, offset(0.00001d));

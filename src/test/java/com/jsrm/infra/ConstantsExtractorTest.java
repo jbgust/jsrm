@@ -1,7 +1,8 @@
 package com.jsrm.infra;
 
 import com.jsrm.application.JSRMConfig;
-import com.jsrm.application.motor.MotorChamber;
+import com.jsrm.application.JSRMConfigBuilder;
+import com.jsrm.application.motor.CombustionChamber;
 import com.jsrm.application.motor.SolidRocketMotor;
 import com.jsrm.application.motor.propellant.GrainSurface;
 import com.jsrm.application.motor.propellant.PropellantGrain;
@@ -28,7 +29,7 @@ class ConstantsExtractorTest {
     @Test
     void shouldExtractConstants(){
         SolidRocketMotor solidRocketMotor = createMotorAsSRM_2014ExcelFile();
-        JSRMConfig config = new JSRMConfig.Builder().createJSRMConfig();
+        JSRMConfig config = new JSRMConfigBuilder().createJSRMConfig();
 
         Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(solidRocketMotor, config);
 
@@ -45,12 +46,12 @@ class ConstantsExtractorTest {
         assertThat(constants.get(at)).isEqualTo(237.746832, offset(0.000001));
 
         assertThat(constants.get(n)).isEqualTo(4);
-        assertThat(constants.get(dto)).isEqualTo(solidRocketMotor.getThroatDiameter());
+        assertThat(constants.get(dto)).isEqualTo(solidRocketMotor.getThroatDiameterInMillimeter());
         assertThat(constants.get(erate)).isEqualTo(config.getNozzleErosionInMillimeter());
 
-        MotorChamber motorChamber = solidRocketMotor.getMotorChamber();
-        assertThat(constants.get(dc)).isEqualTo(motorChamber.getChamberInnerDiameter());
-        assertThat(constants.get(vc)).isEqualTo(motorChamber.getVolume());
+        CombustionChamber combustionChamber = solidRocketMotor.getCombustionChamber();
+        assertThat(constants.get(dc)).isEqualTo(combustionChamber.getChamberInnerDiameterInMillimeter());
+        assertThat(constants.get(vc)).isEqualTo(combustionChamber.getVolume());
 
         assertThat(constants.get(gstar)).isEqualTo(config.getErosiveBurningAreaRatioThreshold());
         assertThat(constants.get(kv)).isEqualTo(config.getErosiveBurningVelocityCoefficient());
@@ -76,9 +77,9 @@ class ConstantsExtractorTest {
                 .withOuterSurface(value.getOuterSurface())
                 .build();
 
-        SolidRocketMotor motor = new SolidRocketMotor(propellantGrain, new MotorChamber(1, 1), 1.0);
+        SolidRocketMotor motor = new SolidRocketMotor(propellantGrain, new CombustionChamber(1, 1), 1.0);
 
-        Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(motor, new JSRMConfig.Builder().createJSRMConfig());
+        Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(motor, new JSRMConfigBuilder().createJSRMConfig());
 
         assertThat(constants.get(osi)).isEqualTo(value.getOsi());
         assertThat(constants.get(ci)).isEqualTo(value.getCi());

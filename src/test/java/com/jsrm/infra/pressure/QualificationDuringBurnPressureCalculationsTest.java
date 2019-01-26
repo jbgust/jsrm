@@ -1,7 +1,7 @@
 package com.jsrm.infra.pressure;
 
 import com.google.common.collect.ImmutableMap;
-import com.jsrm.application.JSRMConfig;
+import com.jsrm.application.JSRMConfigBuilder;
 import com.jsrm.application.motor.SolidRocketMotor;
 import com.jsrm.calculation.Calculator;
 import com.jsrm.calculation.CalculatorBuilder;
@@ -56,7 +56,7 @@ class QualificationDuringBurnPressureCalculationsTest {
     static void init(){
         SolidRocketMotor solidRocketMotor = createMotorAsSRM_2014ExcelFile();
 
-        Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(solidRocketMotor, new JSRMConfig.Builder().createJSRMConfig());
+        Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(solidRocketMotor, new JSRMConfigBuilder().createJSRMConfig());
 
         Map<Formula, Double> initialValues = new HashMap<>();
         initialValues.put(GRAIN_CORE_DIAMETER, 20d);

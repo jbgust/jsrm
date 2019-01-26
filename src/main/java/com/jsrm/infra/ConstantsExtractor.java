@@ -26,12 +26,12 @@ public class ConstantsExtractor {
         constants.put(osi, (double) propellantGrain.getOuterSurface().value());
         constants.put(ei, (double) propellantGrain.getEndsSurface().value());
         constants.put(xincp, twoValue / (NUMBER_LINE_DURING_BURN_CALCULATION - 1));
-        constants.put(dc, solidRocketMotor.getMotorChamber().getChamberInnerDiameter());
+        constants.put(dc, solidRocketMotor.getCombustionChamber().getChamberInnerDiameterInMillimeter());
         constants.put(n, propellantGrain.getNumberOfSegment());
-        constants.put(vc, solidRocketMotor.getMotorChamber().getVolume());
-        constants.put(dto, solidRocketMotor.getThroatDiameter());
+        constants.put(vc, solidRocketMotor.getCombustionChamber().getVolume());
+        constants.put(dto, solidRocketMotor.getThroatDiameterInMillimeter());
         constants.put(two, twoValue);
-        constants.put(at, new CircleAreaFunction().runFunction(solidRocketMotor.getThroatDiameter()));
+        constants.put(at, new CircleAreaFunction().runFunction(solidRocketMotor.getThroatDiameterInMillimeter()));
 
         constants.put(erate, config.getNozzleErosionInMillimeter());
         constants.put(gstar, config.getErosiveBurningAreaRatioThreshold());

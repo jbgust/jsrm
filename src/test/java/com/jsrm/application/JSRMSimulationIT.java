@@ -1,7 +1,7 @@
 package com.jsrm.application;
 
 import com.jsrm.application.csv.CsvToThrustResult;
-import com.jsrm.application.motor.MotorChamber;
+import com.jsrm.application.motor.CombustionChamber;
 import com.jsrm.application.motor.SolidRocketMotor;
 import com.jsrm.application.motor.propellant.PropellantGrain;
 import com.jsrm.application.result.JSRMResult;
@@ -33,7 +33,7 @@ public class JSRMSimulationIT {
 
         JSRMSimulation jsrmSimulation = new JSRMSimulation(solidRocketMotor);
         //see SRM_2014.xls
-        JSRMConfig jsrmConfig = new JSRMConfig.Builder()
+        JSRMConfig jsrmConfig = new JSRMConfigBuilder()
                 .withNozzleExpansionRatio(8)
                 .createJSRMConfig();
 
@@ -178,10 +178,10 @@ public class JSRMSimulationIT {
 
         double chamberInnerDiameter = 75d;
         double chamberLength = 470d;
-        MotorChamber motorChamber = new MotorChamber(chamberInnerDiameter, chamberLength);
+        CombustionChamber combustionChamber = new CombustionChamber(chamberInnerDiameter, chamberLength);
 
         double throatDiameter = 17.3985248919802;
 
-        return new SolidRocketMotor(propellantGrain, motorChamber, throatDiameter);
+        return new SolidRocketMotor(propellantGrain, combustionChamber, throatDiameter);
     }
 }

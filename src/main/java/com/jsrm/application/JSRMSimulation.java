@@ -22,22 +22,36 @@ import static com.jsrm.infra.JSRMConstant.*;
 import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.*;
 
 public class JSRMSimulation {
+
     private final SolidRocketMotor motor;
 
     private JSRMConfig config;
 
+    /**
+     * Create a JSRMSimulation for a motor
+     * @param motor the motor that will be used in simulation
+     */
     public JSRMSimulation(SolidRocketMotor motor) {
         this.motor = motor;
-        config = new JSRMConfig.Builder().createJSRMConfig();
+        config = new JSRMConfigBuilder().createJSRMConfig();
     }
 
+    /**
+     * Run the simulation with default configuration
+     * @return The simuation result
+     */
     public JSRMResult run() {
         return run(config);
     }
 
+    /**
+     * Run the simulation with the given configuration
+     * @param config
+     * @return The simuation result
+     */
     public JSRMResult run(JSRMConfig config) {
         try {
-            Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(motor, new JSRMConfig.Builder().createJSRMConfig());
+            Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(motor, new JSRMConfigBuilder().createJSRMConfig());
 
             Map<ChamberPressureCalculation.Results, List<Double>> chamberPressureResults = new ChamberPressureCalculation(motor, config, constants).compute();
 
@@ -84,7 +98,7 @@ public class JSRMSimulation {
     }
 
     private Nozzle buildNozzleResult(JSRMConfig config, PerformanceCalculationResult performanceCalculationResult) {
-        return new Nozzle(motor.getThroatDiameter(), motor.getMotorChamber().getChamberInnerDiameter(), performanceCalculationResult.getOptimalNozzleExpansionResult(), performanceCalculationResult.getOptimalNozzleExitDiameterInMillimeter(),
+        return new Nozzle(motor.getThroatDiameterInMillimeter(), motor.getCombustionChamber().getChamberInnerDiameterInMillimeter(), performanceCalculationResult.getOptimalNozzleExpansionResult(), performanceCalculationResult.getOptimalNozzleExitDiameterInMillimeter(),
                 getNozzleExpansionRatioResult(config, performanceCalculationResult), performanceCalculationResult.getNozzleExitDiameterInMillimeter(),
                 performanceCalculationResult.getInitialNozzleExitSpeedInMach(), performanceCalculationResult.getFinalNozzleExitSpeedInMach());
     }
