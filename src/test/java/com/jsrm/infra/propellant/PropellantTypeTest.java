@@ -1,6 +1,7 @@
 package com.jsrm.infra.propellant;
 
 import com.jsrm.application.exception.ChamberPressureOutOfBoundException;
+import com.jsrm.application.motor.propellant.PropellantType;
 import com.jsrm.application.motor.propellant.SolidPropellant;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -8,7 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.EnumSource;
 
-import static com.jsrm.infra.propellant.PropellantType.*;
+import static com.jsrm.application.motor.propellant.PropellantType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

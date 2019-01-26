@@ -15,7 +15,7 @@ public class PropellantGrain {
 
     /**
      * Create an Hollow cylindrical propellant grain
-     * @param propellant propellant used (for default propellant see {@link com.jsrm.infra.propellant.PropellantType})
+     * @param propellant propellant used (for default propellant see {@link PropellantType})
      * @param outerDiameter outer grain diameter in millimeter
      * @param coreDiameter core  grain diameter in millimeter
      * @param segmentLength the length of a segment gran in millimeter. Example : if using 4 grains of 34mm each, segmentLength is 34.

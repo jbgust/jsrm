@@ -1,7 +1,7 @@
 package com.jsrm.infra;
 
 import com.jsrm.application.exception.UnregisteredPropellantException;
-import com.jsrm.infra.propellant.PropellantType;
+import com.jsrm.application.motor.propellant.PropellantType;
 import com.jsrm.application.motor.propellant.SolidPropellant;
 
 import java.util.Map;

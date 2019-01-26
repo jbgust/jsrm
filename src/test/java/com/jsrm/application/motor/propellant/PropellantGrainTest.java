@@ -3,7 +3,7 @@ package com.jsrm.application.motor.propellant;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
 
-import static com.jsrm.infra.propellant.PropellantType.KNDX;
+import static com.jsrm.application.motor.propellant.PropellantType.KNDX;
 import static com.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
 import static com.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
 import static org.assertj.core.api.Assertions.assertThat;

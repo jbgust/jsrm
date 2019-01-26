@@ -1,14 +1,17 @@
-package com.jsrm.infra.propellant;
+package com.jsrm.application.motor.propellant;
 
 import com.google.common.collect.ImmutableRangeMap;
 import com.google.common.collect.RangeMap;
 import com.jsrm.application.exception.ChamberPressureOutOfBoundException;
-import com.jsrm.application.motor.propellant.SolidPropellant;
+import com.jsrm.infra.propellant.BurnRateData;
 
 import static com.google.common.collect.Range.atLeast;
 import static com.google.common.collect.Range.closedOpen;
 
 public enum PropellantType implements SolidPropellant {
+    /**
+     * KNDX = Potassium Nitrate/Dextrose, 65/35 O/F ratio
+     */
     KNDX("KNDX = Potassium Nitrate/Dextrose, 65/35 O/F ratio",
             1.879, 1.043, 1.1308, 42.39, 1710,
             new ImmutableRangeMap.Builder<Double, BurnRateData>()
@@ -21,6 +24,9 @@ public enum PropellantType implements SolidPropellant {
                     .put(atLeast(8.501535), new BurnRateData(4.77524086347659, 0.4417))
                     .build(), 1),
 
+    /**
+     * KNSB fine = potassium nitrate/sorbitol 65/35 O/F ratio, oxidizer finely milled
+     */
     KNSB_FINE("KNSB fine = potassium nitrate/sorbitol 65/35 O/F ratio, oxidizer finely milled",
             1.841, 1.042, 1.1361, 39.90, 1600,
             new ImmutableRangeMap.Builder<Double, BurnRateData>()
@@ -33,6 +39,9 @@ public enum PropellantType implements SolidPropellant {
                     .put(atLeast(7.0329), new BurnRateData(9.65320361987685, 0.0638))
                     .build(), 2),
 
+    /**
+     * KNSB coarse = potassium nitrate/sorbitol 65/35 O/F ratio, oxidizer granular or lightly milled prills
+     */
     KNSB_COARSE("KNSB coarse = potassium nitrate/sorbitol 65/35 O/F ratio, oxidizer granular or lightly milled prills",
             1.841, 1.042, 1.1361, 39.90, 1600,
             new ImmutableRangeMap.Builder<Double, BurnRateData>()
@@ -41,6 +50,9 @@ public enum PropellantType implements SolidPropellant {
                     .put(atLeast(0.101), new BurnRateData(5.13, 0.22))
                     .build(), 3),
 
+    /**
+     * KNSU = potassium nitrate/sucrose 65/35 O/F ratio, oxidizer finely milled
+     */
     KNSU("KNSU = potassium nitrate/sucrose 65/35 O/F ratio, oxidizer finely milled",
             1.889, 1.044, 1.133, 41.98, 1720,
             new ImmutableRangeMap.Builder<Double, BurnRateData>()
@@ -49,6 +61,9 @@ public enum PropellantType implements SolidPropellant {
                     .put(atLeast(0.101), new BurnRateData(8.26, 0.319))
                     .build(), 4),
 
+    /**
+     * KNER coarse = potassium nitrate/erythritol 65/35 O/F ratio, oxidizer granular or lightly milled prills
+     */
     KNER_COARSE("KNER coarse = potassium nitrate/erythritol 65/35 O/F ratio, oxidizer granular or lightly milled prills",
             1.820, 1.0426, 1.139, 38.78, 1608,
             new ImmutableRangeMap.Builder<Double, BurnRateData>()
@@ -57,6 +72,9 @@ public enum PropellantType implements SolidPropellant {
                     .put(atLeast(0.101), new BurnRateData(2.9, 0.4))
                     .build(), 5),
 
+    /**
+     * KNMN coarse = potassium nitrate/mannitol 65/35 O/F ratio, oxidizer granular or lightly milled prills
+     */
     KNMN_COARSE("KNMN coarse = potassium nitrate/mannitol 65/35 O/F ratio, oxidizer granular or lightly milled prills",
             1.854, 1.042, 1.1363, 39.826, 1616,
             new ImmutableRangeMap.Builder<Double, BurnRateData>()

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
 import static com.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
-import static com.jsrm.infra.propellant.PropellantType.KNSB_FINE;
+import static com.jsrm.application.motor.propellant.PropellantType.KNSB_FINE;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class JSRMSimulationTest {

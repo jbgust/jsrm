@@ -17,7 +17,7 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import static com.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
 import static com.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
 import static com.jsrm.application.result.MotorClassification.L;
-import static com.jsrm.infra.propellant.PropellantType.KNDX;
+import static com.jsrm.application.motor.propellant.PropellantType.KNDX;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
 

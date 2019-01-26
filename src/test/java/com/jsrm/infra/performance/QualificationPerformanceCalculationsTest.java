@@ -16,7 +16,7 @@ import static com.google.common.collect.Sets.newHashSet;
 import static com.jsrm.infra.JSRMConstant.*;
 import static com.jsrm.infra.performance.PerformanceFormulas.*;
 import static com.jsrm.infra.pressure.ChamberPressureCalculation.Results.*;
-import static com.jsrm.infra.propellant.PropellantType.KNDX;
+import static com.jsrm.application.motor.propellant.PropellantType.KNDX;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
 

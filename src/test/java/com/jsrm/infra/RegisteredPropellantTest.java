@@ -2,7 +2,7 @@ package com.jsrm.infra;
 
 import com.jsrm.application.exception.UnregisteredPropellantException;
 import com.jsrm.application.exception.ChamberPressureOutOfBoundException;
-import com.jsrm.infra.propellant.PropellantType;
+import com.jsrm.application.motor.propellant.PropellantType;
 import com.jsrm.application.motor.propellant.SolidPropellant;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 
 import static com.jsrm.infra.RegisteredPropellant.getSolidPropellant;
 import static com.jsrm.infra.RegisteredPropellant.registerPropellant;
-import static com.jsrm.infra.propellant.PropellantType.KNDX;
+import static com.jsrm.application.motor.propellant.PropellantType.KNDX;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

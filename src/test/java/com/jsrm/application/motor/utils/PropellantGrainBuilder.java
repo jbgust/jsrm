@@ -6,7 +6,7 @@ import com.jsrm.application.motor.propellant.SolidPropellant;
 
 import static com.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
 import static com.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
-import static com.jsrm.infra.propellant.PropellantType.KNDX;
+import static com.jsrm.application.motor.propellant.PropellantType.KNDX;
 
 public class PropellantGrainBuilder {
 

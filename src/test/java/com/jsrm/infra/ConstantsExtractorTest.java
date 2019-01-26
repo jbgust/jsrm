@@ -8,7 +8,7 @@ import com.jsrm.application.motor.propellant.GrainSurface;
 import com.jsrm.application.motor.propellant.PropellantGrain;
 import com.jsrm.application.motor.propellant.SolidPropellant;
 import com.jsrm.application.motor.utils.PropellantGrainBuilder;
-import com.jsrm.infra.propellant.PropellantType;
+import com.jsrm.application.motor.propellant.PropellantType;
 import lombok.Value;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
