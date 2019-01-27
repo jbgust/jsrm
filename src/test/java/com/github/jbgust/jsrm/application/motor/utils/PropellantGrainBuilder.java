@@ -10,14 +10,14 @@ import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType
 
 public class PropellantGrainBuilder {
 
-    private int coreDiameter = 10;
-    private int segmentLength = 50;
-    private int numberOfSegments = 1;
+    private double coreDiameter = 10;
+    private double segmentLength = 50;
+    private double numberOfSegments = 1;
     private GrainSurface outerSurface = INHIBITED;
     private GrainSurface endsSurface = INHIBITED;
     private GrainSurface coreSurface = EXPOSED;
     private SolidPropellant propellantType = KNDX;
-    private int outerDiameter = 20;
+    private double outerDiameter = 20;
 
     public PropellantGrain build() {
         return new PropellantGrain(propellantType, outerDiameter, coreDiameter, segmentLength, numberOfSegments, outerSurface, endsSurface, coreSurface);
@@ -38,8 +38,24 @@ public class PropellantGrainBuilder {
         return this;
     }
 
-    public PropellantGrainBuilder withNumberOfSegments(int numberOfSegments) {
+    public PropellantGrainBuilder withNumberOfSegments(double numberOfSegments) {
         this.numberOfSegments = numberOfSegments;
         return this;
     }
+
+    public PropellantGrainBuilder withCoreDiameter(double coreDiameter) {
+        this.coreDiameter = coreDiameter;
+        return this;
+    }
+
+    public PropellantGrainBuilder withOuterDiameter(double outerDiameter) {
+        this.outerDiameter = outerDiameter;
+        return this;
+    }
+
+    public PropellantGrainBuilder withSegmentLength(double segmentLength) {
+        this.segmentLength = segmentLength;
+        return this;
+    }
+
 }
