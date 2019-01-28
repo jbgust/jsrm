@@ -1,8 +1,5 @@
 package com.github.jbgust.jsrm.infra.pressure;
 
-import com.github.jbgust.jsrm.infra.pressure.csv.CsvToDuringBurnPressureLine;
-import com.github.jbgust.jsrm.infra.pressure.csv.DuringBurnPressureCsvLineAggregator;
-import com.google.common.collect.ImmutableMap;
 import com.github.jbgust.jsrm.application.JSRMConfigBuilder;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.calculation.Calculator;
@@ -11,6 +8,9 @@ import com.github.jbgust.jsrm.calculation.CalculatorResults;
 import com.github.jbgust.jsrm.calculation.Formula;
 import com.github.jbgust.jsrm.infra.ConstantsExtractor;
 import com.github.jbgust.jsrm.infra.JSRMConstant;
+import com.github.jbgust.jsrm.infra.pressure.csv.CsvToDuringBurnPressureLine;
+import com.github.jbgust.jsrm.infra.pressure.csv.DuringBurnPressureCsvLineAggregator;
+import com.google.common.collect.ImmutableMap;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -20,8 +20,8 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.github.jbgust.jsrm.application.JSRMSimulationIT.createMotorAsSRM_2014ExcelFile;
 import static com.github.jbgust.jsrm.infra.pressure.PressureFormulas.*;
+import static com.github.jbgust.jsrm.utils.SolidRocketMotorBuilder.createMotorAsSRM_2014ExcelFile;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
 

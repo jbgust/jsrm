@@ -4,7 +4,7 @@ import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
 import com.github.jbgust.jsrm.application.motor.CombustionChamber;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
-import com.github.jbgust.jsrm.application.motor.utils.PropellantGrainBuilder;
+import com.github.jbgust.jsrm.utils.PropellantGrainBuilder;
 import org.junit.jupiter.api.Test;
 
 import static com.github.jbgust.jsrm.infra.SolidRocketMotorChecker.check;

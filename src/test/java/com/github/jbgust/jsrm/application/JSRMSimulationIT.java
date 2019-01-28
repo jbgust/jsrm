@@ -1,14 +1,11 @@
 package com.github.jbgust.jsrm.application;
 
 import com.github.jbgust.jsrm.application.csv.CsvToThrustResult;
-import com.github.jbgust.jsrm.application.motor.CombustionChamber;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
-import com.github.jbgust.jsrm.application.motor.propellant.GrainSurface;
-import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.github.jbgust.jsrm.application.result.MotorClassification;
-import com.github.jbgust.jsrm.application.result.ThrustResult;
 import com.github.jbgust.jsrm.application.result.Nozzle;
+import com.github.jbgust.jsrm.application.result.ThrustResult;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -16,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
-import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
+import static com.github.jbgust.jsrm.utils.SolidRocketMotorBuilder.createMotorAsSRM_2014ExcelFile;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
 
@@ -160,27 +157,5 @@ public class JSRMSimulationIT {
 
         assertThat(nozzle.getFinalNozzleExitSpeedInMach())
                 .isEqualTo(3.065, offset(0.001d));
-    }
-
-    /**
-     * Create same solid rocket motor that is used in SRM_2014.xls @see <a href="https://www.nakka-rocketry.net/softw.html">SRM_2014.xls</a>
-     * @return the solid rocket motor described in SRM_2014.xls
-     */
-    public static SolidRocketMotor createMotorAsSRM_2014ExcelFile() {
-        double grainOuterDiameter = 69d;
-        double grainCoreDiameter = 20d;
-        double grainSegmentLength = 115d;
-        double numberOfSegment = 4d;
-        PropellantGrain propellantGrain = new PropellantGrain(KNDX, grainOuterDiameter, grainCoreDiameter,
-                grainSegmentLength, numberOfSegment,
-                GrainSurface.INHIBITED, GrainSurface.EXPOSED, GrainSurface.EXPOSED);
-
-        double chamberInnerDiameter = 75d;
-        double chamberLength = 470d;
-        CombustionChamber combustionChamber = new CombustionChamber(chamberInnerDiameter, chamberLength);
-
-        double throatDiameter = 17.3985248919802;
-
-        return new SolidRocketMotor(propellantGrain, combustionChamber, throatDiameter);
     }
 }

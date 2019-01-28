@@ -1,13 +1,13 @@
 package com.github.jbgust.jsrm.infra.performance;
 
-import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
-import com.github.jbgust.jsrm.infra.performance.csv.CsvToPerformanceLine;
-import com.google.common.collect.ImmutableMap;
 import com.github.jbgust.jsrm.application.JSRMConfig;
 import com.github.jbgust.jsrm.application.JSRMConfigBuilder;
+import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.infra.ConstantsExtractor;
 import com.github.jbgust.jsrm.infra.JSRMConstant;
+import com.github.jbgust.jsrm.infra.performance.csv.CsvToPerformanceLine;
 import com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation;
+import com.google.common.collect.ImmutableMap;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -17,7 +17,6 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.jbgust.jsrm.application.JSRMSimulationIT.createMotorAsSRM_2014ExcelFile;
 import static com.github.jbgust.jsrm.infra.JSRMConstant.atfinal;
 import static com.github.jbgust.jsrm.infra.performance.PerformanceCalculation.Results.deliveredImpulse;
 import static com.github.jbgust.jsrm.infra.performance.PerformanceCalculation.Results.thrust;
@@ -25,6 +24,7 @@ import static com.github.jbgust.jsrm.infra.performance.PerformanceFormulas.DELIV
 import static com.github.jbgust.jsrm.infra.performance.PerformanceFormulas.THRUST;
 import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results;
 import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.*;
+import static com.github.jbgust.jsrm.utils.SolidRocketMotorBuilder.createMotorAsSRM_2014ExcelFile;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
 

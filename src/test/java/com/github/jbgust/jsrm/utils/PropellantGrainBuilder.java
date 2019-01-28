@@ -1,4 +1,4 @@
-package com.github.jbgust.jsrm.application.motor.utils;
+package com.github.jbgust.jsrm.utils;
 
 import com.github.jbgust.jsrm.application.motor.propellant.GrainSurface;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;

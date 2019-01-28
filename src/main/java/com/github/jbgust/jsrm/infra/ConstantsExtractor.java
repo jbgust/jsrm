@@ -25,7 +25,7 @@ public class ConstantsExtractor {
         constants.put(ci, (double) propellantGrain.getCoreSurface().value());
         constants.put(osi, (double) propellantGrain.getOuterSurface().value());
         constants.put(ei, (double) propellantGrain.getEndsSurface().value());
-        constants.put(xincp, twoValue / (NUMBER_LINE_DURING_BURN_CALCULATION - 1));
+        constants.put(xincp, twoValue / (NUMBER_LINE_DURING_BURN_CALCULATION - 1) / getXincFactor(propellantGrain));
         constants.put(dc, solidRocketMotor.getCombustionChamber().getChamberInnerDiameterInMillimeter());
         constants.put(n, propellantGrain.getNumberOfSegment());
         constants.put(vc, solidRocketMotor.getCombustionChamber().getVolume());
@@ -50,6 +50,10 @@ public class ConstantsExtractor {
         constants.put(mgrain, computeGrainMass(constants.get(rhopgrain), propellantGrain));
 
         return constants;
+    }
+
+    private static int getXincFactor(PropellantGrain propellantGrain) {
+        return propellantGrain.getCoreSurface().value() + propellantGrain.getOuterSurface().value();
     }
 
     private static double computeGrainMass(Double rhopgrain, PropellantGrain propellantGrain) {
