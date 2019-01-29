@@ -5,6 +5,8 @@ import com.github.jbgust.jsrm.application.motor.CombustionChamber;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
 
+import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
+
 public class SolidRocketMotorChecker {
 
     public static void check(SolidRocketMotor solidRocketMotor) {
@@ -26,6 +28,10 @@ public class SolidRocketMotorChecker {
 
         if(propellantGrain.getGrainLength() > combustionChamber.getChamberLengthInMillimeter()) {
             throw new InvalidMotorDesignException("Combustion chamber length should be >= than Grain total length");
+        }
+
+        if(INHIBITED == propellantGrain.getCoreSurface() && INHIBITED == propellantGrain.getOuterSurface()) {
+            throw new InvalidMotorDesignException("The motor should have at least core surface or outer surface exposed.");
         }
     }
 }

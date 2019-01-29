@@ -7,6 +7,7 @@ import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
 import com.github.jbgust.jsrm.utils.PropellantGrainBuilder;
 import org.junit.jupiter.api.Test;
 
+import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
 import static com.github.jbgust.jsrm.infra.SolidRocketMotorChecker.check;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -75,6 +76,20 @@ class SolidRocketMotorCheckerTest {
         assertThatThrownBy(() -> check(solidRocketMotor))
                 .isInstanceOf(InvalidMotorDesignException.class)
                 .hasMessage("Combustion chamber length should be >= than Grain total length");
+    }
+
+    @Test
+    void shouldThrowExceptionIfCoreAndOuterSurfaceAreInhibited(){
+        PropellantGrain propellantGrain = new PropellantGrainBuilder()
+                .withCoreSurface(INHIBITED)
+                .withOuterSurface(INHIBITED)
+                .build();
+
+        SolidRocketMotor solidRocketMotor = new SolidRocketMotor(propellantGrain, new CombustionChamber(20, 80), 5d);
+
+        assertThatThrownBy(() -> check(solidRocketMotor))
+                .isInstanceOf(InvalidMotorDesignException.class)
+                .hasMessage("The motor should have at least core surface or outer surface exposed.");
     }
 
 }
