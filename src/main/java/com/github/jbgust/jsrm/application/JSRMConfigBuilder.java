@@ -115,7 +115,7 @@ public class JSRMConfigBuilder {
      */
     public JSRMConfig createJSRMConfig() {
         if(!optimalNozzleDesign && nozzleExpansionRatio==null){
-            throw new InvalidConfigurationException("Your configuration should defined a nozzleExpansionRatio is you don't use optimalNozzleDesign");
+            throw new InvalidConfigurationException("Your configuration should defined a nozzleExpansionRatio if you don't use optimalNozzleDesign");
         }
 
         if(optimalNozzleDesign && nozzleExpansionRatio!=null){

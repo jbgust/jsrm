@@ -15,7 +15,7 @@ class JSRMConfigBuilderTest {
                 .withOptimalNozzleDesign(false)
                 .createJSRMConfig())
                 .isInstanceOf(InvalidConfigurationException.class)
-                .hasMessage("Your configuration should defined a nozzleExpansionRatio is you don't use optimalNozzleDesign");
+                .hasMessage("Your configuration should defined a nozzleExpansionRatio if you don't use optimalNozzleDesign");
 
         assertThatThrownBy(() -> new JSRMConfigBuilder()
                 .withNozzleExpansionRatio(3)
