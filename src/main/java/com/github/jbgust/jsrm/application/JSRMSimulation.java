@@ -4,6 +4,7 @@ import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.github.jbgust.jsrm.application.result.MotorClassification;
 import com.github.jbgust.jsrm.application.result.ThrustResult;
+import com.github.jbgust.jsrm.infra.SolidRocketMotorChecker;
 import com.github.jbgust.jsrm.infra.performance.PerformanceResultProvider;
 import com.google.common.collect.ImmutableMap;
 import com.github.jbgust.jsrm.application.exception.SimulationFailedException;
@@ -32,6 +33,7 @@ public class JSRMSimulation {
      * @param motor the motor that will be used in simulation
      */
     public JSRMSimulation(SolidRocketMotor motor) {
+        SolidRocketMotorChecker.check(motor);
         this.motor = motor;
         config = new JSRMConfigBuilder().createJSRMConfig();
     }

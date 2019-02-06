@@ -13,10 +13,10 @@ public class SolidRocketMotorChecker {
 
         PropellantGrain propellantGrain = solidRocketMotor.getPropellantGrain();
         CombustionChamber combustionChamber = solidRocketMotor.getCombustionChamber();
-
-        if(propellantGrain.getCoreDiameter() < solidRocketMotor.getThroatDiameterInMillimeter()){
-            throw new InvalidMotorDesignException("Throat diameter should be >= than grain core diameter");
-        }
+// TODO : a voir si on remet
+//        if(propellantGrain.getCoreDiameter() < solidRocketMotor.getThroatDiameterInMillimeter()){
+//            throw new InvalidMotorDesignException("Throat diameter should be >= than grain core diameter");
+//        }
 
         if(propellantGrain.getOuterDiameter() > combustionChamber.getChamberInnerDiameterInMillimeter()) {
             throw new InvalidMotorDesignException("Combution chamber diameter should be >= than grain outer diameter");

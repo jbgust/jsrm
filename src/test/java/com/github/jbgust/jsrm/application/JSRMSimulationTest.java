@@ -1,5 +1,6 @@
 package com.github.jbgust.jsrm.application;
 
+import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
 import com.github.jbgust.jsrm.application.exception.SimulationFailedException;
 import com.github.jbgust.jsrm.application.motor.CombustionChamber;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
@@ -7,6 +8,7 @@ import com.github.jbgust.jsrm.application.motor.propellant.GrainSurface;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.github.jbgust.jsrm.calculation.exception.LineCalculatorException;
+import com.github.jbgust.jsrm.utils.PropellantGrainBuilder;
 import com.github.jbgust.jsrm.utils.SolidRocketMotorBuilder;
 import org.junit.jupiter.api.Test;
 
@@ -44,6 +46,22 @@ class JSRMSimulationTest {
         assertThat(result.getTotalImpulseInNewtonSecond()).isEqualTo(3484, offset(1d));
         assertThat(result.getSpecificImpulseInSecond()).isEqualTo(126.3, offset(0.1));
         assertThat(result.getMotorClassification()).isEqualTo(L);
+    }
+
+    @Test
+    void shouldCheckSolidRocketMotor() {
+        //GIVEN
+        PropellantGrain propellantGrain = new PropellantGrainBuilder()
+                .withNumberOfSegments(2)
+                .withSegmentLength(45)
+                .build();
+
+        SolidRocketMotor solidRocketMotor = new SolidRocketMotor(propellantGrain, new CombustionChamber(20, 89), 5d);
+
+
+        assertThatThrownBy( () -> new JSRMSimulation(solidRocketMotor).run(default_SRM_2014_jsrmConfig))
+                .isInstanceOf(InvalidMotorDesignException.class)
+                .hasMessage("Combustion chamber length should be >= than Grain total length");
     }
 
     /**
