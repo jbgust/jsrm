@@ -51,6 +51,10 @@ public class JSRMSimulationIT {
                     .describedAs("Max chamber pressure")
                     .isEqualTo(5.93, offset(0.01));
 
+            assertThat(jsrmResult.getAverageChamberPressure())
+                    .describedAs("Average chamber pressure")
+                    .isEqualTo(4.89, offset(0.01));
+
             assertThat(jsrmResult.getMaxThrustInNewton())
                     .describedAs("Max thrust")
                     .isEqualTo(2060, offset(1d));

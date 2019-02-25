@@ -25,7 +25,7 @@ class SolidRocketMotorCheckerTest {
         assertDoesNotThrow(() -> check(solidRocketMotor));
     }
 
-    @Disabled // TODO : a voir si on remet
+    @Disabled // TODO : a voir si on remet (test echoue car le diam du core est inferieur a celui du col de la tuyère)
     @Test
     void shouldThrowExceptionIfCoreDiameterIsLessThanThroatDiameter(){
         PropellantGrain propellantGrain = new PropellantGrainBuilder()

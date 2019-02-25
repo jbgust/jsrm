@@ -82,6 +82,7 @@ public class JSRMSimulation {
     private JSRMResult buildResult(JSRMConfig config, Map<JSRMConstant, Double> constants, Map<ChamberPressureCalculation.Results, List<Double>> chamberPressureResults, PerformanceResultProvider timeSinceBurnStartProvider, PerformanceCalculationResult performanceCalculationResult) {
         double maxThrust = performanceCalculationResult.getResults().get(PerformanceCalculation.Results.thrust).stream().mapToDouble(Double::doubleValue).max().getAsDouble();
         double maxChamberPressure = chamberPressureResults.get(ChamberPressureCalculation.Results.absoluteChamberPressure).stream().mapToDouble(Double::doubleValue).max().getAsDouble();
+        double averageChamberPressure = chamberPressureResults.get(ChamberPressureCalculation.Results.absoluteChamberPressure).stream().mapToDouble(Double::doubleValue).average().getAsDouble();
         double totalImpulse = performanceCalculationResult.getResults().get(PerformanceCalculation.Results.deliveredImpulse).stream().mapToDouble(Double::doubleValue).sum();
         double thrustTime = getThrustTime(timeSinceBurnStartProvider);
         long averageThrust = Math.round(totalImpulse/thrustTime);
@@ -92,6 +93,7 @@ public class JSRMSimulation {
                 totalImpulse,
                 specificImpulse,
                 maxChamberPressure,
+                averageChamberPressure,
                 thrustTime,
                 MotorClassification.getMotorClassification(totalImpulse),
                 buildThrustResult(timeSinceBurnStartProvider, performanceCalculationResult),
