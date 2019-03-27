@@ -114,6 +114,30 @@ class JSRMSimulationTest {
         assertThat(result.getMotorClassification()).isEqualTo(L);
     }
 
+    /**
+     * @see "SRM_2014 - EXPRAT_2.xls"
+     */
+    @Test
+    void shouldComputeSRM_2014_Exprat2() {
+        //GIVEN
+        SolidRocketMotor motor = new SolidRocketMotorBuilder().build();
+
+        JSRMConfig config = new JSRMConfigBuilder()
+                .withNozzleExpansionRatio(2)
+                .createJSRMConfig();
+
+        //WHEN
+        JSRMResult result = new JSRMSimulation(motor).run(config);
+
+        //THEN
+        assertThat(result.getMaxChamberPressureInMPa()).isEqualTo(5.93, offset(0.01));
+        assertThat(result.getThrustTimeInSecond()).isEqualTo(2.158, offset(0.001));
+        assertThat(result.getMaxThrustInNewton()).isEqualTo(1811, offset(1.0));
+        assertThat(result.getTotalImpulseInNewtonSecond()).isEqualTo(3209, offset(1d));
+        assertThat(result.getSpecificImpulseInSecond()).isEqualTo(116.3, offset(0.1));
+        assertThat(result.getMotorClassification()).isEqualTo(L);
+    }
+
     @Test
     void shouldThrowException(){
         SolidRocketMotor meteor = new SolidRocketMotor(
