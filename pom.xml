@@ -6,12 +6,42 @@
 
     <groupId>com.github.jbgust</groupId>
     <artifactId>Java-Solid-Rocket-Motor</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
+
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>Java Solid Rocket Motor is the Java implementation of Richard Nakka SRM Excel file by J. Content and J. Bise</description>
+    <url>https://github.com/jbgust/jsrm</url>
+
+    <packaging>jar</packaging>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License v3.0</name>
+            <url>https://github.com/jbgust/jsrm/blob/master/LICENSE</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Jordan Content</name>
+            <email>jordan.content@outlook.fr</email>
+        </developer>
+        <developer>
+            <name>Jerome Bise</name>
+            <email>jeromebise@hotmail.com</email>
+        </developer>
+    </developers>
 
     <properties>
         <java.version>1.8</java.version>
         <junit-jupiter.version>5.3.2</junit-jupiter.version>
     </properties>
+
+    <scm>
+        <connection>scm:git:git://github.com/jbgust/jsrm.git</connection>
+        <developerConnection>scm:git:ssh://github.com/jbgust/jsrm.git</developerConnection>
+        <url>http://github.com/jbgust/jsrm/tree/master/</url>
+    </scm>
 
     <build>
         <plugins>
@@ -23,6 +53,38 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <finalName>${artifactId}-${version}</finalName>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
