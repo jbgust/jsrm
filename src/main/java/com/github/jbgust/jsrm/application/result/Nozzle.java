@@ -1,23 +1,65 @@
 package com.github.jbgust.jsrm.application.result;
 
-import lombok.Value;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
-@Value
 public class Nozzle {
-    private double nozzleThroatDiameterInMillimeter;
-    private double chamberInsideDiameterInMillimeter;
-    private double optimalNozzleExpansionRatio;
-    private double optimalNozzleExitDiameterInMillimeter;
-    private double nozzleExpansionRatio;
-    private double nozzleExitDiameterInMillimeter;
-    private double initialNozzleExitSpeedInMach;
-    private double finalNozzleExitSpeedInMach;
 
     private static final String CROSS_SECTION_DIAMETER_VAR = "crossSectionDiameter";
     private static final String ANGLE_VAR = "angle";
     private static final ExpressionBuilder nozzleLenghtExpression = new ExpressionBuilder("crossSectionDiameter / 2 / tan(angle * pi / 180)")
             .variables(CROSS_SECTION_DIAMETER_VAR, ANGLE_VAR);
+
+    private final double nozzleThroatDiameterInMillimeter;
+    private final double chamberInsideDiameterInMillimeter;
+    private final double optimalNozzleExpansionRatio;
+    private final double optimalNozzleExitDiameterInMillimeter;
+    private final double nozzleExpansionRatio;
+    private final double nozzleExitDiameterInMillimeter;
+    private final double initialNozzleExitSpeedInMach;
+    private final double finalNozzleExitSpeedInMach;
+
+    public Nozzle(double nozzleThroatDiameterInMillimeter, double chamberInsideDiameterInMillimeter, double optimalNozzleExpansionRatio, double optimalNozzleExitDiameterInMillimeter, double nozzleExpansionRatio, double nozzleExitDiameterInMillimeter, double initialNozzleExitSpeedInMach, double finalNozzleExitSpeedInMach) {
+        this.nozzleThroatDiameterInMillimeter = nozzleThroatDiameterInMillimeter;
+        this.chamberInsideDiameterInMillimeter = chamberInsideDiameterInMillimeter;
+        this.optimalNozzleExpansionRatio = optimalNozzleExpansionRatio;
+        this.optimalNozzleExitDiameterInMillimeter = optimalNozzleExitDiameterInMillimeter;
+        this.nozzleExpansionRatio = nozzleExpansionRatio;
+        this.nozzleExitDiameterInMillimeter = nozzleExitDiameterInMillimeter;
+        this.initialNozzleExitSpeedInMach = initialNozzleExitSpeedInMach;
+        this.finalNozzleExitSpeedInMach = finalNozzleExitSpeedInMach;
+    }
+
+    public double getNozzleThroatDiameterInMillimeter() {
+        return nozzleThroatDiameterInMillimeter;
+    }
+
+    public double getChamberInsideDiameterInMillimeter() {
+        return chamberInsideDiameterInMillimeter;
+    }
+
+    public double getOptimalNozzleExpansionRatio() {
+        return optimalNozzleExpansionRatio;
+    }
+
+    public double getOptimalNozzleExitDiameterInMillimeter() {
+        return optimalNozzleExitDiameterInMillimeter;
+    }
+
+    public double getNozzleExpansionRatio() {
+        return nozzleExpansionRatio;
+    }
+
+    public double getNozzleExitDiameterInMillimeter() {
+        return nozzleExitDiameterInMillimeter;
+    }
+
+    public double getInitialNozzleExitSpeedInMach() {
+        return initialNozzleExitSpeedInMach;
+    }
+
+    public double getFinalNozzleExitSpeedInMach() {
+        return finalNozzleExitSpeedInMach;
+    }
 
     /**
      * The length of the convergence in millimeter
