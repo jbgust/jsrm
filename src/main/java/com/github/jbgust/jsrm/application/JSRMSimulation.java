@@ -48,7 +48,7 @@ public class JSRMSimulation {
 
     /**
      * Run the simulation with the given configuration
-     * @param config
+     * @param config JSRMConfig used ti run the computation
      * @return The simuation result
      */
     public JSRMResult run(JSRMConfig config) {

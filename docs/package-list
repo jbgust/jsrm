@@ -1,0 +1,5 @@
+com.github.jbgust.jsrm.application
+com.github.jbgust.jsrm.application.exception
+com.github.jbgust.jsrm.application.motor
+com.github.jbgust.jsrm.application.motor.propellant
+com.github.jbgust.jsrm.application.result

@@ -11,14 +11,9 @@
     <properties>
         <java.version>1.8</java.version>
         <junit-jupiter.version>5.3.2</junit-jupiter.version>
-
-        <!--<project.build.sourceEncoding>${file.encoding}</project.build.sourceEncoding>-->
-        <!--<lombok.testOutputDirectory>/target/delombok</lombok.testOutputDirectory>-->
-        <!--<lombok.testSourceDirectory>${project.basedir}/src/main/com/jsrm/application</lombok.testSourceDirectory>-->
     </properties>
 
     <build>
-        <!--<sourceDirectory>${project.build.directory}/generated-sources/delombok</sourceDirectory>-->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -39,30 +34,22 @@
                         <version>1.2.0</version>
                     </dependency>
                 </dependencies>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/*IT.java</include>
+                    </includes>
+                </configuration>
             </plugin>
-            <!--<plugin>-->
-                <!--<groupId>org.projectlombok</groupId>-->
-                <!--<artifactId>lombok-maven-plugin</artifactId>-->
-                <!--<version>1.18.4.0</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<phase>generate-sources</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>delombok</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<addOutputDirectory>false</addOutputDirectory>-->
-                            <!--<sourceDirectory>src/main/java</sourceDirectory>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>3.1.0</version>
                 <configuration>
-                    <excludePackageNames>com.jsrm.calculation:com.jsrm.infra</excludePackageNames>
+                    <excludePackageNames>
+                        com.github.jbgust.jsrm.calculation:com.github.jbgust.jsrm.infra:
+                        com.github.jbgust.jsrm.calculation.*:com.github.jbgust.jsrm.infra.*
+                    </excludePackageNames>
                 </configuration>
             </plugin>
         </plugins>

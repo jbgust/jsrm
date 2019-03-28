@@ -17,7 +17,7 @@ import java.util.Map;
 
 import static com.github.jbgust.jsrm.calculation.Formula.PREVIOUS_VARIABLE_SUFFIX;
 import static com.github.jbgust.jsrm.infra.JSRMConstant.*;
-import static com.github.jbgust.jsrm.infra.RegisteredPropellant.getSolidPropellant;
+import static com.github.jbgust.jsrm.application.RegisteredPropellant.getSolidPropellant;
 import static com.github.jbgust.jsrm.infra.performance.PerformanceCalculation.Results.deliveredImpulse;
 import static com.github.jbgust.jsrm.infra.performance.PerformanceCalculation.Results.thrust;
 import static com.github.jbgust.jsrm.infra.performance.PerformanceFormulas.*;

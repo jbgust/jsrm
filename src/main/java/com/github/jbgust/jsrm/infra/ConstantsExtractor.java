@@ -1,6 +1,7 @@
 package com.github.jbgust.jsrm.infra;
 
 import com.github.jbgust.jsrm.application.JSRMConfig;
+import com.github.jbgust.jsrm.application.RegisteredPropellant;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
 import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;

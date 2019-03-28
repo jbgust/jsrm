@@ -1,5 +1,6 @@
 package com.github.jbgust.jsrm.infra;
 
+import com.github.jbgust.jsrm.application.RegisteredPropellant;
 import com.github.jbgust.jsrm.application.exception.ChamberPressureOutOfBoundException;
 import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 import com.github.jbgust.jsrm.application.exception.UnregisteredPropellantException;

@@ -1,7 +1,7 @@
 package com.github.jbgust.jsrm.infra.pressure.function;
 
 import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
-import com.github.jbgust.jsrm.infra.RegisteredPropellant;
+import com.github.jbgust.jsrm.application.RegisteredPropellant;
 import com.github.jbgust.jsrm.application.exception.UnregisteredPropellantException;
 import com.github.jbgust.jsrm.calculation.exception.InvalidResultException;
 import com.github.jbgust.jsrm.infra.function.NaNThrowExceptionFunction;

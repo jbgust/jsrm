@@ -1,4 +1,4 @@
-package com.github.jbgust.jsrm.infra;
+package com.github.jbgust.jsrm.application;
 
 import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 import com.github.jbgust.jsrm.application.exception.UnregisteredPropellantException;
