@@ -1,9 +1,19 @@
 package com.github.jbgust.jsrm.application.result;
 
-import lombok.Value;
-
-@Value
 public class ThrustResult {
-    private double thrustInNewton;
-    private double timeSinceBurnStartInSecond;
+    private final double thrustInNewton;
+    private final double timeSinceBurnStartInSecond;
+
+    public ThrustResult(double thrustInNewton, double timeSinceBurnStartInSecond) {
+        this.thrustInNewton = thrustInNewton;
+        this.timeSinceBurnStartInSecond = timeSinceBurnStartInSecond;
+    }
+
+    public double getThrustInNewton() {
+        return thrustInNewton;
+    }
+
+    public double getTimeSinceBurnStartInSecond() {
+        return timeSinceBurnStartInSecond;
+    }
 }
