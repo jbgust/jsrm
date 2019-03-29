@@ -1,5 +1,5 @@
 # JSRM Java Solid Rocket Motor performance
-Java implementation of Richard Nakka SRM Excel file
+Java implementation of Richard Nakka SRM Excel file. This library can predict performance of solid rocket motor solely for cylindrical grain configurations, such as BATES.
 
 # Usage
 ### Examples
