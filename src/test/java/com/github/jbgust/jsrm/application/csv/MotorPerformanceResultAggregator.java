@@ -7,7 +7,7 @@ import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
 
 import com.github.jbgust.jsrm.application.result.MotorParameters;
 
-class ThrustResultAggregator implements ArgumentsAggregator {
+class MotorPerformanceResultAggregator implements ArgumentsAggregator {
 
     @Override
     public MotorParameters aggregateArguments(ArgumentsAccessor argumentsAccessor, ParameterContext parameterContext) throws ArgumentsAggregationException {
@@ -16,8 +16,9 @@ class ThrustResultAggregator implements ArgumentsAggregator {
         Double time = argumentsAccessor.getDouble(1);
         Double kn = argumentsAccessor.getDouble(2);
         Double chamberPressure = argumentsAccessor.getDouble(3);
+        Double massFlowRate = argumentsAccessor.getDouble(4);
 
-        return new MotorParameters(time, thrust, kn, chamberPressure);
+        return new MotorParameters(time, thrust, kn, chamberPressure, massFlowRate);
     }
 
 }

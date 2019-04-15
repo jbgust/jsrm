@@ -1,14 +1,21 @@
 package com.github.jbgust.jsrm.infra.pressure.csv;
 
-import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
-import org.junit.jupiter.params.aggregator.ArgumentsAggregationException;
-import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
+import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.absoluteChamberPressure;
+import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.absoluteChamberPressurePSIG;
+import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.chamberPressureMPA;
+import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.kn;
+import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.massFlowRate;
+import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.nozzleCriticalPassageArea;
+import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.throatArea;
+import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.timeSinceBurnStart;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.*;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.aggregator.ArgumentsAggregationException;
+import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
 
 public class PressureCsvLineAggregator implements ArgumentsAggregator {
 
@@ -25,6 +32,8 @@ public class PressureCsvLineAggregator implements ArgumentsAggregator {
         csvValues.put(nozzleCriticalPassageArea.name(), argumentsAccessor.getDouble(7));
 
         csvValues.put(timeSinceBurnStart.name(), argumentsAccessor.getDouble(15));
+
+        csvValues.put(massFlowRate.name(), argumentsAccessor.getDouble(21));
 
         csvValues.put(chamberPressureMPA.name(), argumentsAccessor.getDouble(26));
         csvValues.put(absoluteChamberPressure.name(), argumentsAccessor.getDouble(27));

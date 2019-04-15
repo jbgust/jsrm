@@ -125,23 +125,30 @@ public class JSRMSimulationIT {
 
         @ParameterizedTest
         @DisplayName("Thrust by time")
-        @CsvFileSource(resources = "/SRM_2014_THRUST_BY_TIME.csv", numLinesToSkip = 2, delimiter = '|')
+        @CsvFileSource(resources = "/SRM_2014_PERFORMANCES_BY_TIME.csv", numLinesToSkip = 2, delimiter = '|')
         void checkThrustDataResults(@CsvToThrustResult MotorParameters expectedMotorParameters) {
 
             MotorParameters motorParameters = jsrmResult.getMotorParameters().get(lineToAssert++);
 
             assertThat(motorParameters.getTimeSinceBurnStartInSecond())
+                    .describedAs("Time")
                     .isEqualTo(expectedMotorParameters.getTimeSinceBurnStartInSecond(), offset(0.0001));
 
             assertThat(motorParameters.getThrustInNewton())
+                    .describedAs("Thrust")
                     .isEqualTo(expectedMotorParameters.getThrustInNewton(), offset(1d));
 
             assertThat(motorParameters.getKn())
+                    .describedAs("KN")
                     .isEqualTo(expectedMotorParameters.getKn(), offset(0.01d));
 
             assertThat(motorParameters.getChamberPressureInMPa())
+                    .describedAs("Pressure")
                     .isEqualTo(expectedMotorParameters.getChamberPressureInMPa(), offset(0.001d));
 
+            assertThat(motorParameters.getMassFlowRateInKgPerSec())
+                    .describedAs("Mass flow rate")
+                    .isEqualTo(expectedMotorParameters.getMassFlowRateInKgPerSec(), offset(0.0001d));
         }
 
     }

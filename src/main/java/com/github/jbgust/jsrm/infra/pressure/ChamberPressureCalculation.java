@@ -1,13 +1,15 @@
 package com.github.jbgust.jsrm.infra.pressure;
 
-import com.github.jbgust.jsrm.application.JSRMConfig;
-import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
-import com.github.jbgust.jsrm.calculation.CalculatorBuilder;
-import com.github.jbgust.jsrm.calculation.CalculatorResults;
-import com.github.jbgust.jsrm.calculation.Formula;
-import com.github.jbgust.jsrm.infra.ConstantsExtractor;
-import com.github.jbgust.jsrm.infra.JSRMConstant;
-import com.google.common.collect.ImmutableMap;
+import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.absoluteChamberPressure;
+import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.absoluteChamberPressurePSIG;
+import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.chamberPressureMPA;
+import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.kn;
+import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.massFlowRate;
+import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.nozzleCriticalPassageArea;
+import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.throatArea;
+import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.timeSinceBurnStart;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,9 +18,14 @@ import java.util.Map;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.*;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
+import com.github.jbgust.jsrm.application.JSRMConfig;
+import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
+import com.github.jbgust.jsrm.calculation.CalculatorBuilder;
+import com.github.jbgust.jsrm.calculation.CalculatorResults;
+import com.github.jbgust.jsrm.calculation.Formula;
+import com.github.jbgust.jsrm.infra.ConstantsExtractor;
+import com.github.jbgust.jsrm.infra.JSRMConstant;
+import com.google.common.collect.ImmutableMap;
 
 public class ChamberPressureCalculation {
 
@@ -67,6 +74,14 @@ public class ChamberPressureCalculation {
         IntStream.range(0, JSRMConstant.NUMBER_LINE_DURING_POST_BURN_CALCULATION + 1)
                 .forEach(value -> knResultValues.add(0d));
 
+        List<Double> massFlowRateValues = new ArrayList<>(pressureResults.getResults(PressureFormulas.NOZZLE_MASS_FLOW_RATE));
+
+        // linear decrease of MassFlow rate during post burn phase to 0 kg/s
+        double lastMassFlowRateComputed = massFlowRateValues.get(massFlowRateValues.size() - 1);
+        double massflowIncrement = lastMassFlowRateComputed/(JSRMConstant.NUMBER_LINE_DURING_POST_BURN_CALCULATION+1);
+        IntStream.range(0, JSRMConstant.NUMBER_LINE_DURING_POST_BURN_CALCULATION + 1)
+                .forEach(value -> massFlowRateValues.add(lastMassFlowRateComputed - (massflowIncrement * (value+1))));
+
         List<Double> nozzlePassageAreaResults = new ArrayList<>(pressureResults.getResults(PressureFormulas.NOZZLE_CRITICAL_PASSAGE_AREA));
         IntStream.range(0, JSRMConstant.NUMBER_LINE_DURING_POST_BURN_CALCULATION + 1)
                 .forEach(value -> nozzlePassageAreaResults.add(pressureResults.getResult(PressureFormulas.NOZZLE_CRITICAL_PASSAGE_AREA, lastPressureResultsLine)));
@@ -91,6 +106,7 @@ public class ChamberPressureCalculation {
                 .put(absoluteChamberPressure, absoluteChamberPressureResults)
                 .put(absoluteChamberPressurePSIG, absoluteChamberPressurePSIGResults)
                 .put(kn, knResultValues)
+                .put(massFlowRate, massFlowRateValues)
                 .build();
     }
 
@@ -127,6 +143,7 @@ public class ChamberPressureCalculation {
                         PressureFormulas.CHAMBER_PRESSURE_MPA,
                         PressureFormulas.ABSOLUTE_CHAMBER_PRESSURE,
                         PressureFormulas.ABSOLUTE_CHAMBER_PRESSURE_PSIG,
+                        PressureFormulas.NOZZLE_MASS_FLOW_RATE,
                         //KN DEPENDENCIES
                         PressureFormulas.GRAIN_LENGTH,
                         PressureFormulas.END_GRAIN_SRUFACE,
@@ -182,6 +199,7 @@ public class ChamberPressureCalculation {
         chamberPressureMPA,
         absoluteChamberPressure,
         absoluteChamberPressurePSIG,
-        kn;
+        kn,
+        massFlowRate;
     }
 }

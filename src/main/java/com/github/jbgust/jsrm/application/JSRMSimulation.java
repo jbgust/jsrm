@@ -124,7 +124,8 @@ public class JSRMSimulation {
                     timeSinceBurnStartProvider.getResult(i),
                     performanceCalculationResult.getResults().get(PerformanceCalculation.Results.thrust).get(i),
                     chamberPressureResults.get(kn).get(i),
-                    chamberPressureResults.get(ChamberPressureCalculation.Results.absoluteChamberPressure).get(i)));
+                    chamberPressureResults.get(ChamberPressureCalculation.Results.absoluteChamberPressure).get(i),
+                    chamberPressureResults.get(ChamberPressureCalculation.Results.massFlowRate).get(i)));
         }
         return motorParameters;
     }
