@@ -11,11 +11,11 @@ public class JSRMResult {
     private final double averageChamberPressure;
     private final double thrustTimeInSecond;
     private final MotorClassification motorClassification;
-    private final List<ThrustResult> thrustResults;
+    private final List<MotorParameters> motorParameters;
     private final Nozzle nozzle;
     private final long averageThrustInNewton;
 
-    public JSRMResult(double maxThrustInNewton, double totalImpulseInNewtonSecond, double specificImpulseInSecond, double maxChamberPressureInMPa, double averageChamberPressure, double thrustTimeInSecond, MotorClassification motorClassification, List<ThrustResult> thrustResults, Nozzle nozzle, long averageThrustInNewton) {
+    public JSRMResult(double maxThrustInNewton, double totalImpulseInNewtonSecond, double specificImpulseInSecond, double maxChamberPressureInMPa, double averageChamberPressure, double thrustTimeInSecond, MotorClassification motorClassification, List<MotorParameters> motorParameters, Nozzle nozzle, long averageThrustInNewton) {
         this.maxThrustInNewton = maxThrustInNewton;
         this.totalImpulseInNewtonSecond = totalImpulseInNewtonSecond;
         this.specificImpulseInSecond = specificImpulseInSecond;
@@ -23,7 +23,7 @@ public class JSRMResult {
         this.averageChamberPressure = averageChamberPressure;
         this.thrustTimeInSecond = thrustTimeInSecond;
         this.motorClassification = motorClassification;
-        this.thrustResults = thrustResults;
+        this.motorParameters = motorParameters;
         this.nozzle = nozzle;
         this.averageThrustInNewton = averageThrustInNewton;
     }
@@ -56,8 +56,8 @@ public class JSRMResult {
         return motorClassification;
     }
 
-    public List<ThrustResult> getThrustResults() {
-        return thrustResults;
+    public List<MotorParameters> getMotorParameters() {
+        return motorParameters;
     }
 
     public Nozzle getNozzle() {

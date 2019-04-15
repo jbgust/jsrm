@@ -4,8 +4,8 @@ import com.github.jbgust.jsrm.application.csv.CsvToThrustResult;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.github.jbgust.jsrm.application.result.MotorClassification;
+import com.github.jbgust.jsrm.application.result.MotorParameters;
 import com.github.jbgust.jsrm.application.result.Nozzle;
-import com.github.jbgust.jsrm.application.result.ThrustResult;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -125,15 +125,18 @@ public class JSRMSimulationIT {
         @ParameterizedTest
         @DisplayName("Thrust by time")
         @CsvFileSource(resources = "/SRM_2014_THRUST_BY_TIME.csv", numLinesToSkip = 2, delimiter = '|')
-        void checkThrustDataResults(@CsvToThrustResult ThrustResult expectedThrustResult) {
+        void checkThrustDataResults(@CsvToThrustResult MotorParameters expectedMotorParameters) {
 
-            ThrustResult thrustResult = jsrmResult.getThrustResults().get(lineToAssert++);
+            MotorParameters motorParameters = jsrmResult.getMotorParameters().get(lineToAssert++);
 
-            assertThat(thrustResult.getTimeSinceBurnStartInSecond())
-                    .isEqualTo(expectedThrustResult.getTimeSinceBurnStartInSecond(), offset(0.0001));
+            assertThat(motorParameters.getTimeSinceBurnStartInSecond())
+                    .isEqualTo(expectedMotorParameters.getTimeSinceBurnStartInSecond(), offset(0.0001));
 
-            assertThat(thrustResult.getThrustInNewton())
-                    .isEqualTo(expectedThrustResult.getThrustInNewton(), offset(1d));
+            assertThat(motorParameters.getThrustInNewton())
+                    .isEqualTo(expectedMotorParameters.getThrustInNewton(), offset(1d));
+
+            assertThat(motorParameters.getKn())
+                    .isEqualTo(expectedMotorParameters.getKn(), offset(0.01d));
 
         }
 

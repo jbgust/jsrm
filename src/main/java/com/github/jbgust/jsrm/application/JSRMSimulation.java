@@ -3,7 +3,7 @@ package com.github.jbgust.jsrm.application;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.github.jbgust.jsrm.application.result.MotorClassification;
-import com.github.jbgust.jsrm.application.result.ThrustResult;
+import com.github.jbgust.jsrm.application.result.MotorParameters;
 import com.github.jbgust.jsrm.infra.SolidRocketMotorChecker;
 import com.github.jbgust.jsrm.infra.performance.PerformanceResultProvider;
 import com.google.common.collect.ImmutableMap;
@@ -96,7 +96,7 @@ public class JSRMSimulation {
                 averageChamberPressure,
                 thrustTime,
                 MotorClassification.getMotorClassification(totalImpulse),
-                buildThrustResult(timeSinceBurnStartProvider, performanceCalculationResult),
+                buildMotorParametersResult(timeSinceBurnStartProvider, chamberPressureResults, performanceCalculationResult),
                 buildNozzleResult(config, performanceCalculationResult),
                 averageThrust);
     }
@@ -107,15 +107,18 @@ public class JSRMSimulation {
                 performanceCalculationResult.getInitialNozzleExitSpeedInMach(), performanceCalculationResult.getFinalNozzleExitSpeedInMach());
     }
 
-    private List<ThrustResult> buildThrustResult(PerformanceResultProvider timeSinceBurnStartProvider, PerformanceCalculationResult performanceCalculationResult) {
-        List<ThrustResult> thrustResults = new ArrayList<>();
+    private List<MotorParameters> buildMotorParametersResult(PerformanceResultProvider timeSinceBurnStartProvider,
+                                                             Map<ChamberPressureCalculation.Results, List<Double>> chamberPressureResults,
+                                                             PerformanceCalculationResult performanceCalculationResult) {
+        List<MotorParameters> motorParameters = new ArrayList<>();
 
         for(int i = 0; i < LAST_CALCULATION_LINE+1; i++){
-            thrustResults.add(new ThrustResult(
+            motorParameters.add(new MotorParameters(
+                    timeSinceBurnStartProvider.getResult(i),
                     performanceCalculationResult.getResults().get(PerformanceCalculation.Results.thrust).get(i),
-                    timeSinceBurnStartProvider.getResult(i)));
+                    chamberPressureResults.get(kn).get(i)));
         }
-        return thrustResults;
+        return motorParameters;
     }
 
     private double getSpecificImpulse(Map<JSRMConstant, Double> constants, double totalImpulse) {
