@@ -41,15 +41,30 @@ public enum PressureFormulas implements Formula {
     NOZZLE_CRITICAL_PASSAGE_AREA(new FormulaConfiguration("THROAT_AREA / 1000^2")
             .withDependencies("THROAT_AREA")),
 
-    //Difference in chamber and grain cross-sectional area (flow area)
-    EROSIVE_BURN_FACTOR(new FormulaConfiguration("ErosiveBurnFactor((CircleArea(dc)-HollowCircleArea(GRAIN_OUTSIDE_DIAMETER, GRAIN_CORE_DIAMETER))/THROAT_AREA, gstar)")
-            .withDependencies("GRAIN_OUTSIDE_DIAMETER", "GRAIN_CORE_DIAMETER", "THROAT_AREA")
-            .withConstants(dc, gstar)
-            .withFunctions(Functions.erosiveBurnFactor, Functions.hollowCircleArea, Functions.circleArea)),
-
-    GRAIN_VOLUME(new FormulaConfiguration("(HollowCircleArea(GRAIN_OUTSIDE_DIAMETER, GRAIN_CORE_DIAMETER) * GRAIN_LENGTH)")
-            .withDependencies("GRAIN_OUTSIDE_DIAMETER", "GRAIN_CORE_DIAMETER", "GRAIN_LENGTH")
+    END_GRAIN_SRUFACE(new FormulaConfiguration("HollowCircleArea(GRAIN_OUTSIDE_DIAMETER, GRAIN_CORE_DIAMETER)")
+            .withDependencies("GRAIN_OUTSIDE_DIAMETER", "GRAIN_CORE_DIAMETER")
             .withFunctions(Functions.hollowCircleArea)),
+
+    //Difference in chamber and grain cross-sectional area (flow area)
+    EROSIVE_BURN_FACTOR(new FormulaConfiguration("ErosiveBurnFactor((CircleArea(dc)-END_GRAIN_SRUFACE)/THROAT_AREA, gstar)")
+            .withDependencies("THROAT_AREA", "END_GRAIN_SRUFACE")
+            .withConstants(dc, gstar)
+            .withFunctions(Functions.erosiveBurnFactor, Functions.circleArea)),
+
+    GRAIN_END_BURNING_SURFACE(new FormulaConfiguration("(ei * 2 * END_GRAIN_SRUFACE) * n")
+            .withDependencies("END_GRAIN_SRUFACE")
+            .withConstants(n, ei)),
+
+    GRAIN_CORE_BURNING_SURFACE(new FormulaConfiguration("ci * pi * GRAIN_CORE_DIAMETER * GRAIN_LENGTH")
+            .withDependencies("GRAIN_CORE_DIAMETER", "GRAIN_LENGTH")
+            .withConstants(ci)),
+
+    GRAIN_OUTER_BURNING_SURFACE(new FormulaConfiguration("osi * pi * GRAIN_OUTSIDE_DIAMETER * GRAIN_LENGTH")
+            .withDependencies("GRAIN_OUTSIDE_DIAMETER", "GRAIN_LENGTH")
+            .withConstants(osi)),
+
+    GRAIN_VOLUME(new FormulaConfiguration("(END_GRAIN_SRUFACE * GRAIN_LENGTH)")
+            .withDependencies("GRAIN_LENGTH", "END_GRAIN_SRUFACE")),
 
     TEMPORARY_CHAMBER_PRESSURE(new FormulaConfiguration("CHAMBER_PRESSURE_MPA_previous")
             .withVariables("CHAMBER_PRESSURE_MPA_previous")),
@@ -108,7 +123,11 @@ public enum PressureFormulas implements Formula {
     //Strange column AI in Excel file, no more information about it
     AI(new FormulaConfiguration("(TEMPORARY_CHAMBER_PRESSURE - patm) * 1000000 * NOZZLE_CRITICAL_PASSAGE_AREA / sqrt(rat*to) * sqrt(k) * (2/(k+1))^((k+1)/2/(k-1))")
             .withDependencies("TEMPORARY_CHAMBER_PRESSURE", "NOZZLE_CRITICAL_PASSAGE_AREA")
-            .withConstants(patm, rat, to, k));
+            .withConstants(patm, rat, to, k)),
+
+    KN(new FormulaConfiguration("(GRAIN_END_BURNING_SURFACE + GRAIN_CORE_BURNING_SURFACE + GRAIN_OUTER_BURNING_SURFACE) / THROAT_AREA")
+            .withDependencies("THROAT_AREA", "GRAIN_END_BURNING_SURFACE", "GRAIN_CORE_BURNING_SURFACE", "GRAIN_OUTER_BURNING_SURFACE")
+            .withConstants(ei, ci, osi));
 
     private final Expression expression;
     private final Set<String> dependencies;
