@@ -51,16 +51,16 @@ public enum PressureFormulas implements Formula {
             .withConstants(dc, gstar)
             .withFunctions(Functions.erosiveBurnFactor, Functions.circleArea)),
 
-    GRAIN_END_BURNING_SURFACE(new FormulaConfiguration("(ei * 2 * END_GRAIN_SRUFACE) * n")
-            .withDependencies("END_GRAIN_SRUFACE")
+    GRAIN_END_BURNING_SURFACE(new FormulaConfiguration("(ei * 2 * endGrainSurface) * n")
+            .withVariables("endGrainSurface")
             .withConstants(n, ei)),
 
-    GRAIN_CORE_BURNING_SURFACE(new FormulaConfiguration("ci * pi * GRAIN_CORE_DIAMETER * GRAIN_LENGTH")
-            .withDependencies("GRAIN_CORE_DIAMETER", "GRAIN_LENGTH")
+    GRAIN_CORE_BURNING_SURFACE(new FormulaConfiguration("ci * pi * grainCoreDiameter * grainLength")
+            .withVariables("grainCoreDiameter", "grainLength")
             .withConstants(ci)),
 
-    GRAIN_OUTER_BURNING_SURFACE(new FormulaConfiguration("osi * pi * GRAIN_OUTSIDE_DIAMETER * GRAIN_LENGTH")
-            .withDependencies("GRAIN_OUTSIDE_DIAMETER", "GRAIN_LENGTH")
+    GRAIN_OUTER_BURNING_SURFACE(new FormulaConfiguration("osi * pi * grainOutsideDiameter * grainLength")
+            .withVariables("grainOutsideDiameter", "grainLength")
             .withConstants(osi)),
 
     GRAIN_VOLUME(new FormulaConfiguration("(END_GRAIN_SRUFACE * GRAIN_LENGTH)")
@@ -125,9 +125,9 @@ public enum PressureFormulas implements Formula {
             .withDependencies("TEMPORARY_CHAMBER_PRESSURE", "NOZZLE_CRITICAL_PASSAGE_AREA")
             .withConstants(patm, rat, to, k)),
 
-    KN(new FormulaConfiguration("(GRAIN_END_BURNING_SURFACE + GRAIN_CORE_BURNING_SURFACE + GRAIN_OUTER_BURNING_SURFACE) / THROAT_AREA")
-            .withDependencies("THROAT_AREA", "GRAIN_END_BURNING_SURFACE", "GRAIN_CORE_BURNING_SURFACE", "GRAIN_OUTER_BURNING_SURFACE")
-            .withConstants(ei, ci, osi));
+    KN(new FormulaConfiguration("(GRAIN_END_BURNING_SURFACE + GRAIN_CORE_BURNING_SURFACE + GRAIN_OUTER_BURNING_SURFACE) / throatArea")
+            .withDependencies("GRAIN_END_BURNING_SURFACE", "GRAIN_CORE_BURNING_SURFACE", "GRAIN_OUTER_BURNING_SURFACE")
+            .withVariables("throatArea"));
 
     private final Expression expression;
     private final Set<String> dependencies;

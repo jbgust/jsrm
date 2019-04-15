@@ -30,6 +30,8 @@ public class PressureCsvLineAggregator implements ArgumentsAggregator {
         csvValues.put(absoluteChamberPressure.name(), argumentsAccessor.getDouble(27));
         csvValues.put(absoluteChamberPressurePSIG.name(), argumentsAccessor.getDouble(28));
 
+        csvValues.put(kn.name(), argumentsAccessor.getDouble(32));
+
         return csvValues;
     }
 

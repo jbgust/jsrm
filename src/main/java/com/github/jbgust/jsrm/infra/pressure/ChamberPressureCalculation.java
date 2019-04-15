@@ -33,19 +33,39 @@ public class ChamberPressureCalculation {
     public Map<Results, List<Double>> compute() {
 
         CalculatorResults pressureResults = computeChamberPressureDuringPropellantBurn();
+        CalculatorResults knResults = computeKn(pressureResults);
 
         addNewConstantsFromPressureResults(pressureResults);
 
         CalculatorResults postBurnPressureResults = computePostBurnPressure();
 
-        return buildResults(pressureResults, postBurnPressureResults);
+        return buildResults(pressureResults, knResults, postBurnPressureResults);
     }
 
-    private Map<Results, List<Double>> buildResults(CalculatorResults pressureResults, CalculatorResults postBurnPressureResults) {
+    private CalculatorResults computeKn(CalculatorResults pressureResults) {
+        return new CalculatorBuilder(PressureFormulas.KN)
+                .withResultsToSave(PressureFormulas.KN)
+                .withConstants(ConstantsExtractor.toCalculationFormat(constants))
+                .withResultLineProviders(
+                        new KnDependenciesResultsProvider(throatArea.name(), pressureResults.getResults(PressureFormulas.THROAT_AREA)),
+                        new KnDependenciesResultsProvider("endGrainSurface", pressureResults.getResults(PressureFormulas.END_GRAIN_SRUFACE)),
+                        new KnDependenciesResultsProvider("grainCoreDiameter", pressureResults.getResults(PressureFormulas.GRAIN_CORE_DIAMETER)),
+                        new KnDependenciesResultsProvider("grainOutsideDiameter", pressureResults.getResults(PressureFormulas.GRAIN_OUTSIDE_DIAMETER)),
+                        new KnDependenciesResultsProvider("grainLength", pressureResults.getResults(PressureFormulas.GRAIN_LENGTH)))
+                .createCalculator()
+                .compute(0, JSRMConstant.NUMBER_LINE_DURING_BURN_CALCULATION);
+    }
+
+    private Map<Results, List<Double>> buildResults(CalculatorResults pressureResults, CalculatorResults knResults, CalculatorResults postBurnPressureResults) {
         int lastPressureResultsLine = JSRMConstant.NUMBER_LINE_DURING_BURN_CALCULATION - 1;
         List<Double> throatAreaResults = new ArrayList<>(pressureResults.getResults(PressureFormulas.THROAT_AREA));
         IntStream.range(0, JSRMConstant.NUMBER_LINE_DURING_POST_BURN_CALCULATION + 1)
                 .forEach(value -> throatAreaResults.add(pressureResults.getResult(PressureFormulas.THROAT_AREA, lastPressureResultsLine)));
+
+        // During post burn pressure KN = 0 because burning surface = 0
+        List<Double> knResultValues = new ArrayList<>(knResults.getResults(PressureFormulas.KN));
+        IntStream.range(0, JSRMConstant.NUMBER_LINE_DURING_POST_BURN_CALCULATION + 1)
+                .forEach(value -> knResultValues.add(0d));
 
         List<Double> nozzlePassageAreaResults = new ArrayList<>(pressureResults.getResults(PressureFormulas.NOZZLE_CRITICAL_PASSAGE_AREA));
         IntStream.range(0, JSRMConstant.NUMBER_LINE_DURING_POST_BURN_CALCULATION + 1)
@@ -70,6 +90,7 @@ public class ChamberPressureCalculation {
                 .put(chamberPressureMPA, chamberPressureMPAResults)
                 .put(absoluteChamberPressure, absoluteChamberPressureResults)
                 .put(absoluteChamberPressurePSIG, absoluteChamberPressurePSIGResults)
+                .put(kn, knResultValues)
                 .build();
     }
 
@@ -100,8 +121,18 @@ public class ChamberPressureCalculation {
                 .withConstants(ConstantsExtractor.toCalculationFormat(constants))
                 .withInitialValues(initialValues)
                 .withResultsToSave(
-                        PressureFormulas.THROAT_AREA, PressureFormulas.NOZZLE_CRITICAL_PASSAGE_AREA, PressureFormulas.TIME_SINCE_BURN_STARTS, PressureFormulas.CHAMBER_PRESSURE_MPA,
-                        PressureFormulas.ABSOLUTE_CHAMBER_PRESSURE, PressureFormulas.ABSOLUTE_CHAMBER_PRESSURE_PSIG)
+                        PressureFormulas.THROAT_AREA,
+                        PressureFormulas.NOZZLE_CRITICAL_PASSAGE_AREA,
+                        PressureFormulas.TIME_SINCE_BURN_STARTS,
+                        PressureFormulas.CHAMBER_PRESSURE_MPA,
+                        PressureFormulas.ABSOLUTE_CHAMBER_PRESSURE,
+                        PressureFormulas.ABSOLUTE_CHAMBER_PRESSURE_PSIG,
+                        //KN DEPENDENCIES
+                        PressureFormulas.GRAIN_LENGTH,
+                        PressureFormulas.END_GRAIN_SRUFACE,
+                        PressureFormulas.GRAIN_CORE_DIAMETER,
+                        PressureFormulas.GRAIN_OUTSIDE_DIAMETER
+                )
                 .createCalculator()
                 .compute(JSRMConstant.START_CALCULATION_LINE, JSRMConstant.NUMBER_LINE_DURING_BURN_CALCULATION);
     }
@@ -150,6 +181,7 @@ public class ChamberPressureCalculation {
         timeSinceBurnStart,
         chamberPressureMPA,
         absoluteChamberPressure,
-        absoluteChamberPressurePSIG;
+        absoluteChamberPressurePSIG,
+        kn;
     }
 }

@@ -34,6 +34,7 @@ class ChamberPressureCalculationTest {
             .put(chamberPressureMPA, offset(0.001))
             .put(absoluteChamberPressure, offset(0.001))
             .put(absoluteChamberPressurePSIG, offset(0.1))
+            .put(kn, offset(0.01))
             .build();
 
     @BeforeAll
@@ -49,7 +50,7 @@ class ChamberPressureCalculationTest {
     }
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/SRM_2014_PRESSURE_SHEET_QUALIFICATION.csv", numLinesToSkip = 2, delimiter = '|')
+    @CsvFileSource(resources = "/SRM_2014_PRESSURE_SHEET_QUALIFICATION_WITH_KN.csv", numLinesToSkip = 2, delimiter = '|')
     @DisplayName("Check pressure with SRM results")
     void qualification1(@CsvToPressureLine Map<String, Double> expectedLine) {
         int lineNumber = expectedLine.get(PressureCsvLineAggregator.LINE).intValue();
