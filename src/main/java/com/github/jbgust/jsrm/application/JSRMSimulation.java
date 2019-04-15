@@ -1,26 +1,33 @@
 package com.github.jbgust.jsrm.application;
 
-import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
-import com.github.jbgust.jsrm.application.result.JSRMResult;
-import com.github.jbgust.jsrm.application.result.MotorClassification;
-import com.github.jbgust.jsrm.application.result.MotorParameters;
-import com.github.jbgust.jsrm.infra.SolidRocketMotorChecker;
-import com.github.jbgust.jsrm.infra.performance.PerformanceResultProvider;
-import com.google.common.collect.ImmutableMap;
-import com.github.jbgust.jsrm.application.exception.SimulationFailedException;
-import com.github.jbgust.jsrm.application.result.Nozzle;
-import com.github.jbgust.jsrm.infra.ConstantsExtractor;
-import com.github.jbgust.jsrm.infra.JSRMConstant;
-import com.github.jbgust.jsrm.infra.performance.PerformanceCalculation;
-import com.github.jbgust.jsrm.infra.performance.PerformanceCalculationResult;
-import com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation;
+import static com.github.jbgust.jsrm.infra.JSRMConstant.GRAVITATIONAL_ACCELERATION;
+import static com.github.jbgust.jsrm.infra.JSRMConstant.LAST_CALCULATION_LINE;
+import static com.github.jbgust.jsrm.infra.JSRMConstant.atfinal;
+import static com.github.jbgust.jsrm.infra.JSRMConstant.mgrain;
+import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.chamberPressureMPA;
+import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.kn;
+import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.nozzleCriticalPassageArea;
+import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.throatArea;
+import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.timeSinceBurnStart;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.jbgust.jsrm.infra.JSRMConstant.*;
-import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.*;
+import com.github.jbgust.jsrm.application.exception.SimulationFailedException;
+import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
+import com.github.jbgust.jsrm.application.result.JSRMResult;
+import com.github.jbgust.jsrm.application.result.MotorClassification;
+import com.github.jbgust.jsrm.application.result.MotorParameters;
+import com.github.jbgust.jsrm.application.result.Nozzle;
+import com.github.jbgust.jsrm.infra.ConstantsExtractor;
+import com.github.jbgust.jsrm.infra.JSRMConstant;
+import com.github.jbgust.jsrm.infra.SolidRocketMotorChecker;
+import com.github.jbgust.jsrm.infra.performance.PerformanceCalculation;
+import com.github.jbgust.jsrm.infra.performance.PerformanceCalculationResult;
+import com.github.jbgust.jsrm.infra.performance.PerformanceResultProvider;
+import com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation;
+import com.google.common.collect.ImmutableMap;
 
 public class JSRMSimulation {
 
@@ -116,7 +123,8 @@ public class JSRMSimulation {
             motorParameters.add(new MotorParameters(
                     timeSinceBurnStartProvider.getResult(i),
                     performanceCalculationResult.getResults().get(PerformanceCalculation.Results.thrust).get(i),
-                    chamberPressureResults.get(kn).get(i)));
+                    chamberPressureResults.get(kn).get(i),
+                    chamberPressureResults.get(ChamberPressureCalculation.Results.absoluteChamberPressure).get(i)));
         }
         return motorParameters;
     }

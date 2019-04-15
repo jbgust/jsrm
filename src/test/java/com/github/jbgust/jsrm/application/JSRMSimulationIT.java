@@ -1,11 +1,9 @@
 package com.github.jbgust.jsrm.application;
 
-import com.github.jbgust.jsrm.application.csv.CsvToThrustResult;
-import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
-import com.github.jbgust.jsrm.application.result.JSRMResult;
-import com.github.jbgust.jsrm.application.result.MotorClassification;
-import com.github.jbgust.jsrm.application.result.MotorParameters;
-import com.github.jbgust.jsrm.application.result.Nozzle;
+import static com.github.jbgust.jsrm.utils.SolidRocketMotorBuilder.createMotorAsSRM_2014ExcelFile;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.data.Offset.offset;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -13,9 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
-import static com.github.jbgust.jsrm.utils.SolidRocketMotorBuilder.createMotorAsSRM_2014ExcelFile;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.data.Offset.offset;
+import com.github.jbgust.jsrm.application.csv.CsvToThrustResult;
+import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
+import com.github.jbgust.jsrm.application.result.JSRMResult;
+import com.github.jbgust.jsrm.application.result.MotorClassification;
+import com.github.jbgust.jsrm.application.result.MotorParameters;
+import com.github.jbgust.jsrm.application.result.Nozzle;
 
 @DisplayName("JSRM Integration test")
 public class JSRMSimulationIT {
@@ -51,7 +52,7 @@ public class JSRMSimulationIT {
                     .describedAs("Max chamber pressure")
                     .isEqualTo(5.93, offset(0.01));
 
-            assertThat(jsrmResult.getAverageChamberPressure())
+            assertThat(jsrmResult.getAverageChamberPressureInMPa())
                     .describedAs("Average chamber pressure")
                     .isEqualTo(4.89, offset(0.01));
 
@@ -137,6 +138,9 @@ public class JSRMSimulationIT {
 
             assertThat(motorParameters.getKn())
                     .isEqualTo(expectedMotorParameters.getKn(), offset(0.01d));
+
+            assertThat(motorParameters.getChamberPressureInMPa())
+                    .isEqualTo(expectedMotorParameters.getChamberPressureInMPa(), offset(0.001d));
 
         }
 
