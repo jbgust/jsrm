@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
 import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSB_FINE;
+import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSU;
+import static com.github.jbgust.jsrm.application.result.MotorClassification.H;
 import static com.github.jbgust.jsrm.application.result.MotorClassification.L;
 import static org.assertj.core.api.Assertions.*;
 
@@ -46,6 +48,48 @@ class JSRMSimulationTest {
         assertThat(result.getTotalImpulseInNewtonSecond()).isEqualTo(3484, offset(1d));
         assertThat(result.getSpecificImpulseInSecond()).isEqualTo(126.3, offset(0.1));
         assertThat(result.getMotorClassification()).isEqualTo(L);
+    }
+
+    @Test
+    void shouldComputeSRM_Herve() {
+        //GIVEN
+        SolidRocketMotor motor = new SolidRocketMotorBuilder()
+                .withThroatDiameter(8.500639)
+                .withOuterSurface(INHIBITED)
+                .withCoreSurface(EXPOSED)
+                .withEndsSurface(EXPOSED)
+                .withChamberInnerDiameter(36)
+                .withChamberLength(200)
+                .withNumberOfSegment(3)
+                .withGrainCoreDiameter(10)
+                .withGrainOuterDiameter(34)
+                .withGrainSegmentLength(58)
+                .withPropellant(KNSU)
+                .build();
+
+        JSRMConfig jsrmConfig = new JSRMConfigBuilder()
+                .withAmbiantPressureInMPa(0.101)
+                .withDensityRatio(0.95)
+                .withNozzleErosionInMillimeter(0)
+                .withCombustionEfficiencyRatio(0.95)
+                .withNozzleExpansionRatio(10)
+                .withNozzleEfficiency(0.8)
+                .withErosiveBurningAreaRatioThreshold(6)
+                .withErosiveBurningVelocityCoefficient(0)
+                .createJSRMConfig();
+        //WHEN
+        JSRMResult result = new JSRMSimulation(motor).run(jsrmConfig);
+
+        //THEN
+        assertThat(result.getMotorClassification()).isEqualTo(H);
+        assertThat(result.getAverageThrustInNewton()).isEqualTo(337);
+
+        assertThat(result.getThrustTimeInSecond()).isEqualTo(0.922, offset(0.001));
+        assertThat(result.getMaxThrustInNewton()).isEqualTo(379, offset(1.0));
+        assertThat(result.getTotalImpulseInNewtonSecond()).isEqualTo(311, offset(1d));
+        assertThat(result.getSpecificImpulseInSecond()).isEqualTo(122.4, offset(0.1));
+        // TODO investigate
+        //assertThat(result.getMaxChamberPressureInMPa()).isEqualTo(4.92, offset(0.01));
     }
 
     @Test

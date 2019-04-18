@@ -1,19 +1,5 @@
 package com.github.jbgust.jsrm.application;
 
-import static com.github.jbgust.jsrm.infra.JSRMConstant.GRAVITATIONAL_ACCELERATION;
-import static com.github.jbgust.jsrm.infra.JSRMConstant.LAST_CALCULATION_LINE;
-import static com.github.jbgust.jsrm.infra.JSRMConstant.atfinal;
-import static com.github.jbgust.jsrm.infra.JSRMConstant.mgrain;
-import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.chamberPressureMPA;
-import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.kn;
-import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.nozzleCriticalPassageArea;
-import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.throatArea;
-import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.timeSinceBurnStart;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.github.jbgust.jsrm.application.exception.SimulationFailedException;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
@@ -28,6 +14,13 @@ import com.github.jbgust.jsrm.infra.performance.PerformanceCalculationResult;
 import com.github.jbgust.jsrm.infra.performance.PerformanceResultProvider;
 import com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation;
 import com.google.common.collect.ImmutableMap;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static com.github.jbgust.jsrm.infra.JSRMConstant.*;
+import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.*;
 
 public class JSRMSimulation {
 
@@ -55,12 +48,13 @@ public class JSRMSimulation {
 
     /**
      * Run the simulation with the given configuration
-     * @param config JSRMConfig used ti run the computation
+     * @param customConfig JSRMConfig used to run the computation
      * @return The simuation result
      */
-    public JSRMResult run(JSRMConfig config) {
+    public JSRMResult run(JSRMConfig customConfig) {
+        this.config = customConfig;
         try {
-            Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(motor, new JSRMConfigBuilder().createJSRMConfig());
+            Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(motor, config);
 
             Map<ChamberPressureCalculation.Results, List<Double>> chamberPressureResults = new ChamberPressureCalculation(motor, config, constants).compute();
 
