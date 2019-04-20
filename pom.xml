@@ -101,6 +101,7 @@
                         <include>**/*Test.java</include>
                         <include>**/*IT.java</include>
                     </includes>
+                    <reportsDirectory>target/surefire-reports</reportsDirectory>
                 </configuration>
             </plugin>
             <plugin>
