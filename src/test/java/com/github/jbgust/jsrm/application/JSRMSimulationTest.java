@@ -10,6 +10,7 @@ import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.github.jbgust.jsrm.calculation.exception.LineCalculatorException;
 import com.github.jbgust.jsrm.utils.PropellantGrainBuilder;
 import com.github.jbgust.jsrm.utils.SolidRocketMotorBuilder;
+import org.assertj.core.data.Percentage;
 import org.junit.jupiter.api.Test;
 
 import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
@@ -191,10 +192,25 @@ class JSRMSimulationTest {
         );
         JSRMSimulation simulation = new JSRMSimulation(meteor);
 
-        assertThatThrownBy(()->simulation.run())
+        assertThatThrownBy(simulation::run)
                 .isInstanceOf(SimulationFailedException.class)
                 .hasCauseExactlyInstanceOf(LineCalculatorException.class)
                 .hasStackTraceContaining("Failed to compute PROPELLANT_BURN_RATE in line 3");
+    }
+
+    @Test
+    void shouldUseLowAtmosphericPressure() {
+        // GIVEN
+        JSRMConfig jsrmConfig = new JSRMConfigBuilder().withAmbiantPressureInMPa(0.07).createJSRMConfig();
+
+        // WHEN
+
+        JSRMResult result = new JSRMSimulation(new SolidRocketMotorBuilder().build())
+                .run(jsrmConfig);
+
+        //THEN
+        assertThat(result.getMotorClassification()).isEqualTo(L);
+        assertThat(result.getTotalImpulseInNewtonSecond()).isCloseTo(3602, Percentage.withPercentage(5));
     }
 
 }
