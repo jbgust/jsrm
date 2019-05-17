@@ -11,16 +11,20 @@ public class JSRMConfig {
     private final double nozzleEfficiency;
     private final boolean optimalNozzleDesign;
     private final Double nozzleExpansionRatio;
+    private final int numberLineDuringBurnCalculation;
+    private final int numberLineDuringPostBurnCalculation;
 
     JSRMConfig(double densityRatio,
-                       double nozzleErosionInMillimeter,
-                       double combustionEfficiencyRatio,
-                       double ambiantPressureInMPa,
-                       double erosiveBurningAreaRatioThreshold,
-                       double erosiveBurningVelocityCoefficient,
-                       double nozzleEfficiency,
-                       boolean optimalNozzleDesign,
-                       Double nozzleExpansionRatio) {
+               double nozzleErosionInMillimeter,
+               double combustionEfficiencyRatio,
+               double ambiantPressureInMPa,
+               double erosiveBurningAreaRatioThreshold,
+               double erosiveBurningVelocityCoefficient,
+               double nozzleEfficiency,
+               boolean optimalNozzleDesign,
+               Double nozzleExpansionRatio,
+               int numberLineDuringBurnCalculation,
+               int numberLineDuringPostBurnCalculation) {
 
         this.densityRatio = densityRatio;
         this.nozzleErosionInMillimeter = nozzleErosionInMillimeter;
@@ -31,6 +35,8 @@ public class JSRMConfig {
         this.nozzleEfficiency = nozzleEfficiency;
         this.optimalNozzleDesign = optimalNozzleDesign;
         this.nozzleExpansionRatio = nozzleExpansionRatio;
+        this.numberLineDuringBurnCalculation = numberLineDuringBurnCalculation;
+        this.numberLineDuringPostBurnCalculation = numberLineDuringPostBurnCalculation;
     }
 
     /**
@@ -105,4 +111,27 @@ public class JSRMConfig {
         return nozzleExpansionRatio;
     }
 
+    /**
+     * See builder documentation {@link JSRMConfigBuilder}
+     * @return See builder documentation {@link JSRMConfigBuilder}
+     */
+    public int getNumberLineDuringBurnCalculation() {
+        return numberLineDuringBurnCalculation;
+    }
+
+    /**
+     * See builder documentation {@link JSRMConfigBuilder}
+     * @return See builder documentation {@link JSRMConfigBuilder}
+     */
+    public int getNumberLineDuringPostBurnCalculation() {
+        return numberLineDuringPostBurnCalculation;
+    }
+
+    /**
+     * See builder documentation {@link JSRMConfigBuilder}
+     * @return See builder documentation {@link JSRMConfigBuilder}
+     */
+    public int getLastCalcultationLine() {
+        return numberLineDuringBurnCalculation + numberLineDuringPostBurnCalculation;
+    }
 }

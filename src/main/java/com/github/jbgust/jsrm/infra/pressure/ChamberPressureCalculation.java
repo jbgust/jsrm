@@ -1,23 +1,5 @@
 package com.github.jbgust.jsrm.infra.pressure;
 
-import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.absoluteChamberPressure;
-import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.absoluteChamberPressurePSIG;
-import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.chamberPressureMPA;
-import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.kn;
-import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.massFlowRate;
-import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.nozzleCriticalPassageArea;
-import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.throatArea;
-import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.timeSinceBurnStart;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-
 import com.github.jbgust.jsrm.application.JSRMConfig;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.calculation.CalculatorBuilder;
@@ -27,12 +9,25 @@ import com.github.jbgust.jsrm.infra.ConstantsExtractor;
 import com.github.jbgust.jsrm.infra.JSRMConstant;
 import com.google.common.collect.ImmutableMap;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
+import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.*;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+
 public class ChamberPressureCalculation {
 
+    private JSRMConfig config;
     private final Map<JSRMConstant, Double> constants;
     private final Map<Formula, Double> initialValues;
 
     public ChamberPressureCalculation(SolidRocketMotor motor, JSRMConfig config, Map<JSRMConstant, Double> constants) {
+        this.config = config;
         this.constants = constants;
         initialValues = getInitialValues(motor, config);
     }
@@ -60,30 +55,30 @@ public class ChamberPressureCalculation {
                         new KnDependenciesResultsProvider("grainOutsideDiameter", pressureResults.getResults(PressureFormulas.GRAIN_OUTSIDE_DIAMETER)),
                         new KnDependenciesResultsProvider("grainLength", pressureResults.getResults(PressureFormulas.GRAIN_LENGTH)))
                 .createCalculator()
-                .compute(0, JSRMConstant.NUMBER_LINE_DURING_BURN_CALCULATION);
+                .compute(0, config.getNumberLineDuringBurnCalculation());
     }
 
     private Map<Results, List<Double>> buildResults(CalculatorResults pressureResults, CalculatorResults knResults, CalculatorResults postBurnPressureResults) {
-        int lastPressureResultsLine = JSRMConstant.NUMBER_LINE_DURING_BURN_CALCULATION - 1;
+        int lastPressureResultsLine = config.getNumberLineDuringBurnCalculation() - 1;
         List<Double> throatAreaResults = new ArrayList<>(pressureResults.getResults(PressureFormulas.THROAT_AREA));
-        IntStream.range(0, JSRMConstant.NUMBER_LINE_DURING_POST_BURN_CALCULATION + 1)
+        IntStream.range(0, config.getNumberLineDuringPostBurnCalculation() + 1)
                 .forEach(value -> throatAreaResults.add(pressureResults.getResult(PressureFormulas.THROAT_AREA, lastPressureResultsLine)));
 
         // During post burn pressure KN = 0 because burning surface = 0
         List<Double> knResultValues = new ArrayList<>(knResults.getResults(PressureFormulas.KN));
-        IntStream.range(0, JSRMConstant.NUMBER_LINE_DURING_POST_BURN_CALCULATION + 1)
+        IntStream.range(0, config.getNumberLineDuringPostBurnCalculation() + 1)
                 .forEach(value -> knResultValues.add(0d));
 
         List<Double> massFlowRateValues = new ArrayList<>(pressureResults.getResults(PressureFormulas.NOZZLE_MASS_FLOW_RATE));
 
         // linear decrease of MassFlow rate during post burn phase to 0 kg/s
         double lastMassFlowRateComputed = massFlowRateValues.get(massFlowRateValues.size() - 1);
-        double massflowIncrement = lastMassFlowRateComputed/(JSRMConstant.NUMBER_LINE_DURING_POST_BURN_CALCULATION+1);
-        IntStream.range(0, JSRMConstant.NUMBER_LINE_DURING_POST_BURN_CALCULATION + 1)
+        double massflowIncrement = lastMassFlowRateComputed/(config.getNumberLineDuringPostBurnCalculation()+1);
+        IntStream.range(0, config.getNumberLineDuringPostBurnCalculation() + 1)
                 .forEach(value -> massFlowRateValues.add(lastMassFlowRateComputed - (massflowIncrement * (value+1))));
 
         List<Double> nozzlePassageAreaResults = new ArrayList<>(pressureResults.getResults(PressureFormulas.NOZZLE_CRITICAL_PASSAGE_AREA));
-        IntStream.range(0, JSRMConstant.NUMBER_LINE_DURING_POST_BURN_CALCULATION + 1)
+        IntStream.range(0, config.getNumberLineDuringPostBurnCalculation() + 1)
                 .forEach(value -> nozzlePassageAreaResults.add(pressureResults.getResult(PressureFormulas.NOZZLE_CRITICAL_PASSAGE_AREA, lastPressureResultsLine)));
 
 
@@ -129,7 +124,7 @@ public class ChamberPressureCalculation {
                 .withInitialValues(initialValues)
                 .withResultsToSave(PostBurnPressureFormulas.values())
                 .createCalculator()
-                .compute(0, JSRMConstant.NUMBER_LINE_DURING_POST_BURN_CALCULATION);
+                .compute(0, config.getNumberLineDuringPostBurnCalculation());
     }
 
     private CalculatorResults computeChamberPressureDuringPropellantBurn() {
@@ -151,11 +146,11 @@ public class ChamberPressureCalculation {
                         PressureFormulas.GRAIN_OUTSIDE_DIAMETER
                 )
                 .createCalculator()
-                .compute(JSRMConstant.START_CALCULATION_LINE, JSRMConstant.NUMBER_LINE_DURING_BURN_CALCULATION);
+                .compute(JSRMConstant.START_CALCULATION_LINE, config.getNumberLineDuringBurnCalculation());
     }
 
     private void addNewConstantsFromPressureResults(CalculatorResults pressureResults) {
-        int lastPressureResultsLine = JSRMConstant.NUMBER_LINE_DURING_BURN_CALCULATION - 1;
+        int lastPressureResultsLine = config.getNumberLineDuringBurnCalculation() - 1;
 
         constants.put(JSRMConstant.tbout, pressureResults.getResult(PressureFormulas.TIME_SINCE_BURN_STARTS, lastPressureResultsLine));
         constants.put(JSRMConstant.pbout, pressureResults.getResult(PressureFormulas.CHAMBER_PRESSURE_MPA, lastPressureResultsLine));
@@ -172,7 +167,7 @@ public class ChamberPressureCalculation {
         Map<String, Double> tbincVariables = Stream.of(JSRMConstant.vc, JSRMConstant.expectedPfinal, JSRMConstant.pbout, JSRMConstant.rat, JSRMConstant.to, JSRMConstant.astarf, JSRMConstant.cstar)
                 .collect(toMap(Enum::name, constants::get));
 
-        tbincVariables.put(IncrementTimeBurstSolver.NB_LINE_VARIABLE, Double.valueOf(JSRMConstant.NUMBER_LINE_DURING_POST_BURN_CALCULATION));
+        tbincVariables.put(IncrementTimeBurstSolver.NB_LINE_VARIABLE, (double) config.getNumberLineDuringPostBurnCalculation());
 
         return new IncrementTimeBurstSolver().solve(tbincVariables);
     }

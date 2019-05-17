@@ -26,7 +26,7 @@ public class ConstantsExtractor {
         constants.put(ci, (double) propellantGrain.getCoreSurface().value());
         constants.put(osi, (double) propellantGrain.getOuterSurface().value());
         constants.put(ei, (double) propellantGrain.getEndsSurface().value());
-        constants.put(xincp, twoValue / (NUMBER_LINE_DURING_BURN_CALCULATION - 1) / getXincFactor(propellantGrain));
+        constants.put(xincp, twoValue / (config.getNumberLineDuringBurnCalculation() - 1) / getXincFactor(propellantGrain));
         constants.put(dc, solidRocketMotor.getCombustionChamber().getChamberInnerDiameterInMillimeter());
         constants.put(n, propellantGrain.getNumberOfSegment());
         constants.put(vc, solidRocketMotor.getCombustionChamber().getVolume());

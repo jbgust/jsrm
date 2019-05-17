@@ -47,6 +47,7 @@ class JSRMConfigBuilderTest {
                 .withErosiveBurningVelocityCoefficient(8)
                 .withNozzleEfficiency(9)
                 .withNozzleErosionInMillimeter(10)
+                .withNumberOfCalculationLine(100)
                 .createJSRMConfig();
 
         assertThat(jsrmConfig.getNozzleExpansionRatio()).isEqualTo(3);
@@ -58,6 +59,8 @@ class JSRMConfigBuilderTest {
         assertThat(jsrmConfig.getErosiveBurningVelocityCoefficient()).isEqualTo(8);
         assertThat(jsrmConfig.getNozzleEfficiency()).isEqualTo(9);
         assertThat(jsrmConfig.getNozzleErosionInMillimeter()).isEqualTo(10);
+        assertThat(jsrmConfig.getNumberLineDuringBurnCalculation()).isEqualTo(96);
+        assertThat(jsrmConfig.getNumberLineDuringPostBurnCalculation()).isEqualTo(3);
     }
 
     @Test
@@ -73,5 +76,7 @@ class JSRMConfigBuilderTest {
         assertThat(jsrmConfig.getNozzleErosionInMillimeter()).isEqualTo(0);
         assertThat(jsrmConfig.isOptimalNozzleDesign()).isTrue();
         assertThat(jsrmConfig.getNozzleExpansionRatio()).isNull();
+        assertThat(jsrmConfig.getNumberLineDuringBurnCalculation()).isEqualTo(835);
+        assertThat(jsrmConfig.getNumberLineDuringPostBurnCalculation()).isEqualTo(47);
     }
 }

@@ -204,13 +204,41 @@ class JSRMSimulationTest {
         JSRMConfig jsrmConfig = new JSRMConfigBuilder().withAmbiantPressureInMPa(0.07).createJSRMConfig();
 
         // WHEN
-
         JSRMResult result = new JSRMSimulation(new SolidRocketMotorBuilder().build())
                 .run(jsrmConfig);
 
         //THEN
         assertThat(result.getMotorClassification()).isEqualTo(L);
         assertThat(result.getTotalImpulseInNewtonSecond()).isCloseTo(3602, Percentage.withPercentage(5));
+    }
+
+    @Test
+    void shouldSpecifynumberOfCalculationLine() {
+        // GIVEN
+        JSRMConfig jsrmConfig = new JSRMConfigBuilder()
+                .withNumberOfCalculationLine(400)
+                .createJSRMConfig();
+
+        // WHEN
+        JSRMResult result = new JSRMSimulation(new SolidRocketMotorBuilder().build())
+                .run(jsrmConfig);
+
+        //THEN
+        Percentage percentage = Percentage.withPercentage(2);
+
+        assertThat(result.getMotorClassification()).isEqualTo(L);
+        assertThat(result.getTotalImpulseInNewtonSecond()).isCloseTo(3602, percentage);
+
+        assertThat(result.getMaxChamberPressureInMPa()).isCloseTo(5.93, percentage);
+        assertThat(result.getAverageChamberPressureInMPa()).isCloseTo(4.89, percentage);
+        assertThat(result.getMaxThrustInNewton()).isCloseTo(2060, percentage);
+        assertThat(result.getTotalImpulseInNewtonSecond()).isCloseTo(3602,  percentage);
+        assertThat(result.getSpecificImpulseInSecond()).isCloseTo(130.6, percentage);
+        assertThat(result.getSpecificImpulseInSecond()).isCloseTo(130.6, percentage);
+        assertThat(result.getThrustTimeInSecond()).isCloseTo(2.1575, percentage);
+        assertThat(result.getAverageThrustInNewton()).isCloseTo(1670, percentage);
+
+        assertThat(result.getMotorParameters()).hasSize(400);
     }
 
 }

@@ -17,6 +17,9 @@ public class JSRMConfigBuilder {
     private boolean optimalNozzleDesign = true;
     private Double nozzleExpansionRatio = null;
 
+    private int numberLineDuringBurnCalculation = 835;
+    private int numberLineDuringPostBurnCalculation = 47;
+
     /**
      * Change density ratio (Grain actual density / Grain ideal density)
      * @param densityRatio typically 0.90 to 0.98 (default 0.95)
@@ -98,6 +101,17 @@ public class JSRMConfigBuilder {
     }
 
     /**
+     * Use to specify more or less line for calculation
+     * @param numberOfCalculationLine default value is 882 (same as SRM Excel file)
+     * @return the builder
+     */
+    public JSRMConfigBuilder withNumberOfCalculationLine(int numberOfCalculationLine) {
+        this.numberLineDuringBurnCalculation = (int) (numberOfCalculationLine*0.96);
+        this.numberLineDuringPostBurnCalculation = numberOfCalculationLine - this.numberLineDuringBurnCalculation - 1;
+        return this;
+    }
+
+    /**
      * Change ratio of cross-sectional areas of nozzle exit  to throat.
      * Should be set if optimalNozzleDesign is false
      * @param nozzleExpansionRatio the expansion ratio
@@ -122,6 +136,17 @@ public class JSRMConfigBuilder {
             throw new InvalidConfigurationException("Your configuration should not use both optimalNozzleDesign and nozzleExpansionRatio");
         }
 
-        return new JSRMConfig(densityRatio, nozzleErosionInMillimeter, combustionEfficiencyRatio, ambiantPressureInMPa, erosiveBurningAreaRatioThreshold, erosiveBurningVelocityCoefficient, nozzleEfficiency, optimalNozzleDesign, nozzleExpansionRatio);
+        return new JSRMConfig(
+                densityRatio,
+                nozzleErosionInMillimeter,
+                combustionEfficiencyRatio,
+                ambiantPressureInMPa,
+                erosiveBurningAreaRatioThreshold,
+                erosiveBurningVelocityCoefficient,
+                nozzleEfficiency,
+                optimalNozzleDesign,
+                nozzleExpansionRatio,
+                numberLineDuringBurnCalculation,
+                numberLineDuringPostBurnCalculation);
     }
 }
