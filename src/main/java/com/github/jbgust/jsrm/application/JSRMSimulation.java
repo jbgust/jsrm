@@ -113,7 +113,7 @@ public class JSRMSimulation {
                                                              PerformanceCalculationResult performanceCalculationResult) {
         List<MotorParameters> motorParameters = new ArrayList<>();
 
-        for(int i = 0; i < LAST_CALCULATION_LINE+1; i++){
+        for(int i = 0; i < config.getLastCalcultationLine()+1; i++){
             motorParameters.add(new MotorParameters(
                     timeSinceBurnStartProvider.getResult(i),
                     performanceCalculationResult.getResults().get(PerformanceCalculation.Results.thrust).get(i),

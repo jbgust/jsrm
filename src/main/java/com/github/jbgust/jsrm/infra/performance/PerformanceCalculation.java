@@ -48,7 +48,7 @@ public class PerformanceCalculation {
     }
 
     public PerformanceCalculationResult compute(JSRMConfig config) {
-        double optimalNozzleExpansionRatio = getOptimalNozzleExpansionRatio();
+        double optimalNozzleExpansionRatio = getOptimalNozzleExpansionRatio(config);
         computeNozzleExitSpeed(config, optimalNozzleExpansionRatio);
 
         CalculatorResults performanceResults = new CalculatorBuilder(DELIVERED_IMPULSE)
@@ -57,9 +57,9 @@ public class PerformanceCalculation {
                 .withResultLineProviders(chamberPressureMpaResultProvider, throatAreaResultProvider, nozzleCriticalPassageAreaResultProvider, timeResultProvider)
                 .withResultsToSave(THRUST, DELIVERED_IMPULSE)
                 .createCalculator()
-                .compute(START_CALCULATION_LINE, LAST_CALCULATION_LINE);
+                .compute(START_CALCULATION_LINE, config.getLastCalcultationLine());
 
-        performanceResults.addResult(computeLastLine(LAST_CALCULATION_LINE, performanceResults));
+        performanceResults.addResult(computeLastLine(config.getLastCalcultationLine(), performanceResults));
 
         return new PerformanceCalculationResult(ImmutableMap.<Results, List<Double>>builder()
                 .put(thrust, performanceResults.getResults(THRUST))
@@ -106,13 +106,13 @@ public class PerformanceCalculation {
         return lastResultLine;
     }
 
-    private double getOptimalNozzleExpansionRatio() {
+    private double getOptimalNozzleExpansionRatio(JSRMConfig config) {
         List<Double> optimalNozzleRatioByTime = new CalculatorBuilder(OPTIMUM_NOZZLE_EXPANSION_RATIO)
                 .withConstants(ConstantsExtractor.toCalculationFormat(constants))
                 .withInitialValues(initialValues)
                 .withResultLineProviders(chamberPressureMpaResultProvider)
                 .createCalculator()
-                .compute(START_CALCULATION_LINE, LAST_CALCULATION_LINE)
+                .compute(START_CALCULATION_LINE, config.getLastCalcultationLine())
                 .getResults(OPTIMUM_NOZZLE_EXPANSION_RATIO);
         return optimalNozzleRatioByTime.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
     }

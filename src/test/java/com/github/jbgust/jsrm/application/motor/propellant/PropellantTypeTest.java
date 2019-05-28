@@ -1,17 +1,12 @@
-package com.github.jbgust.jsrm.infra.propellant;
+package com.github.jbgust.jsrm.application.motor.propellant;
 
-import com.github.jbgust.jsrm.application.exception.ChamberPressureOutOfBoundException;
-import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
-import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
-import org.junit.jupiter.params.provider.EnumSource;
 
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class PropellantTypeTest {
 
@@ -54,7 +49,7 @@ class PropellantTypeTest {
 
     @Test
     void checkKNSB_COARSEBurnRateData() {
-        double minPressureInChamber = 0.101;
+        double minPressureInChamber = 0.001;
         double maxPressureInChamber = 10.3;
         assertPropellantBurnRateCoefficient(minPressureInChamber, maxPressureInChamber, 5.13, KNSB_COARSE);
         assertPropellantPressureExponent(minPressureInChamber, maxPressureInChamber, 0.22, KNSB_COARSE);
@@ -62,7 +57,7 @@ class PropellantTypeTest {
 
     @Test
     void checkKNMN_COARSEBurnRateData() {
-        double minPressureInChamber = 0.101;
+        double minPressureInChamber = 0.001;
         double maxPressureInChamber = 10.3;
         assertPropellantBurnRateCoefficient(minPressureInChamber, maxPressureInChamber, 5.13, KNMN_COARSE);
         assertPropellantPressureExponent(minPressureInChamber, maxPressureInChamber, 0.22, KNMN_COARSE);
@@ -70,7 +65,7 @@ class PropellantTypeTest {
 
     @Test
     void checkKNSUBurnRateData() {
-        double minPressureInChamber = 0.101;
+        double minPressureInChamber = 0.001;
         double maxPressureInChamber = 10.3;
         assertPropellantBurnRateCoefficient(minPressureInChamber, maxPressureInChamber, 8.26, KNSU);
         assertPropellantPressureExponent(minPressureInChamber, maxPressureInChamber, 0.319, KNSU);
@@ -78,28 +73,11 @@ class PropellantTypeTest {
 
     @Test
     void checkKNER_COARSEBurnRateData() {
-        double minPressureInChamber = 0.101;
+        double minPressureInChamber = 0.001;
         double maxPressureInChamber = 10.3;
         assertPropellantBurnRateCoefficient(minPressureInChamber, maxPressureInChamber, 2.9, KNER_COARSE);
         assertPropellantPressureExponent(minPressureInChamber, maxPressureInChamber, 0.4, KNER_COARSE);
     }
-
-    @ParameterizedTest
-    @EnumSource(PropellantType.class)
-    void shouldThrowExceptionIfKNDXBurnRateCoefficientIsUsedWithOutOfBoundChamberPressure(PropellantType propellantType) {
-        assertThatThrownBy(() -> propellantType.getBurnRateCoefficient(0.09))
-                .isInstanceOf(ChamberPressureOutOfBoundException.class)
-                .hasMessageContaining(propellantType + " has no burn rate coefficient for this pressure (0.09) should be in range");
-    }
-
-    @ParameterizedTest
-    @EnumSource(PropellantType.class)
-    void shouldThrowExceptionIfKNDXPressureExponentIsUsedWithOutOfBoundChamberPressure(PropellantType propellantType) {
-        assertThatThrownBy(() -> propellantType.getPressureExponent(0.09))
-                .isInstanceOf(ChamberPressureOutOfBoundException.class)
-                .hasMessageContaining(propellantType + " has no pressure exponent for this pressure (0.09) should be in range");
-    }
-
 
     private void assertPropellantBurnRateCoefficient(double minPressureInChamber, double maxPressureInChamber, double burnRateCoefficient, PropellantType propellantType) {
         assertPropellantBurnRateCoefficient(minPressureInChamber, maxPressureInChamber, burnRateCoefficient, propellantType, 0, 1);

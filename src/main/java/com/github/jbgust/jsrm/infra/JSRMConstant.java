@@ -41,10 +41,8 @@ public enum JSRMConstant {
     public static final double PMAXPERC = 0.02;
     public static final double PBD = 0.0;
 
-    public static final int NUMBER_LINE_DURING_BURN_CALCULATION = 835;
-    public static final int NUMBER_LINE_DURING_POST_BURN_CALCULATION = 47;
-    public static final int LAST_CALCULATION_LINE = (int) (NUMBER_LINE_DURING_BURN_CALCULATION + NUMBER_LINE_DURING_POST_BURN_CALCULATION);
     public static final int START_CALCULATION_LINE = 0;
+
     private final boolean constantExtractedDuringCalculation;
 
     JSRMConstant(boolean constantExtractedDuringCalculation) {
