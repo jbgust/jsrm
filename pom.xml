@@ -6,7 +6,7 @@
 
     <groupId>com.github.jbgust</groupId>
     <artifactId>Java-Solid-Rocket-Motor</artifactId>
-    <version>1.3</version>
+    <version>1.4-SNAPSHOT</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Java Solid Rocket Motor is the Java implementation of Richard Nakka SRM Excel file by J. Content and J. Bise</description>
