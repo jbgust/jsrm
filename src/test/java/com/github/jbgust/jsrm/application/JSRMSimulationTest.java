@@ -17,8 +17,7 @@ import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.E
 import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSB_FINE;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSU;
-import static com.github.jbgust.jsrm.application.result.MotorClassification.H;
-import static com.github.jbgust.jsrm.application.result.MotorClassification.L;
+import static com.github.jbgust.jsrm.application.result.MotorClassification.*;
 import static org.assertj.core.api.Assertions.*;
 
 class JSRMSimulationTest {
@@ -48,6 +47,202 @@ class JSRMSimulationTest {
         assertThat(result.getMaxThrustInNewton()).isEqualTo(4592, offset(1.0));
         assertThat(result.getTotalImpulseInNewtonSecond()).isEqualTo(3484, offset(1d));
         assertThat(result.getSpecificImpulseInSecond()).isEqualTo(126.3, offset(0.1));
+        assertThat(result.getMotorClassification()).isEqualTo(L);
+    }
+
+    @Test
+    void shouldComputeSRM_2014() {
+        //GIVEN
+        SolidRocketMotor motor = new SolidRocketMotorBuilder()
+                .build();
+
+        //WHEN
+        JSRMResult result = new JSRMSimulation(motor).run(new JSRMConfigBuilder()
+                .withNozzleExpansionRatio(8)
+                .createJSRMConfig());
+
+        //THEN
+        assertThat(result.getMotorClassification()).isEqualTo(L);
+        assertThat(result.getTotalImpulseInNewtonSecond()).isEqualTo(3602, offset(1d));
+        assertThat(result.getSpecificImpulseInSecond()).isEqualTo(130.6, offset(0.1));
+        assertThat(result.getMaxThrustInNewton()).isEqualTo(2060, offset(1.0));
+        assertThat(result.getThrustTimeInSecond()).isEqualTo(2.158, offset(0.001));
+        assertThat(result.getMaxChamberPressureInMPa()).isEqualTo(5.93, offset(0.01));
+    }
+
+    @Test
+    void shouldComputeSRM_2014_customPressure() {
+        //GIVEN
+        SolidRocketMotor motor = new SolidRocketMotorBuilder()
+                .build();
+
+        //WHEN
+        JSRMResult result = new JSRMSimulation(motor).run(
+                new JSRMConfigBuilder()
+                        .withAmbiantPressureInMPa(0.9)
+                        .withNozzleExpansionRatio(8)
+                        .createJSRMConfig());
+
+        //THEN
+        assertThat(result.getMotorClassification()).isEqualTo(L);
+        assertThat(result.getTotalImpulseInNewtonSecond()).isEqualTo(2951, offset(2d));
+        assertThat(result.getSpecificImpulseInSecond()).isEqualTo(107, offset(0.1));
+        assertThat(result.getMaxThrustInNewton()).isEqualTo(1648, offset(1.0));
+        assertThat(result.getThrustTimeInSecond()).isEqualTo(1.91, offset(0.01));
+        assertThat(result.getMaxChamberPressureInMPa()).isEqualTo(5.84, offset(0.01));
+    }
+
+    @Test
+    void shouldComputeSRM_2014_nozzleEfficiency() {
+        //GIVEN
+        SolidRocketMotor motor = new SolidRocketMotorBuilder()
+                .build();
+
+        //WHEN
+        JSRMResult result = new JSRMSimulation(motor).run(new JSRMConfigBuilder()
+                .withNozzleEfficiency(1)
+                .withNozzleExpansionRatio(8)
+                .createJSRMConfig());
+
+        //THEN
+        assertThat(result.getMotorClassification()).isEqualTo(L);
+        assertThat(result.getTotalImpulseInNewtonSecond()).isEqualTo(4238, offset(1d));
+        assertThat(result.getSpecificImpulseInSecond()).isEqualTo(153.7, offset(0.1));
+        assertThat(result.getMaxThrustInNewton()).isEqualTo(2424, offset(1.0));
+        assertThat(result.getThrustTimeInSecond()).isEqualTo(2.158, offset(0.001));
+        assertThat(result.getMaxChamberPressureInMPa()).isEqualTo(5.93, offset(0.01));
+    }
+
+    @Test
+    void shouldComputeSRM_2014_combustionEfficiency() {
+        //GIVEN
+        SolidRocketMotor motor = new SolidRocketMotorBuilder()
+                .build();
+
+        //WHEN
+        JSRMResult result = new JSRMSimulation(motor).run(new JSRMConfigBuilder()
+                .withCombustionEfficiencyRatio(1)
+                .withNozzleExpansionRatio(8)
+                .createJSRMConfig());
+
+        //THEN
+        assertThat(result.getMotorClassification()).isEqualTo(L);
+        assertThat(result.getTotalImpulseInNewtonSecond()).isEqualTo(3716, offset(1d));
+        assertThat(result.getSpecificImpulseInSecond()).isEqualTo(134.8, offset(0.1));
+        assertThat(result.getMaxThrustInNewton()).isEqualTo(2112, offset(1.0));
+        assertThat(result.getThrustTimeInSecond()).isEqualTo(2.086, offset(0.001));
+        assertThat(result.getMaxChamberPressureInMPa()).isEqualTo(6.07, offset(0.01));
+    }
+
+    @Test
+    void shouldComputeSRM_2014_nozzleErosion() {
+        //GIVEN
+        SolidRocketMotor motor = new SolidRocketMotorBuilder()
+                .build();
+
+        //WHEN
+        JSRMResult result = new JSRMSimulation(motor).run(new JSRMConfigBuilder()
+                .withNozzleErosionInMillimeter(2)
+                .withNozzleExpansionRatio(8)
+                .createJSRMConfig());
+
+        //THEN
+        assertThat(result.getMotorClassification()).isEqualTo(L);
+        assertThat(result.getTotalImpulseInNewtonSecond()).isEqualTo(3493, offset(1d));
+        assertThat(result.getSpecificImpulseInSecond()).isEqualTo(126.6, offset(0.1));
+        assertThat(result.getMaxThrustInNewton()).isEqualTo(1658, offset(1.0));
+        assertThat(result.getThrustTimeInSecond()).isEqualTo(2.626, offset(0.001));
+        assertThat(result.getMaxChamberPressureInMPa()).isEqualTo(4.49, offset(0.01));
+    }
+
+    @Test
+    void shouldComputeSRM_2014_erosiveBurningVelocityCoefficient() {
+        //GIVEN
+        SolidRocketMotor motor = new SolidRocketMotorBuilder()
+                .build();
+
+        //WHEN
+        JSRMResult result = new JSRMSimulation(motor).run(new JSRMConfigBuilder()
+                .withNozzleErosionInMillimeter(2)
+                .withErosiveBurningVelocityCoefficient(0.5)
+                .withErosiveBurningAreaRatioThreshold(0)
+                .withNozzleExpansionRatio(8)
+                .createJSRMConfig());
+
+        //THEN
+        assertThat(result.getMotorClassification()).isEqualTo(L);
+        assertThat(result.getTotalImpulseInNewtonSecond()).isCloseTo(3493, offset(1d));
+        assertThat(result.getSpecificImpulseInSecond()).isEqualTo(126.6, offset(0.1));
+        assertThat(result.getMaxThrustInNewton()).isCloseTo(1658, offset(1d));
+        assertThat(result.getThrustTimeInSecond()).isEqualTo(2.626, offset(0.001));
+        assertThat(result.getMaxChamberPressureInMPa()).isEqualTo(4.49, offset(0.01));
+    }
+
+    @Test
+    void shouldComputeSRM_2014_erosiveBurningAreaRatioThreshold() {
+        //GIVEN
+        SolidRocketMotor motor = new SolidRocketMotorBuilder()
+                .build();
+
+        //WHEN
+        JSRMResult result = new JSRMSimulation(motor).run(new JSRMConfigBuilder()
+                .withNozzleErosionInMillimeter(2)
+                .withErosiveBurningVelocityCoefficient(0.5)
+                .withErosiveBurningAreaRatioThreshold(7)
+                .withNozzleExpansionRatio(8)
+                .createJSRMConfig());
+
+        //THEN
+        assertThat(result.getMotorClassification()).isEqualTo(L);
+        assertThat(result.getTotalImpulseInNewtonSecond()).isCloseTo(3563, offset(1d));
+        assertThat(result.getSpecificImpulseInSecond()).isCloseTo(129.2, offset(0.1));
+        assertThat(result.getMaxThrustInNewton()).isCloseTo(4561, offset(1d));
+        assertThat(result.getThrustTimeInSecond()).isEqualTo(2.151, offset(0.001));
+        assertThat(result.getMaxChamberPressureInMPa()).isEqualTo(12.47, offset(0.01));
+    }
+
+    @Test
+    void shouldComputeSRM_2014_density() {
+        //GIVEN
+        SolidRocketMotor motor = new SolidRocketMotorBuilder()
+                .build();
+
+        //WHEN
+        JSRMResult result = new JSRMSimulation(motor).run(new JSRMConfigBuilder()
+                .withDensityRatio(0.7)
+                .withNozzleExpansionRatio(8)
+                .createJSRMConfig());
+
+        //THEN
+        assertThat(result.getMotorClassification()).isEqualTo(K);
+        assertThat(result.getTotalImpulseInNewtonSecond()).isEqualTo(2461, offset(1d));
+        assertThat(result.getSpecificImpulseInSecond()).isEqualTo(121.1, offset(0.1));
+        assertThat(result.getMaxThrustInNewton()).isEqualTo(790, offset(1.0));
+        assertThat(result.getThrustTimeInSecond()).isEqualTo(3.343, offset(0.001));
+        assertThat(result.getMaxChamberPressureInMPa()).isEqualTo(2.48, offset(0.01));
+    }
+
+    /**
+     * @see "SRM_2014 - EXPRAT_2.xls"
+     */
+    @Test
+    void shouldComputeSRM_2014_nozzleExpansionRatio() {
+        //GIVEN
+        SolidRocketMotor motor = new SolidRocketMotorBuilder().build();
+
+        JSRMConfig config = new JSRMConfigBuilder()
+                .withNozzleExpansionRatio(2)
+                .createJSRMConfig();
+
+        //WHEN
+        JSRMResult result = new JSRMSimulation(motor).run(config);
+
+        //THEN
+        assertThat(result.getMaxChamberPressureInMPa()).isEqualTo(5.93, offset(0.01));
+        assertThat(result.getThrustTimeInSecond()).isEqualTo(2.158, offset(0.001));
+        assertThat(result.getMaxThrustInNewton()).isEqualTo(1811, offset(1.0));
+        assertThat(result.getTotalImpulseInNewtonSecond()).isEqualTo(3209, offset(1d));
+        assertThat(result.getSpecificImpulseInSecond()).isEqualTo(116.3, offset(0.1));
         assertThat(result.getMotorClassification()).isEqualTo(L);
     }
 
@@ -156,30 +351,6 @@ class JSRMSimulationTest {
         assertThat(result.getMaxThrustInNewton()).isEqualTo(3892, offset(1.0));
         assertThat(result.getTotalImpulseInNewtonSecond()).isEqualTo(3652, offset(1d));
         assertThat(result.getSpecificImpulseInSecond()).isEqualTo(132.4, offset(0.1));
-        assertThat(result.getMotorClassification()).isEqualTo(L);
-    }
-
-    /**
-     * @see "SRM_2014 - EXPRAT_2.xls"
-     */
-    @Test
-    void shouldComputeSRM_2014_Exprat2() {
-        //GIVEN
-        SolidRocketMotor motor = new SolidRocketMotorBuilder().build();
-
-        JSRMConfig config = new JSRMConfigBuilder()
-                .withNozzleExpansionRatio(2)
-                .createJSRMConfig();
-
-        //WHEN
-        JSRMResult result = new JSRMSimulation(motor).run(config);
-
-        //THEN
-        assertThat(result.getMaxChamberPressureInMPa()).isEqualTo(5.93, offset(0.01));
-        assertThat(result.getThrustTimeInSecond()).isEqualTo(2.158, offset(0.001));
-        assertThat(result.getMaxThrustInNewton()).isEqualTo(1811, offset(1.0));
-        assertThat(result.getTotalImpulseInNewtonSecond()).isEqualTo(3209, offset(1d));
-        assertThat(result.getSpecificImpulseInSecond()).isEqualTo(116.3, offset(0.1));
         assertThat(result.getMotorClassification()).isEqualTo(L);
     }
 
