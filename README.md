@@ -14,7 +14,7 @@ Easy integration to your source code with [Maven repository](https://search.mave
 <dependency>
   <groupId>com.github.jbgust</groupId>
   <artifactId>Java-Solid-Rocket-Motor</artifactId>
-  <version>1.1</version>
+  <version>1.3</version>
 </dependency>
 ```
 
