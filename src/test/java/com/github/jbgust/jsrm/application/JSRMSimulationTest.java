@@ -15,8 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
 import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
-import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSB_FINE;
-import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSU;
+import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.*;
 import static com.github.jbgust.jsrm.application.result.MotorClassification.*;
 import static org.assertj.core.api.Assertions.*;
 
@@ -68,6 +67,32 @@ class JSRMSimulationTest {
         assertThat(result.getMaxThrustInNewton()).isEqualTo(2060, offset(1.0));
         assertThat(result.getThrustTimeInSecond()).isEqualTo(2.158, offset(0.001));
         assertThat(result.getMaxChamberPressureInMPa()).isEqualTo(5.93, offset(0.01));
+    }
+
+    @Test
+    void shouldComputeLowKN() {
+        //GIVEN
+        SolidRocketMotor motor = new SolidRocketMotorBuilder()
+                .withThroatDiameter(8)
+                .withGrainOuterDiameter(28)
+                .withGrainCoreDiameter(12)
+                .withGrainSegmentLength(98)
+                .withNumberOfSegment(1)
+                .withOuterSurface(INHIBITED)
+                .withEndsSurface(EXPOSED)
+                .withCoreSurface(EXPOSED)
+                .withPropellant(KNDX)
+                .withChamberInnerDiameter(28)
+                .withChamberLength(98)
+                .build();
+
+        //WHEN
+        JSRMResult result = new JSRMSimulation(motor).run(new JSRMConfigBuilder()
+                .withSafeKNFailure(true)
+                .createJSRMConfig());
+
+        //THEN
+        assertThat(result.getMotorClassification()).isEqualTo(G);
     }
 
     @Test

@@ -25,6 +25,7 @@ public enum JSRMConstant {
     cstar,
     at,
     rhopgrain,
+    safeKN,
 
     expectedPfinal(true),
     pbout(true),

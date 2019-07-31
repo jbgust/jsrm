@@ -33,6 +33,7 @@ public class ConstantsExtractor {
         constants.put(dto, solidRocketMotor.getThroatDiameterInMillimeter());
         constants.put(two, twoValue);
         constants.put(at, new CircleAreaFunction().runFunction(solidRocketMotor.getThroatDiameterInMillimeter()));
+        constants.put(safeKN, config.isSafeKNFailure() ? 1d : 0d);
 
         constants.put(erate, config.getNozzleErosionInMillimeter());
         constants.put(gstar, config.getErosiveBurningAreaRatioThreshold());

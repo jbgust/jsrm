@@ -13,6 +13,7 @@ public class JSRMConfig {
     private final Double nozzleExpansionRatio;
     private final int numberLineDuringBurnCalculation;
     private final int numberLineDuringPostBurnCalculation;
+    private boolean safeKNFailure;
 
     JSRMConfig(double densityRatio,
                double nozzleErosionInMillimeter,
@@ -24,7 +25,8 @@ public class JSRMConfig {
                boolean optimalNozzleDesign,
                Double nozzleExpansionRatio,
                int numberLineDuringBurnCalculation,
-               int numberLineDuringPostBurnCalculation) {
+               int numberLineDuringPostBurnCalculation,
+               boolean safeKNFailure) {
 
         this.densityRatio = densityRatio;
         this.nozzleErosionInMillimeter = nozzleErosionInMillimeter;
@@ -37,6 +39,7 @@ public class JSRMConfig {
         this.nozzleExpansionRatio = nozzleExpansionRatio;
         this.numberLineDuringBurnCalculation = numberLineDuringBurnCalculation;
         this.numberLineDuringPostBurnCalculation = numberLineDuringPostBurnCalculation;
+        this.safeKNFailure = safeKNFailure;
     }
 
     /**
@@ -133,5 +136,13 @@ public class JSRMConfig {
      */
     public int getLastCalcultationLine() {
         return numberLineDuringBurnCalculation + numberLineDuringPostBurnCalculation;
+    }
+
+    /**
+     * See builder documentation {@link JSRMConfigBuilder}
+     * @return See builder documentation {@link JSRMConfigBuilder}
+     */
+    public boolean isSafeKNFailure() {
+        return safeKNFailure;
     }
 }

@@ -7,6 +7,7 @@ import com.github.jbgust.jsrm.infra.function.HollowCircleAreaFunction;
 import com.github.jbgust.jsrm.infra.pressure.function.*;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import net.objecthunter.exp4j.function.Function;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -94,8 +95,10 @@ public enum PressureFormulas implements Formula {
             .withFunctions(Functions.nozzleMassFlowRate)),
 
     //Mass storage rate of combustion products (in chamber)
-    MASS_STORAGE_RATE(new FormulaConfiguration("MASS_GENERATION_RATE - NOZZLE_MASS_FLOW_RATE")
-            .withDependencies("MASS_GENERATION_RATE", "NOZZLE_MASS_FLOW_RATE")),
+    MASS_STORAGE_RATE(new FormulaConfiguration("test(MASS_GENERATION_RATE - NOZZLE_MASS_FLOW_RATE, safeKN)")
+            .withDependencies("MASS_GENERATION_RATE", "NOZZLE_MASS_FLOW_RATE")
+            .withConstants(safeKN)
+            .withFunctions(Functions.test)),
 
     //Mass of combustion products stored in chamber
     MASS_COMBUSTION_PRODUCTS(new FormulaConfiguration("MASS_STORAGE_RATE * (TIME_SINCE_BURN_STARTS-TIME_SINCE_BURN_STARTS_previous) + MASS_COMBUSTION_PRODUCTS_previous")
@@ -184,6 +187,16 @@ public enum PressureFormulas implements Formula {
         private static final GrainMassFunction grainMass = new GrainMassFunction();
         private static final NozzleMassFlowRateFunction nozzleMassFlowRate = new NozzleMassFlowRateFunction();
         private static final FreeVolumeInChamberFunction freeVolumeInChamber = new FreeVolumeInChamberFunction();
+        public static final Function test = new Function("test", 2) {
+            @Override
+            public double apply(double... doubles) {
+                if(doubles[1] == 1d){
+                    return doubles[0] > 0.0 ? 0.01 : doubles[0] ;
+                } else {
+                    return doubles[0];
+                }
+            }
+        };
     }
 
 }

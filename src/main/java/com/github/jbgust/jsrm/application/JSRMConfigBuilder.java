@@ -15,6 +15,7 @@ public class JSRMConfigBuilder {
     private double erosiveBurningVelocityCoefficient = 0;
     private double nozzleEfficiency = 0.85;
     private boolean optimalNozzleDesign = true;
+    private boolean safeKNFailure = false;
     private Double nozzleExpansionRatio = null;
 
     private int numberLineDuringBurnCalculation = 835;
@@ -124,6 +125,17 @@ public class JSRMConfigBuilder {
     }
 
     /**
+     * If the computation failed, you can set it to true. This parameter help to compute
+     * low KN motor that normaly failed. The result will be less precise.
+     * @param safeKNFailure
+     * @return the builder
+     */
+    public JSRMConfigBuilder withSafeKNFailure(boolean safeKNFailure) {
+        this.safeKNFailure = safeKNFailure;
+        return this;
+    }
+
+    /**
      * Build the configuration
      * @return the config
      */
@@ -147,6 +159,7 @@ public class JSRMConfigBuilder {
                 optimalNozzleDesign,
                 nozzleExpansionRatio,
                 numberLineDuringBurnCalculation,
-                numberLineDuringPostBurnCalculation);
+                numberLineDuringPostBurnCalculation,
+                safeKNFailure);
     }
 }
