@@ -1,20 +1,44 @@
 package com.github.jbgust.jsrm.infra.pressure;
 
-import com.github.jbgust.jsrm.calculation.Formula;
-import com.github.jbgust.jsrm.infra.FormulaConfiguration;
-import com.github.jbgust.jsrm.infra.function.CircleAreaFunction;
-import com.github.jbgust.jsrm.infra.function.HollowCircleAreaFunction;
-import com.github.jbgust.jsrm.infra.pressure.function.*;
-import net.objecthunter.exp4j.Expression;
-import net.objecthunter.exp4j.ExpressionBuilder;
-import net.objecthunter.exp4j.function.Function;
+import static com.github.jbgust.jsrm.infra.JSRMConstant.ci;
+import static com.github.jbgust.jsrm.infra.JSRMConstant.dc;
+import static com.github.jbgust.jsrm.infra.JSRMConstant.dto;
+import static com.github.jbgust.jsrm.infra.JSRMConstant.ei;
+import static com.github.jbgust.jsrm.infra.JSRMConstant.erate;
+import static com.github.jbgust.jsrm.infra.JSRMConstant.gstar;
+import static com.github.jbgust.jsrm.infra.JSRMConstant.k;
+import static com.github.jbgust.jsrm.infra.JSRMConstant.kv;
+import static com.github.jbgust.jsrm.infra.JSRMConstant.n;
+import static com.github.jbgust.jsrm.infra.JSRMConstant.osi;
+import static com.github.jbgust.jsrm.infra.JSRMConstant.patm;
+import static com.github.jbgust.jsrm.infra.JSRMConstant.pbd;
+import static com.github.jbgust.jsrm.infra.JSRMConstant.propellantId;
+import static com.github.jbgust.jsrm.infra.JSRMConstant.rat;
+import static com.github.jbgust.jsrm.infra.JSRMConstant.rhopgrain;
+import static com.github.jbgust.jsrm.infra.JSRMConstant.safeKN;
+import static com.github.jbgust.jsrm.infra.JSRMConstant.to;
+import static com.github.jbgust.jsrm.infra.JSRMConstant.two;
+import static com.github.jbgust.jsrm.infra.JSRMConstant.vc;
+import static com.github.jbgust.jsrm.infra.JSRMConstant.xincp;
+import static java.util.stream.Stream.of;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.github.jbgust.jsrm.infra.JSRMConstant.*;
-import static java.util.stream.Stream.of;
+import com.github.jbgust.jsrm.calculation.Formula;
+import com.github.jbgust.jsrm.infra.FormulaConfiguration;
+import com.github.jbgust.jsrm.infra.function.CircleAreaFunction;
+import com.github.jbgust.jsrm.infra.function.HollowCircleAreaFunction;
+import com.github.jbgust.jsrm.infra.pressure.function.BurnRateCharacteristicFunction;
+import com.github.jbgust.jsrm.infra.pressure.function.ErosiveBurnFactorFunction;
+import com.github.jbgust.jsrm.infra.pressure.function.FreeVolumeInChamberFunction;
+import com.github.jbgust.jsrm.infra.pressure.function.GrainMassFunction;
+import com.github.jbgust.jsrm.infra.pressure.function.NozzleMassFlowRateFunction;
+
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
+import net.objecthunter.exp4j.function.Function;
 
 
 public enum PressureFormulas implements Formula {
@@ -191,12 +215,14 @@ public enum PressureFormulas implements Formula {
             @Override
             public double apply(double... doubles) {
                 if(doubles[1] == 1d){
-                    return doubles[0] > 0.0 ? 0.01 : doubles[0] ;
+                    if (doubles[0] < 0.0) {
+                        return 0.0001;
+                    }
+                    else return doubles[0];
                 } else {
                     return doubles[0];
                 }
             }
         };
     }
-
 }

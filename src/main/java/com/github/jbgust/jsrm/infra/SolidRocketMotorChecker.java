@@ -1,11 +1,11 @@
 package com.github.jbgust.jsrm.infra;
 
+import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
+
 import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
 import com.github.jbgust.jsrm.application.motor.CombustionChamber;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
-
-import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
 
 public class SolidRocketMotorChecker {
 
@@ -14,9 +14,9 @@ public class SolidRocketMotorChecker {
         PropellantGrain propellantGrain = solidRocketMotor.getPropellantGrain();
         CombustionChamber combustionChamber = solidRocketMotor.getCombustionChamber();
 // TODO : a voir si on remet
-//        if(propellantGrain.getCoreDiameter() < solidRocketMotor.getThroatDiameterInMillimeter()){
-//            throw new InvalidMotorDesignException("Throat diameter should be >= than grain core diameter");
-//        }
+        if(propellantGrain.getCoreDiameter() < solidRocketMotor.getThroatDiameterInMillimeter()){
+            throw new InvalidMotorDesignException("Throat diameter should be >= than grain core diameter");
+        }
 
         if(propellantGrain.getOuterDiameter() > combustionChamber.getChamberInnerDiameterInMillimeter()) {
             throw new InvalidMotorDesignException("Combution chamber diameter should be >= than grain outer diameter");
