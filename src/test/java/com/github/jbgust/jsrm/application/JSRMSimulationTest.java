@@ -1,19 +1,5 @@
 package com.github.jbgust.jsrm.application;
 
-import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
-import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
-import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSB_FINE;
-import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSU;
-import static com.github.jbgust.jsrm.application.result.MotorClassification.H;
-import static com.github.jbgust.jsrm.application.result.MotorClassification.K;
-import static com.github.jbgust.jsrm.application.result.MotorClassification.L;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.offset;
-
-import org.assertj.core.data.Percentage;
-import org.junit.jupiter.api.Test;
-
 import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
 import com.github.jbgust.jsrm.application.exception.SimulationFailedException;
 import com.github.jbgust.jsrm.application.motor.CombustionChamber;
@@ -24,6 +10,15 @@ import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.github.jbgust.jsrm.calculation.exception.LineCalculatorException;
 import com.github.jbgust.jsrm.utils.PropellantGrainBuilder;
 import com.github.jbgust.jsrm.utils.SolidRocketMotorBuilder;
+import org.assertj.core.data.Percentage;
+import org.junit.jupiter.api.Test;
+
+import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
+import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
+import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSB_FINE;
+import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSU;
+import static com.github.jbgust.jsrm.application.result.MotorClassification.*;
+import static org.assertj.core.api.Assertions.*;
 
 class JSRMSimulationTest {
 
@@ -36,22 +31,24 @@ class JSRMSimulationTest {
      * @see "SRM_2014 - OUTER_EXPOSED.xls"
      */
     @Test
-    void shouldComputeSRM_2014_motorWithOuterExposed() {
+    void shouldComputeSRM_2014_motorWithAllSurfacesExposed() {
         //GIVEN
         SolidRocketMotor motor = new SolidRocketMotorBuilder()
-                .withThroatDiameter(26.338369575)
                 .withOuterSurface(EXPOSED)
+                .withCoreSurface(EXPOSED)
+                .withEndsSurface(EXPOSED)
+                .withThroatDiameter(16.3577868)
                 .build();
 
         //WHEN
         JSRMResult result = new JSRMSimulation(motor).run(default_SRM_2014_jsrmConfig);
 
         //THEN
-        assertThat(result.getMaxChamberPressureInMPa()).isEqualTo(5.78, offset(0.01));
-        assertThat(result.getThrustTimeInSecond()).isEqualTo(1.370, offset(0.001));
-        assertThat(result.getMaxThrustInNewton()).isEqualTo(4592, offset(1.0));
-        assertThat(result.getTotalImpulseInNewtonSecond()).isEqualTo(3484, offset(1d));
-        assertThat(result.getSpecificImpulseInSecond()).isEqualTo(126.3, offset(0.1));
+        assertThat(result.getMaxChamberPressureInMPa()).isEqualTo(19.82, offset(0.01));
+        assertThat(result.getThrustTimeInSecond()).isEqualTo(0.893, offset(0.001));
+        assertThat(result.getMaxThrustInNewton()).isEqualTo(6416, offset(1.0));
+        assertThat(result.getTotalImpulseInNewtonSecond()).isEqualTo(3820, offset(1d));
+        assertThat(result.getSpecificImpulseInSecond()).isEqualTo(138.5, offset(0.1));
         assertThat(result.getMotorClassification()).isEqualTo(L);
     }
 
@@ -316,21 +313,21 @@ class JSRMSimulationTest {
     void shouldComputeSRM_2014_motorWithInnerExposedOnly() {
         //GIVEN
         SolidRocketMotor motor = new SolidRocketMotorBuilder()
-                .withThroatDiameter(21.05621206)
                 .withOuterSurface(INHIBITED)
                 .withEndsSurface(INHIBITED)
                 .withCoreSurface(EXPOSED)
+                .withThroatDiameter(17.6135459)
                 .build();
 
         //WHEN
         JSRMResult result = new JSRMSimulation(motor).run(default_SRM_2014_jsrmConfig);
 
         //THEN
-        assertThat(result.getMaxChamberPressureInMPa()).isEqualTo(5.69, offset(0.01));
-        assertThat(result.getThrustTimeInSecond()).isEqualTo(3.065, offset(0.001));
-        assertThat(result.getMaxThrustInNewton()).isEqualTo(2884, offset(1.0));
-        assertThat(result.getTotalImpulseInNewtonSecond()).isEqualTo(3382, offset(1d));
-        assertThat(result.getSpecificImpulseInSecond()).isEqualTo(122.6, offset(0.1));
+        assertThat(result.getMaxChamberPressureInMPa()).isEqualTo(8.02, offset(0.01));
+        assertThat(result.getThrustTimeInSecond()).isEqualTo(2.605, offset(0.001));
+        assertThat(result.getMaxThrustInNewton()).isEqualTo(2918, offset(1.0));
+        assertThat(result.getTotalImpulseInNewtonSecond()).isEqualTo(3569, offset(1d));
+        assertThat(result.getSpecificImpulseInSecond()).isEqualTo(129.4, offset(0.1));
         assertThat(result.getMotorClassification()).isEqualTo(L);
     }
 
@@ -341,7 +338,7 @@ class JSRMSimulationTest {
     void shouldComputeSRM_2014_motorWithInnerAndOuterExposedOnly() {
         //GIVEN
         SolidRocketMotor motor = new SolidRocketMotorBuilder()
-                .withThroatDiameter(23.91391624)
+                .withThroatDiameter(18.9616907)
                 .withOuterSurface(EXPOSED)
                 .withCoreSurface(EXPOSED)
                 .withEndsSurface(INHIBITED)
@@ -351,11 +348,11 @@ class JSRMSimulationTest {
         JSRMResult result = new JSRMSimulation(motor).run(default_SRM_2014_jsrmConfig);
 
         //THEN
-        assertThat(result.getMaxChamberPressureInMPa()).isEqualTo(5.93, offset(0.01));
-        assertThat(result.getThrustTimeInSecond()).isEqualTo(0.983, offset(0.001));
-        assertThat(result.getMaxThrustInNewton()).isEqualTo(3892, offset(1.0));
-        assertThat(result.getTotalImpulseInNewtonSecond()).isEqualTo(3652, offset(1d));
-        assertThat(result.getSpecificImpulseInSecond()).isEqualTo(132.4, offset(0.1));
+        assertThat(result.getMaxChamberPressureInMPa()).isEqualTo(9.02, offset(0.01));
+        assertThat(result.getThrustTimeInSecond()).isEqualTo(1.052, offset(0.001));
+        assertThat(result.getMaxThrustInNewton()).isEqualTo(3825, offset(1.0));
+        assertThat(result.getTotalImpulseInNewtonSecond()).isEqualTo(3750, offset(1d));
+        assertThat(result.getSpecificImpulseInSecond()).isEqualTo(136.0, offset(0.1));
         assertThat(result.getMotorClassification()).isEqualTo(L);
     }
 

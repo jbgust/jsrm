@@ -5,7 +5,6 @@ import com.github.jbgust.jsrm.application.motor.CombustionChamber;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
 import com.github.jbgust.jsrm.utils.PropellantGrainBuilder;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
@@ -25,7 +24,6 @@ class SolidRocketMotorCheckerTest {
         assertDoesNotThrow(() -> check(solidRocketMotor));
     }
 
-    @Disabled // TODO : a voir si on remet (test echoue car le diam du core est inferieur a celui du col de la tuyère)
     @Test
     void shouldThrowExceptionIfCoreDiameterIsLessThanThroatDiameter(){
         PropellantGrain propellantGrain = new PropellantGrainBuilder()
@@ -37,6 +35,15 @@ class SolidRocketMotorCheckerTest {
         assertThatThrownBy(() -> check(solidRocketMotor))
                 .isInstanceOf(InvalidMotorDesignException.class)
                 .hasMessage("Throat diameter should be >= than grain core diameter");
+    }
+
+    @Test
+    void shouldNotThrowExceptionIfCoreDiameterIsEqualToThroatDiameter(){
+        PropellantGrain propellantGrain = new PropellantGrainBuilder()
+                .withCoreDiameter(8)
+                .build();
+
+        check(new SolidRocketMotor(propellantGrain, new CombustionChamber(20, 80), 8d));
     }
 
     @Test
