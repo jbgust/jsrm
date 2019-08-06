@@ -9,14 +9,13 @@ import com.github.jbgust.jsrm.infra.ConstantsExtractor;
 import com.github.jbgust.jsrm.infra.JSRMConstant;
 import com.google.common.collect.ImmutableMap;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.*;
+import static com.github.jbgust.jsrm.infra.pressure.function.LowKnFunction.LOW_KN_MASS_STORAGE_RATE;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -102,7 +101,18 @@ public class ChamberPressureCalculation {
                 .put(absoluteChamberPressurePSIG, absoluteChamberPressurePSIGResults)
                 .put(kn, knResultValues)
                 .put(massFlowRate, massFlowRateValues)
+                .put(lowKNCorrection, singletonList(countLowKNFunctionUsage(pressureResults)))
                 .build();
+    }
+
+    private double countLowKNFunctionUsage(CalculatorResults pressureResults) {
+        if(constants.get(JSRMConstant.safeKN) == 1) {
+            return new Long(pressureResults.getResults(PressureFormulas.MASS_STORAGE_RATE).stream()
+                    .filter(massStorageRate -> Double.compare(LOW_KN_MASS_STORAGE_RATE, massStorageRate) == 0)
+                    .count()).doubleValue();
+        }
+
+        return 0d;
     }
 
     private List<Double> mergeResults(CalculatorResults pressureResults,
@@ -139,6 +149,7 @@ public class ChamberPressureCalculation {
                         PressureFormulas.ABSOLUTE_CHAMBER_PRESSURE,
                         PressureFormulas.ABSOLUTE_CHAMBER_PRESSURE_PSIG,
                         PressureFormulas.NOZZLE_MASS_FLOW_RATE,
+                        PressureFormulas.MASS_STORAGE_RATE,
                         //KN DEPENDENCIES
                         PressureFormulas.GRAIN_LENGTH,
                         PressureFormulas.END_GRAIN_SRUFACE,
@@ -195,6 +206,7 @@ public class ChamberPressureCalculation {
         absoluteChamberPressure,
         absoluteChamberPressurePSIG,
         kn,
-        massFlowRate;
+        massFlowRate,
+        lowKNCorrection;
     }
 }

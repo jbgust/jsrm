@@ -99,7 +99,8 @@ public class JSRMSimulation {
                 MotorClassification.getMotorClassification(totalImpulse),
                 buildMotorParametersResult(timeSinceBurnStartProvider, chamberPressureResults, performanceCalculationResult),
                 buildNozzleResult(config, performanceCalculationResult),
-                averageThrust);
+                averageThrust,
+                chamberPressureResults.get(lowKNCorrection).stream().findFirst().orElse(0.0).longValue());
     }
 
     private Nozzle buildNozzleResult(JSRMConfig config, PerformanceCalculationResult performanceCalculationResult) {

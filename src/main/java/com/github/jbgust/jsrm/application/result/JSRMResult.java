@@ -14,8 +14,9 @@ public class JSRMResult {
     private final List<MotorParameters> motorParameters;
     private final Nozzle nozzle;
     private final long averageThrustInNewton;
+    private final long numberOfKNCorrection;
 
-    public JSRMResult(double maxThrustInNewton, double totalImpulseInNewtonSecond, double specificImpulseInSecond, double maxChamberPressureInMPa, double averageChamberPressureInMPa, double thrustTimeInSecond, MotorClassification motorClassification, List<MotorParameters> motorParameters, Nozzle nozzle, long averageThrustInNewton) {
+    public JSRMResult(double maxThrustInNewton, double totalImpulseInNewtonSecond, double specificImpulseInSecond, double maxChamberPressureInMPa, double averageChamberPressureInMPa, double thrustTimeInSecond, MotorClassification motorClassification, List<MotorParameters> motorParameters, Nozzle nozzle, long averageThrustInNewton, long numberOfKNCorrection) {
         this.maxThrustInNewton = maxThrustInNewton;
         this.totalImpulseInNewtonSecond = totalImpulseInNewtonSecond;
         this.specificImpulseInSecond = specificImpulseInSecond;
@@ -26,6 +27,7 @@ public class JSRMResult {
         this.motorParameters = motorParameters;
         this.nozzle = nozzle;
         this.averageThrustInNewton = averageThrustInNewton;
+        this.numberOfKNCorrection = numberOfKNCorrection;
     }
 
     public double getMaxThrustInNewton() {
@@ -66,5 +68,9 @@ public class JSRMResult {
 
     public long getAverageThrustInNewton() {
         return averageThrustInNewton;
+    }
+
+    public long getNumberOfKNCorrection() {
+        return numberOfKNCorrection;
     }
 }

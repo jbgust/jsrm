@@ -25,7 +25,7 @@ class LowKNTest {
 
     @ParameterizedTest
     @CsvFileSource(resources = "/lowKN.csv", numLinesToSkip = 15)
-    void shouldValidLowKN(double throatDiameter,
+    void shouldValidLowKNFunction(double throatDiameter,
                             double outerDiameter,
                             double coreDiameter,
                             double segmentLength,
@@ -126,6 +126,7 @@ class LowKNTest {
         printSimulationInfos(motor, result);
 
         assertThat(result.getMotorClassification()).isEqualTo(G);
+        assertThat(result.getNumberOfKNCorrection()).isEqualTo(77);
     }
 
     @Test
@@ -149,7 +150,9 @@ class LowKNTest {
         JSRMResult result = new JSRMSimulation(motor).run(new JSRMConfigBuilder()
                 .withSafeKNFailure(true)
                 .createJSRMConfig());
+
         //THEN
+        printSimulationInfos(motor, result);
         assertThat(result.getMotorClassification()).isEqualTo(H);
     }
 
@@ -160,6 +163,7 @@ class LowKNTest {
         System.out.println("Result = " + result.getMotorClassification().name() + result.getAverageThrustInNewton());
         System.out.println("Initial KN : "+ result.getMotorParameters().get(0).getKn());
         System.out.println("Average KN : "+ result.getMotorParameters().stream().mapToDouble(MotorParameters::getKn).average().getAsDouble());
+        System.out.println("safe KN usage count: "+ result.getNumberOfKNCorrection());
         System.out.println("Ratio  : "+ motor.getThroatDiameterInMillimeter()*100/motor.getPropellantGrain().getCoreDiameter());
         System.out.println("========================================================");
     }

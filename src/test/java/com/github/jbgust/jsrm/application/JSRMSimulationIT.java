@@ -1,9 +1,11 @@
 package com.github.jbgust.jsrm.application;
 
-import static com.github.jbgust.jsrm.utils.SolidRocketMotorBuilder.createMotorAsSRM_2014ExcelFile;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.data.Offset.offset;
-
+import com.github.jbgust.jsrm.application.csv.CsvToThrustResult;
+import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
+import com.github.jbgust.jsrm.application.result.JSRMResult;
+import com.github.jbgust.jsrm.application.result.MotorClassification;
+import com.github.jbgust.jsrm.application.result.MotorParameters;
+import com.github.jbgust.jsrm.application.result.Nozzle;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -11,12 +13,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
-import com.github.jbgust.jsrm.application.csv.CsvToThrustResult;
-import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
-import com.github.jbgust.jsrm.application.result.JSRMResult;
-import com.github.jbgust.jsrm.application.result.MotorClassification;
-import com.github.jbgust.jsrm.application.result.MotorParameters;
-import com.github.jbgust.jsrm.application.result.Nozzle;
+import static com.github.jbgust.jsrm.utils.SolidRocketMotorBuilder.createMotorAsSRM_2014ExcelFile;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.data.Offset.offset;
 
 @DisplayName("JSRM Integration test")
 public class JSRMSimulationIT {
@@ -35,6 +34,8 @@ public class JSRMSimulationIT {
                 .createJSRMConfig();
 
         jsrmResult = jsrmSimulation.run(jsrmConfig);
+
+        assertThat(jsrmResult.getNumberOfKNCorrection()).isEqualTo(0);
     }
 
     @Nested

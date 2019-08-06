@@ -4,6 +4,8 @@ import com.github.jbgust.jsrm.infra.function.NaNThrowExceptionFunction;
 
 public class LowKnFunction extends NaNThrowExceptionFunction {
 
+    public static final double LOW_KN_MASS_STORAGE_RATE = 0.0001;
+
     public LowKnFunction() {
         super("lowKn", 2);
     }
@@ -14,7 +16,7 @@ public class LowKnFunction extends NaNThrowExceptionFunction {
         double massStorageRateResult = doubles[0];
 
         if(useSafeKn == 1d && massStorageRateResult < 0.0){
-                return 0.0001;
+            return LOW_KN_MASS_STORAGE_RATE;
         } else {
             return massStorageRateResult;
         }
