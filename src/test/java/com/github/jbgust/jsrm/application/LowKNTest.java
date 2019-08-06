@@ -16,7 +16,9 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
 import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
+import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSU;
 import static com.github.jbgust.jsrm.application.result.MotorClassification.G;
+import static com.github.jbgust.jsrm.application.result.MotorClassification.H;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class LowKNTest {
@@ -99,7 +101,7 @@ class LowKNTest {
     }
 
     @Test
-    void shouldInvestigateLowKN() {
+    void shouldWorkWithLowKN() {
         //GIVEN
         SolidRocketMotor motor = new SolidRocketMotorBuilder()
                 .withThroatDiameter(4)
@@ -124,6 +126,31 @@ class LowKNTest {
         printSimulationInfos(motor, result);
 
         assertThat(result.getMotorClassification()).isEqualTo(G);
+    }
+
+    @Test
+    void shouldWorkWithLowKNThatFailedOnOPTIMUM_NOZZLE_EXPANSION_RATIOCalculation() {
+        //GIVEN
+        SolidRocketMotor motor = new SolidRocketMotorBuilder()
+                .withThroatDiameter(19)
+                .withGrainCoreDiameter(20)
+                .withGrainOuterDiameter(37)
+                .withGrainSegmentLength(10)
+                .withNumberOfSegment(5)
+                .withOuterSurface(INHIBITED)
+                .withEndsSurface(EXPOSED)
+                .withCoreSurface(EXPOSED)
+                .withPropellant(KNSU)
+                .withChamberInnerDiameter(38)
+                .withChamberLength(500)
+                .build();
+
+        //WHEN
+        JSRMResult result = new JSRMSimulation(motor).run(new JSRMConfigBuilder()
+                .withSafeKNFailure(true)
+                .createJSRMConfig());
+        //THEN
+        assertThat(result.getMotorClassification()).isEqualTo(H);
     }
 
     private void printSimulationInfos(SolidRocketMotor motor, JSRMResult result) {

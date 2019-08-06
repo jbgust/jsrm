@@ -15,8 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
 import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
-import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSB_FINE;
-import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSU;
+import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.*;
 import static com.github.jbgust.jsrm.application.result.MotorClassification.*;
 import static org.assertj.core.api.Assertions.*;
 
