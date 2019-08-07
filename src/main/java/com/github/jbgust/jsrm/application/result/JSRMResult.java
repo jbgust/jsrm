@@ -14,9 +14,14 @@ public class JSRMResult {
     private final List<MotorParameters> motorParameters;
     private final Nozzle nozzle;
     private final long averageThrustInNewton;
+    private Double grainMassInKg;
     private final long numberOfKNCorrection;
 
-    public JSRMResult(double maxThrustInNewton, double totalImpulseInNewtonSecond, double specificImpulseInSecond, double maxChamberPressureInMPa, double averageChamberPressureInMPa, double thrustTimeInSecond, MotorClassification motorClassification, List<MotorParameters> motorParameters, Nozzle nozzle, long averageThrustInNewton, long numberOfKNCorrection) {
+    public JSRMResult(double maxThrustInNewton, double totalImpulseInNewtonSecond,
+                      double specificImpulseInSecond, double maxChamberPressureInMPa, double averageChamberPressureInMPa,
+                      double thrustTimeInSecond, MotorClassification motorClassification,
+                      List<MotorParameters> motorParameters, Nozzle nozzle,
+                      long averageThrustInNewton, Double grainMassInKg, long numberOfKNCorrection) {
         this.maxThrustInNewton = maxThrustInNewton;
         this.totalImpulseInNewtonSecond = totalImpulseInNewtonSecond;
         this.specificImpulseInSecond = specificImpulseInSecond;
@@ -27,6 +32,7 @@ public class JSRMResult {
         this.motorParameters = motorParameters;
         this.nozzle = nozzle;
         this.averageThrustInNewton = averageThrustInNewton;
+        this.grainMassInKg = grainMassInKg;
         this.numberOfKNCorrection = numberOfKNCorrection;
     }
 
@@ -72,5 +78,9 @@ public class JSRMResult {
 
     public long getNumberOfKNCorrection() {
         return numberOfKNCorrection;
+    }
+
+    public Double getGrainMassInKg() {
+        return grainMassInKg;
     }
 }

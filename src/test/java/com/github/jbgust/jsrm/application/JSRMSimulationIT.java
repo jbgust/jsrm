@@ -34,8 +34,6 @@ public class JSRMSimulationIT {
                 .createJSRMConfig();
 
         jsrmResult = jsrmSimulation.run(jsrmConfig);
-
-        assertThat(jsrmResult.getNumberOfKNCorrection()).isEqualTo(0);
     }
 
     @Nested
@@ -176,5 +174,17 @@ public class JSRMSimulationIT {
 
         assertThat(nozzle.getFinalNozzleExitSpeedInMach())
                 .isEqualTo(3.065, offset(0.001d));
+    }
+
+    @Test
+    @DisplayName("Other results check")
+    void checkOtherResults(){
+        assertThat(jsrmResult.getNumberOfKNCorrection())
+                .describedAs("Number of correction due to low KN")
+                .isEqualTo(0);
+
+        assertThat(jsrmResult.getGrainMassInKg())
+                .describedAs("Grain mass in Kg")
+                .isCloseTo(2.812, offset(0.001));
     }
 }

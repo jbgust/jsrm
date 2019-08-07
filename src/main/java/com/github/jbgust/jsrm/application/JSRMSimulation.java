@@ -100,6 +100,7 @@ public class JSRMSimulation {
                 buildMotorParametersResult(timeSinceBurnStartProvider, chamberPressureResults, performanceCalculationResult),
                 buildNozzleResult(config, performanceCalculationResult),
                 averageThrust,
+                constants.get(mgrain),
                 chamberPressureResults.get(lowKNCorrection).stream().findFirst().orElse(0.0).longValue());
     }
 
