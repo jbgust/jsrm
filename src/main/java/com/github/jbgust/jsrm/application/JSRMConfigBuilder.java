@@ -127,7 +127,7 @@ public class JSRMConfigBuilder {
     /**
      * If the computation failed, you can set it to true. This parameter help to compute
      * low KN motor that normaly failed. The result will be less precise.
-     * @param safeKNFailure
+     * @param safeKNFailure true to use safeKN feature
      * @return the builder
      */
     public JSRMConfigBuilder withSafeKNFailure(boolean safeKNFailure) {

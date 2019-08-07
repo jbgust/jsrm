@@ -3,7 +3,6 @@ package com.github.jbgust.jsrm.infra.pressure;
 import com.github.jbgust.jsrm.calculation.Calculator;
 import com.github.jbgust.jsrm.calculation.CalculatorBuilder;
 import com.github.jbgust.jsrm.calculation.CalculatorResults;
-import com.github.jbgust.jsrm.calculation.Formula;
 import com.github.jbgust.jsrm.infra.JSRMConstant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,15 +14,11 @@ import static com.github.jbgust.jsrm.infra.ConstantsExtractor.toCalculationForma
 import static com.github.jbgust.jsrm.infra.JSRMConstant.*;
 import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.throatArea;
 import static com.github.jbgust.jsrm.infra.pressure.PressureFormulas.*;
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
 
-public class KnCalculationTest {
-
-
-    private Map<JSRMConstant, Double> constants;
-    private Map<Formula, Double> initialValues;
+class KnCalculationTest {
 
     @BeforeEach
     void setUp() {
@@ -33,7 +28,7 @@ public class KnCalculationTest {
     @Test
     void shouldComputeKNWhenAllSurfacesAreExposed(){
         // GIVEN
-        Map constants = new HashMap<>();
+        Map<JSRMConstant, Double> constants = new HashMap<>();
         constants.put(ei, 1d);
         constants.put(osi, 1d);
         constants.put(ci, 1d);
@@ -43,11 +38,11 @@ public class KnCalculationTest {
         Calculator calculator = new CalculatorBuilder(KN)
                 .withConstants(toCalculationFormat(constants))
                 .withResultLineProviders(
-                        new KnDependenciesResultsProvider(throatArea.name(), asList(237.7325)),
-                        new KnDependenciesResultsProvider("endGrainSurface", asList(3425.1214)),
-                        new KnDependenciesResultsProvider("grainCoreDiameter", asList(20d)),
-                        new KnDependenciesResultsProvider("grainOutsideDiameter", asList(69d)),
-                        new KnDependenciesResultsProvider("grainLength", asList(460d)))
+                        new KnDependenciesResultsProvider(throatArea.name(), singletonList(237.7325)),
+                        new KnDependenciesResultsProvider("endGrainSurface", singletonList(3425.1214)),
+                        new KnDependenciesResultsProvider("grainCoreDiameter", singletonList(20d)),
+                        new KnDependenciesResultsProvider("grainOutsideDiameter", singletonList(69d)),
+                        new KnDependenciesResultsProvider("grainLength", singletonList(460d)))
                 .withResultsToSave(GRAIN_END_BURNING_SURFACE, GRAIN_CORE_BURNING_SURFACE, GRAIN_OUTER_BURNING_SURFACE, KN)
                 .createCalculator();
 
@@ -74,7 +69,7 @@ public class KnCalculationTest {
     @Test
     void shouldComputeKNWhenOnlyOuterSurfacesAreInhibited(){
         // GIVEN
-        Map constants = new HashMap<>();
+        Map<JSRMConstant, Double> constants = new HashMap<>();
         constants.put(ei, 1d);
         constants.put(osi, 0d);
         constants.put(ci, 1d);
@@ -84,11 +79,11 @@ public class KnCalculationTest {
         Calculator calculator = new CalculatorBuilder(KN)
                 .withConstants(toCalculationFormat(constants))
                 .withResultLineProviders(
-                        new KnDependenciesResultsProvider(throatArea.name(), asList(237.7325)),
-                        new KnDependenciesResultsProvider("endGrainSurface", asList(3425.1214)),
-                        new KnDependenciesResultsProvider("grainCoreDiameter", asList(20d)),
-                        new KnDependenciesResultsProvider("grainOutsideDiameter", asList(69d)),
-                        new KnDependenciesResultsProvider("grainLength", asList(460d)))
+                        new KnDependenciesResultsProvider(throatArea.name(), singletonList(237.7325)),
+                        new KnDependenciesResultsProvider("endGrainSurface", singletonList(3425.1214)),
+                        new KnDependenciesResultsProvider("grainCoreDiameter", singletonList(20d)),
+                        new KnDependenciesResultsProvider("grainOutsideDiameter", singletonList(69d)),
+                        new KnDependenciesResultsProvider("grainLength", singletonList(460d)))
                 .withResultsToSave(GRAIN_END_BURNING_SURFACE, GRAIN_CORE_BURNING_SURFACE, GRAIN_OUTER_BURNING_SURFACE, KN)
                 .createCalculator();
 
@@ -115,7 +110,7 @@ public class KnCalculationTest {
     @Test
     void shouldComputeKNWhenOnlyEndSurfacesAreInhibited(){
         // GIVEN
-        Map constants = new HashMap<>();
+        Map<JSRMConstant, Double> constants = new HashMap<>();
         constants.put(ei, 0d);
         constants.put(osi, 1d);
         constants.put(ci, 1d);
@@ -125,11 +120,11 @@ public class KnCalculationTest {
         Calculator calculator = new CalculatorBuilder(KN)
                 .withConstants(toCalculationFormat(constants))
                 .withResultLineProviders(
-                        new KnDependenciesResultsProvider(throatArea.name(), asList(237.7325)),
-                        new KnDependenciesResultsProvider("endGrainSurface", asList(3425.1214)),
-                        new KnDependenciesResultsProvider("grainCoreDiameter", asList(20d)),
-                        new KnDependenciesResultsProvider("grainOutsideDiameter", asList(69d)),
-                        new KnDependenciesResultsProvider("grainLength", asList(460d)))
+                        new KnDependenciesResultsProvider(throatArea.name(), singletonList(237.7325)),
+                        new KnDependenciesResultsProvider("endGrainSurface", singletonList(3425.1214)),
+                        new KnDependenciesResultsProvider("grainCoreDiameter", singletonList(20d)),
+                        new KnDependenciesResultsProvider("grainOutsideDiameter", singletonList(69d)),
+                        new KnDependenciesResultsProvider("grainLength", singletonList(460d)))
                 .withResultsToSave(GRAIN_END_BURNING_SURFACE, GRAIN_CORE_BURNING_SURFACE, GRAIN_OUTER_BURNING_SURFACE, KN)
                 .createCalculator();
 
@@ -156,7 +151,7 @@ public class KnCalculationTest {
     @Test
     void shouldComputeKNWhenOnlyCoreSurfacesAreInhibited(){
         // GIVEN
-        Map constants = new HashMap<>();
+        Map<JSRMConstant, Double> constants = new HashMap<>();
         constants.put(ei, 1d);
         constants.put(osi, 1d);
         constants.put(ci, 0d);
@@ -166,11 +161,11 @@ public class KnCalculationTest {
         Calculator calculator = new CalculatorBuilder(KN)
                 .withConstants(toCalculationFormat(constants))
                 .withResultLineProviders(
-                        new KnDependenciesResultsProvider(throatArea.name(), asList(237.7325)),
-                        new KnDependenciesResultsProvider("endGrainSurface", asList(3425.1214)),
-                        new KnDependenciesResultsProvider("grainCoreDiameter", asList(20d)),
-                        new KnDependenciesResultsProvider("grainOutsideDiameter", asList(69d)),
-                        new KnDependenciesResultsProvider("grainLength", asList(460d)))
+                        new KnDependenciesResultsProvider(throatArea.name(), singletonList(237.7325)),
+                        new KnDependenciesResultsProvider("endGrainSurface", singletonList(3425.1214)),
+                        new KnDependenciesResultsProvider("grainCoreDiameter", singletonList(20d)),
+                        new KnDependenciesResultsProvider("grainOutsideDiameter", singletonList(69d)),
+                        new KnDependenciesResultsProvider("grainLength", singletonList(460d)))
                 .withResultsToSave(GRAIN_END_BURNING_SURFACE, GRAIN_CORE_BURNING_SURFACE, GRAIN_OUTER_BURNING_SURFACE, KN)
                 .createCalculator();
 
@@ -197,7 +192,7 @@ public class KnCalculationTest {
     @Test
     void shouldComputeKNWhenAllSurfacesAreExposedWith2Grains(){
         // GIVEN
-        Map constants = new HashMap<>();
+        Map<JSRMConstant, Double> constants = new HashMap<>();
         constants.put(ei, 1d);
         constants.put(osi, 1d);
         constants.put(ci, 1d);
@@ -207,11 +202,11 @@ public class KnCalculationTest {
         Calculator calculator = new CalculatorBuilder(KN)
                 .withConstants(toCalculationFormat(constants))
                 .withResultLineProviders(
-                        new KnDependenciesResultsProvider(throatArea.name(), asList(237.7325)),
-                        new KnDependenciesResultsProvider("endGrainSurface", asList(3425.1214)),
-                        new KnDependenciesResultsProvider("grainCoreDiameter", asList(20d)),
-                        new KnDependenciesResultsProvider("grainOutsideDiameter", asList(69d)),
-                        new KnDependenciesResultsProvider("grainLength", asList(230d)))
+                        new KnDependenciesResultsProvider(throatArea.name(), singletonList(237.7325)),
+                        new KnDependenciesResultsProvider("endGrainSurface", singletonList(3425.1214)),
+                        new KnDependenciesResultsProvider("grainCoreDiameter", singletonList(20d)),
+                        new KnDependenciesResultsProvider("grainOutsideDiameter", singletonList(69d)),
+                        new KnDependenciesResultsProvider("grainLength", singletonList(230d)))
                 .withResultsToSave(GRAIN_END_BURNING_SURFACE, GRAIN_CORE_BURNING_SURFACE, GRAIN_OUTER_BURNING_SURFACE, KN)
                 .createCalculator();
 
