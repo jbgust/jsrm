@@ -1,7 +1,8 @@
 # JSRM Java Solid Rocket Motor performance
 Java implementation of Richard Nakka SRM Excel file. This library can predict performance of solid rocket motor solely for cylindrical grain configurations, such as BATES.
 
-### Build status [![CircleCI](https://circleci.com/gh/jbgust/jsrm/tree/master.svg?style=svg)](https://circleci.com/gh/jbgust/jsrm/tree/master)
+### Build status 
+[![CircleCI](https://circleci.com/gh/jbgust/jsrm/tree/master.svg?style=svg)](https://circleci.com/gh/jbgust/jsrm/tree/master) [![Coverage Status](https://coveralls.io/repos/github/jbgust/jsrm/badge.svg?branch=master)](https://coveralls.io/github/jbgust/jsrm?branch=master)
 
 # Usage
 ### Examples
