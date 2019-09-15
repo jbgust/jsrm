@@ -1,16 +1,17 @@
 package com.github.jbgust.jsrm.infra;
 
+import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
+import static com.github.jbgust.jsrm.infra.SolidRocketMotorChecker.check;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
+import org.junit.jupiter.api.Test;
+
 import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
 import com.github.jbgust.jsrm.application.motor.CombustionChamber;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
 import com.github.jbgust.jsrm.utils.PropellantGrainBuilder;
-import org.junit.jupiter.api.Test;
-
-import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
-import static com.github.jbgust.jsrm.infra.SolidRocketMotorChecker.check;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class SolidRocketMotorCheckerTest {
 
@@ -34,7 +35,7 @@ class SolidRocketMotorCheckerTest {
 
         assertThatThrownBy(() -> check(solidRocketMotor))
                 .isInstanceOf(InvalidMotorDesignException.class)
-                .hasMessage("Throat diameter should be >= than grain core diameter");
+                .hasMessage("Throat diameter should be <= than grain core diameter");
     }
 
     @Test
