@@ -5,6 +5,7 @@ import com.github.jbgust.jsrm.application.exception.SimulationFailedException;
 import com.github.jbgust.jsrm.application.motor.CombustionChamber;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.motor.propellant.GrainSurface;
+import com.github.jbgust.jsrm.application.motor.propellant.HollowCylinderGrain;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.github.jbgust.jsrm.calculation.exception.LineCalculatorException;
@@ -358,7 +359,7 @@ class JSRMSimulationTest {
     @Test
     void shouldThrowException(){
         SolidRocketMotor meteor = new SolidRocketMotor(
-                new PropellantGrain(KNSB_FINE, 21.2, 8, 60, 1, GrainSurface.INHIBITED, GrainSurface.INHIBITED, EXPOSED),
+                new PropellantGrain(KNSB_FINE, new HollowCylinderGrain(21.2, 8, 60, 1, GrainSurface.INHIBITED, GrainSurface.INHIBITED, EXPOSED)),
                 new CombustionChamber(21.2, 60),
                 6.0
         );

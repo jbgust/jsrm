@@ -164,7 +164,6 @@ class LowKNTest {
         System.out.println("Initial KN : "+ result.getMotorParameters().get(0).getKn());
         System.out.println("Average KN : "+ result.getMotorParameters().stream().mapToDouble(MotorParameters::getKn).average().getAsDouble());
         System.out.println("safe KN usage count: "+ result.getNumberOfKNCorrection());
-        System.out.println("Ratio  : "+ motor.getThroatDiameterInMillimeter()*100/motor.getPropellantGrain().getCoreDiameter());
         System.out.println("========================================================");
     }
 }

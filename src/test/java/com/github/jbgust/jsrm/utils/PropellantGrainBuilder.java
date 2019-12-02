@@ -1,6 +1,7 @@
 package com.github.jbgust.jsrm.utils;
 
 import com.github.jbgust.jsrm.application.motor.propellant.GrainSurface;
+import com.github.jbgust.jsrm.application.motor.propellant.HollowCylinderGrain;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
 import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 
@@ -20,7 +21,8 @@ public class PropellantGrainBuilder {
     private double outerDiameter = 20;
 
     public PropellantGrain build() {
-        return new PropellantGrain(propellantType, outerDiameter, coreDiameter, segmentLength, numberOfSegments, outerSurface, endsSurface, coreSurface);
+        return new PropellantGrain(propellantType,
+                new HollowCylinderGrain(outerDiameter, coreDiameter, segmentLength, numberOfSegments, outerSurface, endsSurface, coreSurface));
     }
 
     public PropellantGrainBuilder withCoreSurface(GrainSurface surface){

@@ -3,6 +3,7 @@ package com.github.jbgust.jsrm.utils;
 import com.github.jbgust.jsrm.application.motor.CombustionChamber;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.motor.propellant.GrainSurface;
+import com.github.jbgust.jsrm.application.motor.propellant.HollowCylinderGrain;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
 import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 
@@ -32,9 +33,9 @@ public class SolidRocketMotorBuilder {
     }
 
     public SolidRocketMotor build() {
-        PropellantGrain propellantGrain = new PropellantGrain(propellant, grainOuterDiameter, grainCoreDiameter,
+        PropellantGrain propellantGrain = new PropellantGrain(propellant, new HollowCylinderGrain(grainOuterDiameter, grainCoreDiameter,
                 grainSegmentLength, numberOfSegment,
-                outerSurface, endsSurface, coreSurface);
+                outerSurface, endsSurface, coreSurface));
 
         CombustionChamber combustionChamber = new CombustionChamber(chamberInnerDiameter, chamberLength);
 
@@ -85,5 +86,49 @@ public class SolidRocketMotorBuilder {
     public SolidRocketMotorBuilder withCoreSurface(GrainSurface coreSurface) {
         this.coreSurface = coreSurface;
         return this;
+    }
+
+    public double getGrainOuterDiameter() {
+        return grainOuterDiameter;
+    }
+
+    public double getGrainCoreDiameter() {
+        return grainCoreDiameter;
+    }
+
+    public double getGrainSegmentLength() {
+        return grainSegmentLength;
+    }
+
+    public double getNumberOfSegment() {
+        return numberOfSegment;
+    }
+
+    public double getChamberInnerDiameter() {
+        return chamberInnerDiameter;
+    }
+
+    public double getChamberLength() {
+        return chamberLength;
+    }
+
+    public double getThroatDiameter() {
+        return throatDiameter;
+    }
+
+    public SolidPropellant getPropellant() {
+        return propellant;
+    }
+
+    public GrainSurface getOuterSurface() {
+        return outerSurface;
+    }
+
+    public GrainSurface getEndsSurface() {
+        return endsSurface;
+    }
+
+    public GrainSurface getCoreSurface() {
+        return coreSurface;
     }
 }

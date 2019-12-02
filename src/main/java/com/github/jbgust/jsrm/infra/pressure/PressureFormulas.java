@@ -13,58 +13,32 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.github.jbgust.jsrm.infra.JSRMConstant.*;
+import static com.github.jbgust.jsrm.infra.pressure.resultprovider.BurningSurfaceResultProvider.BURNING_SURFACE_VARIABLE;
+import static com.github.jbgust.jsrm.infra.pressure.resultprovider.EndGrainSurfaceResultProvider.END_GRAIN_SURFACE_VARIABLE;
+import static com.github.jbgust.jsrm.infra.pressure.resultprovider.GrainVolumeResultProvider.GRAIN_VOLUME_VARIABLE;
+import static com.github.jbgust.jsrm.infra.pressure.resultprovider.ProgressionResultProvider.PROGRESSION_VARIABLE;
 import static java.util.stream.Stream.of;
 
 
 public enum PressureFormulas implements Formula {
 
-    GRAIN_CORE_DIAMETER(new FormulaConfiguration("GRAIN_CORE_DIAMETER_previous + ci * 2 * xincp")
-            .withConstants(ci, xincp)
-            .withVariables("GRAIN_CORE_DIAMETER_previous")),
-
-    GRAIN_OUTSIDE_DIAMETER(new FormulaConfiguration("GRAIN_OUTSIDE_DIAMETER_previous - osi * 2 * xincp")
-            .withConstants(osi, xincp)
-            .withVariables("GRAIN_OUTSIDE_DIAMETER_previous")),
-
-    GRAIN_LENGTH(new FormulaConfiguration("GRAIN_LENGTH_previous-ei*n*2*xincp")
-            .withConstants(ei, n, xincp)
-            .withVariables("GRAIN_LENGTH_previous")),
-
     WEB_THICKNESS(new FormulaConfiguration("(GRAIN_OUTSIDE_DIAMETER - GRAIN_CORE_DIAMETER) / 2")
             .withDependencies("GRAIN_CORE_DIAMETER", "GRAIN_OUTSIDE_DIAMETER")),
 
-    THROAT_AREA(new FormulaConfiguration("CircleArea(dto+erate*(two-WEB_THICKNESS)/two)")
-            .withDependencies("WEB_THICKNESS")
-            .withConstants(dto, erate, two)
+    THROAT_AREA(new FormulaConfiguration("CircleArea(dto+erate*" + PROGRESSION_VARIABLE + ")")
+            .withConstants(dto, erate)
+            .withVariables(PROGRESSION_VARIABLE)
             .withFunctions(Functions.circleArea)),
 
     NOZZLE_CRITICAL_PASSAGE_AREA(new FormulaConfiguration("THROAT_AREA / 1000^2")
             .withDependencies("THROAT_AREA")),
 
-    END_GRAIN_SRUFACE(new FormulaConfiguration("HollowCircleArea(GRAIN_OUTSIDE_DIAMETER, GRAIN_CORE_DIAMETER)")
-            .withDependencies("GRAIN_OUTSIDE_DIAMETER", "GRAIN_CORE_DIAMETER")
-            .withFunctions(Functions.hollowCircleArea)),
-
     //Difference in chamber and grain cross-sectional area (flow area)
-    EROSIVE_BURN_FACTOR(new FormulaConfiguration("ErosiveBurnFactor((CircleArea(dc)-END_GRAIN_SRUFACE)/THROAT_AREA, gstar)")
-            .withDependencies("THROAT_AREA", "END_GRAIN_SRUFACE")
+    EROSIVE_BURN_FACTOR(new FormulaConfiguration("ErosiveBurnFactor((CircleArea(dc)-" + END_GRAIN_SURFACE_VARIABLE + ")/THROAT_AREA, gstar)")
+            .withDependencies("THROAT_AREA")
+            .withVariables(END_GRAIN_SURFACE_VARIABLE)
             .withConstants(dc, gstar)
             .withFunctions(Functions.erosiveBurnFactor, Functions.circleArea)),
-
-    GRAIN_END_BURNING_SURFACE(new FormulaConfiguration("(ei * 2 * endGrainSurface) * n")
-            .withVariables("endGrainSurface")
-            .withConstants(n, ei)),
-
-    GRAIN_CORE_BURNING_SURFACE(new FormulaConfiguration("ci * pi * grainCoreDiameter * grainLength")
-            .withVariables("grainCoreDiameter", "grainLength")
-            .withConstants(ci)),
-
-    GRAIN_OUTER_BURNING_SURFACE(new FormulaConfiguration("osi * pi * grainOutsideDiameter * grainLength")
-            .withVariables("grainOutsideDiameter", "grainLength")
-            .withConstants(osi)),
-
-    GRAIN_VOLUME(new FormulaConfiguration("(END_GRAIN_SRUFACE * GRAIN_LENGTH)")
-            .withDependencies("GRAIN_LENGTH", "END_GRAIN_SRUFACE")),
 
     TEMPORARY_CHAMBER_PRESSURE(new FormulaConfiguration("CHAMBER_PRESSURE_MPA_previous")
             .withVariables("CHAMBER_PRESSURE_MPA_previous")),
@@ -80,9 +54,9 @@ public enum PressureFormulas implements Formula {
             .withVariables("TIME_SINCE_BURN_STARTS_previous")),
 
     //Mass generation rate of combustion products
-    MASS_GENERATION_RATE(new FormulaConfiguration("(GrainMass(rhopgrain, GRAIN_VOLUME_previous)-GrainMass(rhopgrain, GRAIN_VOLUME)) / (TIME_SINCE_BURN_STARTS-TIME_SINCE_BURN_STARTS_previous)")
-            .withDependencies("GRAIN_VOLUME", "TIME_SINCE_BURN_STARTS")
-            .withVariables("GRAIN_VOLUME_previous", "TIME_SINCE_BURN_STARTS_previous")
+    MASS_GENERATION_RATE(new FormulaConfiguration("(GrainMass(rhopgrain, "+GRAIN_VOLUME_VARIABLE+"_previous)-GrainMass(rhopgrain, "+GRAIN_VOLUME_VARIABLE+")) / (TIME_SINCE_BURN_STARTS-TIME_SINCE_BURN_STARTS_previous)")
+            .withDependencies("TIME_SINCE_BURN_STARTS")
+            .withVariables(GRAIN_VOLUME_VARIABLE+"_previous", "TIME_SINCE_BURN_STARTS_previous", GRAIN_VOLUME_VARIABLE)
             .withConstants(rhopgrain)
             .withFunctions(Functions.grainMass)),
 
@@ -105,8 +79,9 @@ public enum PressureFormulas implements Formula {
             .withDependencies("MASS_STORAGE_RATE", "TIME_SINCE_BURN_STARTS")),
 
     //Density of combustion products in chamber
-    DENSITY_COMBUSTION_PRODUCTS(new FormulaConfiguration("MASS_COMBUSTION_PRODUCTS / FreeVolumeInChamber(vc, GRAIN_VOLUME)")
-            .withDependencies("MASS_COMBUSTION_PRODUCTS", "GRAIN_VOLUME")
+    DENSITY_COMBUSTION_PRODUCTS(new FormulaConfiguration("MASS_COMBUSTION_PRODUCTS / FreeVolumeInChamber(vc, "+GRAIN_VOLUME_VARIABLE+")")
+            .withDependencies("MASS_COMBUSTION_PRODUCTS")
+            .withVariables(GRAIN_VOLUME_VARIABLE)
             .withConstants(vc)
             .withFunctions(Functions.freeVolumeInChamber)),
 
@@ -127,9 +102,8 @@ public enum PressureFormulas implements Formula {
             .withDependencies("TEMPORARY_CHAMBER_PRESSURE", "NOZZLE_CRITICAL_PASSAGE_AREA")
             .withConstants(patm, rat, to, k)),
 
-    KN(new FormulaConfiguration("(GRAIN_END_BURNING_SURFACE + GRAIN_CORE_BURNING_SURFACE + GRAIN_OUTER_BURNING_SURFACE) / throatArea")
-            .withDependencies("GRAIN_END_BURNING_SURFACE", "GRAIN_CORE_BURNING_SURFACE", "GRAIN_OUTER_BURNING_SURFACE")
-            .withVariables("throatArea"));
+    KN(new FormulaConfiguration(BURNING_SURFACE_VARIABLE + " / throatArea")
+            .withVariables("throatArea", BURNING_SURFACE_VARIABLE));
 
     private final Expression expression;
     private final Set<String> dependencies;

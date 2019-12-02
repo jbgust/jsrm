@@ -1,105 +1,26 @@
 package com.github.jbgust.jsrm.infra;
 
-import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
-import static com.github.jbgust.jsrm.infra.SolidRocketMotorChecker.check;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-
-import org.junit.jupiter.api.Test;
-
-import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
 import com.github.jbgust.jsrm.application.motor.CombustionChamber;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
+import com.github.jbgust.jsrm.application.motor.propellant.GrainConfigutation;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
-import com.github.jbgust.jsrm.utils.PropellantGrainBuilder;
+import org.junit.jupiter.api.Test;
+
+import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNER_COARSE;
+import static com.github.jbgust.jsrm.infra.SolidRocketMotorChecker.check;
+import static org.mockito.Mockito.*;
 
 class SolidRocketMotorCheckerTest {
 
     @Test
     void shouldCheckSolidRocketMotor(){
-        PropellantGrain propellantGrain = new PropellantGrainBuilder()
-                .build();
+        GrainConfigutation grainConfigutation = mock(GrainConfigutation.class);
 
-        SolidRocketMotor solidRocketMotor = new SolidRocketMotor(propellantGrain, new CombustionChamber(20, 80), 8d);
+        SolidRocketMotor solidRocketMotor = new SolidRocketMotor(new PropellantGrain(KNER_COARSE, grainConfigutation), new CombustionChamber(20, 80), 8d);
 
-        assertDoesNotThrow(() -> check(solidRocketMotor));
-    }
+        check(solidRocketMotor);
 
-    @Test
-    void shouldThrowExceptionIfCoreDiameterIsLessThanThroatDiameter(){
-        PropellantGrain propellantGrain = new PropellantGrainBuilder()
-                .withCoreDiameter(8)
-                .build();
-
-        SolidRocketMotor solidRocketMotor = new SolidRocketMotor(propellantGrain, new CombustionChamber(20, 80), 8.1d);
-
-        assertThatThrownBy(() -> check(solidRocketMotor))
-                .isInstanceOf(InvalidMotorDesignException.class)
-                .hasMessage("Throat diameter should be <= than grain core diameter");
-    }
-
-    @Test
-    void shouldNotThrowExceptionIfCoreDiameterIsEqualToThroatDiameter(){
-        PropellantGrain propellantGrain = new PropellantGrainBuilder()
-                .withCoreDiameter(8)
-                .build();
-
-        check(new SolidRocketMotor(propellantGrain, new CombustionChamber(20, 80), 8d));
-    }
-
-    @Test
-    void shouldThrowExceptionIfCombustionChamberDiameterIsLessThanGrainOuterDiameter(){
-        PropellantGrain propellantGrain = new PropellantGrainBuilder()
-                .withOuterDiameter(20.1)
-                .build();
-
-        SolidRocketMotor solidRocketMotor = new SolidRocketMotor(propellantGrain, new CombustionChamber(20, 80), 5d);
-
-        assertThatThrownBy(() -> check(solidRocketMotor))
-                .isInstanceOf(InvalidMotorDesignException.class)
-                .hasMessage("Combution chamber diameter should be >= than grain outer diameter");
-    }
-
-    @Test
-    void shouldThrowExceptionIfGrainOuterDiameterIsLessThanCoreDiameter(){
-        PropellantGrain propellantGrain = new PropellantGrainBuilder()
-                .withOuterDiameter(20)
-                .withCoreDiameter(20)
-                .build();
-
-        SolidRocketMotor solidRocketMotor = new SolidRocketMotor(propellantGrain, new CombustionChamber(20, 80), 5d);
-
-        assertThatThrownBy(() -> check(solidRocketMotor))
-                .isInstanceOf(InvalidMotorDesignException.class)
-                .hasMessage("Grain outer diameter should be > than grain core diameter");
-    }
-
-    @Test
-    void shouldThrowExceptionIfGrainLengthIsGreaterThanCombustionChamberLength(){
-        PropellantGrain propellantGrain = new PropellantGrainBuilder()
-                .withNumberOfSegments(2)
-                .withSegmentLength(45)
-                .build();
-
-        SolidRocketMotor solidRocketMotor = new SolidRocketMotor(propellantGrain, new CombustionChamber(20, 89), 5d);
-
-        assertThatThrownBy(() -> check(solidRocketMotor))
-                .isInstanceOf(InvalidMotorDesignException.class)
-                .hasMessage("Combustion chamber length should be >= than Grain total length");
-    }
-
-    @Test
-    void shouldThrowExceptionIfCoreAndOuterSurfaceAreInhibited(){
-        PropellantGrain propellantGrain = new PropellantGrainBuilder()
-                .withCoreSurface(INHIBITED)
-                .withOuterSurface(INHIBITED)
-                .build();
-
-        SolidRocketMotor solidRocketMotor = new SolidRocketMotor(propellantGrain, new CombustionChamber(20, 80), 5d);
-
-        assertThatThrownBy(() -> check(solidRocketMotor))
-                .isInstanceOf(InvalidMotorDesignException.class)
-                .hasMessage("The motor should have at least core surface or outer surface exposed.");
+        verify(grainConfigutation, times(1)).checkConfiguration(solidRocketMotor);
     }
 
 }
