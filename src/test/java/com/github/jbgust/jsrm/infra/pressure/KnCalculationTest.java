@@ -1,6 +1,6 @@
 package com.github.jbgust.jsrm.infra.pressure;
 
-import com.github.jbgust.jsrm.application.motor.propellant.HollowCylinderGrain;
+import com.github.jbgust.jsrm.application.motor.grain.HollowCylinderGrain;
 import com.github.jbgust.jsrm.calculation.Calculator;
 import com.github.jbgust.jsrm.calculation.CalculatorBuilder;
 import com.github.jbgust.jsrm.calculation.CalculatorResults;
@@ -8,8 +8,8 @@ import com.github.jbgust.jsrm.infra.pressure.resultprovider.BurningSurfaceResult
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
-import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
+import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.EXPOSED;
+import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.INHIBITED;
 import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.throatArea;
 import static com.github.jbgust.jsrm.infra.pressure.PressureFormulas.KN;
 import static java.util.Collections.singletonList;

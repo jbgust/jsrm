@@ -1,6 +1,6 @@
 package com.github.jbgust.jsrm.infra.pressure.resultprovider;
 
-import com.github.jbgust.jsrm.application.motor.propellant.GrainConfigutation;
+import com.github.jbgust.jsrm.application.motor.grain.GrainConfigutation;
 
 public class GrainVolumeResultProvider extends AbstractGrainResultProvider {
 

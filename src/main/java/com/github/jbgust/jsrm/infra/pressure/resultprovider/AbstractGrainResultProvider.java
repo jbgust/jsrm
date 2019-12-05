@@ -1,6 +1,6 @@
 package com.github.jbgust.jsrm.infra.pressure.resultprovider;
 
-import com.github.jbgust.jsrm.application.motor.propellant.GrainConfigutation;
+import com.github.jbgust.jsrm.application.motor.grain.GrainConfigutation;
 import com.github.jbgust.jsrm.calculation.ResultLineProvider;
 
 import static java.lang.Double.valueOf;

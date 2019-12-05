@@ -2,12 +2,12 @@ package com.github.jbgust.jsrm.utils;
 
 import com.github.jbgust.jsrm.application.motor.CombustionChamber;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
-import com.github.jbgust.jsrm.application.motor.propellant.GrainSurface;
-import com.github.jbgust.jsrm.application.motor.propellant.HollowCylinderGrain;
-import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
+import com.github.jbgust.jsrm.application.motor.grain.GrainSurface;
+import com.github.jbgust.jsrm.application.motor.grain.HollowCylinderGrain;
+import com.github.jbgust.jsrm.application.motor.PropellantGrain;
 import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 
-import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.*;
+import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.*;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
 
 public class SolidRocketMotorBuilder {

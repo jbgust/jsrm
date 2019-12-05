@@ -1,11 +1,11 @@
-package com.github.jbgust.jsrm.application.motor.propellant;
+package com.github.jbgust.jsrm.application.motor.grain;
 
 import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
 import com.github.jbgust.jsrm.application.motor.CombustionChamber;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.infra.function.HollowCircleAreaFunction;
 
-import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
+import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.INHIBITED;
 
 public class HollowCylinderGrain implements GrainConfigutation {
 
@@ -18,6 +18,16 @@ public class HollowCylinderGrain implements GrainConfigutation {
     private final GrainSurface endsSurface;
     private final GrainSurface coreSurface;
 
+    /**
+     * Create an Hollow cylindrical propellant grain
+     * @param outerDiameter outer grain diameter in millimeter
+     * @param coreDiameter core  grain diameter in millimeter
+     * @param segmentLength the length of a segment gran in millimeter. Example : if using 4 grains of 34mm each, segmentLength is 34.
+     * @param numberOfSegment the number of segment
+     * @param outerSurface outer surface is exposed to combustion or inhibited
+     * @param endsSurface end segments surface are exposed to combustion or inhibited
+     * @param coreSurface core surface is exposed to combustion or inhibited
+     */
     public HollowCylinderGrain(double outerDiameter, double coreDiameter, double segmentLength, double numberOfSegment, GrainSurface outerSurface, GrainSurface endsSurface, GrainSurface coreSurface) {
         this.outerDiameter = outerDiameter;
         this.coreDiameter = coreDiameter;

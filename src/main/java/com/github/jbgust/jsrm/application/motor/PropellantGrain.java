@@ -1,4 +1,8 @@
-package com.github.jbgust.jsrm.application.motor.propellant;
+package com.github.jbgust.jsrm.application.motor;
+
+import com.github.jbgust.jsrm.application.motor.grain.GrainConfigutation;
+import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
+import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 
 public class PropellantGrain {
 

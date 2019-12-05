@@ -1,4 +1,4 @@
-package com.github.jbgust.jsrm.application.motor.propellant;
+package com.github.jbgust.jsrm.application.motor.grain;
 
 /**
  * To define if a surface is exposed to the combustion or not

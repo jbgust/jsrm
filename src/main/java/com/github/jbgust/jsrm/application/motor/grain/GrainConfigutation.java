@@ -1,4 +1,4 @@
-package com.github.jbgust.jsrm.application.motor.propellant;
+package com.github.jbgust.jsrm.application.motor.grain;
 
 import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
@@ -22,7 +22,7 @@ public interface GrainConfigutation {
     /**
      * Compute the burning area during burn
      * @param burnProgression (0 to 1, 0 = before burn start ; 1 = grain completly burn)
-     * @return the burning area
+     * @return the burning area mm^2
      */
     double getBurningArea(double burnProgression);
 

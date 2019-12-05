@@ -1,9 +1,11 @@
-package com.github.jbgust.jsrm.application.motor.propellant;
+package com.github.jbgust.jsrm.application.motor;
 
+import com.github.jbgust.jsrm.application.motor.PropellantGrain;
+import com.github.jbgust.jsrm.application.motor.grain.HollowCylinderGrain;
 import org.junit.jupiter.api.Test;
 
-import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
-import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
+import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.EXPOSED;
+import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.INHIBITED;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
 import static org.assertj.core.api.Assertions.assertThat;
 

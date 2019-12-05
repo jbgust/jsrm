@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
+import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.EXPOSED;
 import static com.github.jbgust.jsrm.infra.JSRMConstant.*;
 import static com.github.jbgust.jsrm.utils.SolidRocketMotorBuilder.createMotorAsSRM_2014ExcelFile;
 import static org.assertj.core.api.Assertions.assertThat;
