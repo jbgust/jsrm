@@ -51,7 +51,7 @@ class LowKNTest {
                 .withGrainOuterDiameter(outerDiameter)
                 .withGrainCoreDiameter(coreDiameter)
                 .withGrainSegmentLength(segmentLength)
-                .withNumberOfSegment(numberOfSegment)
+                .withNumberOfSegment(new Double(numberOfSegment).intValue())
                 .withOuterSurface(GrainSurface.valueOf(outerSurface))
                 .withEndsSurface(GrainSurface.valueOf(endsSurface))
                 .withCoreSurface(GrainSurface.valueOf(coreSurface))

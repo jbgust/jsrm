@@ -65,11 +65,7 @@ public class FinocylGrainTest {
 
         JSRMSimulation jsrmSimulation = new JSRMSimulation(finocylMotor);
 
-        JSRMResult result = jsrmSimulation.run(new JSRMConfigBuilder()
-                .withCombustionEfficiencyRatio(0.97)
-                .withDensityRatio(.96)
-                .withNozzleExpansionRatio(8)
-                .createJSRMConfig());
+        JSRMResult result = jsrmSimulation.run(motorSimConfig);
 
         assertThat(result.getNozzle().getNozzleExitDiameterInMillimeter()).isCloseTo(28.284271247461902, offset(0.00001));
         assertThat(result.getMotorClassification()).isEqualTo(G);
@@ -88,11 +84,7 @@ public class FinocylGrainTest {
 
         JSRMSimulation jsrmSimulation = new JSRMSimulation(finocylMotor);
 
-        JSRMResult result = jsrmSimulation.run(new JSRMConfigBuilder()
-                .withCombustionEfficiencyRatio(0.97)
-                .withDensityRatio(.96)
-                .withNozzleExpansionRatio(8)
-                .createJSRMConfig());
+        JSRMResult result = jsrmSimulation.run(motorSimConfig);
 
         assertThat(result.getNozzle().getNozzleExitDiameterInMillimeter()).isCloseTo(28.284271247461902, offset(0.00001));
         assertThat(result.getMotorClassification()).isEqualTo(H);

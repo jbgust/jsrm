@@ -13,7 +13,7 @@ public class PropellantGrainBuilder {
 
     private double coreDiameter = 10;
     private double segmentLength = 50;
-    private double numberOfSegments = 1;
+    private int numberOfSegments = 1;
     private GrainSurface outerSurface = INHIBITED;
     private GrainSurface endsSurface = INHIBITED;
     private GrainSurface coreSurface = EXPOSED;
@@ -40,7 +40,7 @@ public class PropellantGrainBuilder {
         return this;
     }
 
-    public PropellantGrainBuilder withNumberOfSegments(double numberOfSegments) {
+    public PropellantGrainBuilder withNumberOfSegments(int numberOfSegments) {
         this.numberOfSegments = numberOfSegments;
         return this;
     }

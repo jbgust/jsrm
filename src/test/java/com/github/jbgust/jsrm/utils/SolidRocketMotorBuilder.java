@@ -15,7 +15,7 @@ public class SolidRocketMotorBuilder {
     private double grainOuterDiameter = 69d;
     private double grainCoreDiameter = 20d;
     private double grainSegmentLength = 115d;
-    private double numberOfSegment = 4d;
+    private int numberOfSegment = 4;
     private double chamberInnerDiameter = 75d;
     private double chamberLength = 470d;
     private double throatDiameter = 17.3985248919802;
@@ -54,7 +54,7 @@ public class SolidRocketMotorBuilder {
         this.grainSegmentLength = grainSegmentLength;
         return this;
     }
-    public SolidRocketMotorBuilder withNumberOfSegment(double numberOfSegment) {
+    public SolidRocketMotorBuilder withNumberOfSegment(int numberOfSegment) {
         this.numberOfSegment = numberOfSegment;
         return this;
     }
@@ -100,7 +100,7 @@ public class SolidRocketMotorBuilder {
         return grainSegmentLength;
     }
 
-    public double getNumberOfSegment() {
+    public int getNumberOfSegment() {
         return numberOfSegment;
     }
 

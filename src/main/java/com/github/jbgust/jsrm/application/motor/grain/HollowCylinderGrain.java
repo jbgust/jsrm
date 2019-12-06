@@ -12,7 +12,7 @@ public class HollowCylinderGrain implements GrainConfigutation {
     private final double outerDiameter;
     private final double coreDiameter;
     private final double segmentLength;
-    private final double numberOfSegment;
+    private final int numberOfSegment;
 
     private final GrainSurface outerSurface;
     private final GrainSurface endsSurface;
@@ -28,7 +28,7 @@ public class HollowCylinderGrain implements GrainConfigutation {
      * @param endsSurface end segments surface are exposed to combustion or inhibited
      * @param coreSurface core surface is exposed to combustion or inhibited
      */
-    public HollowCylinderGrain(double outerDiameter, double coreDiameter, double segmentLength, double numberOfSegment, GrainSurface outerSurface, GrainSurface endsSurface, GrainSurface coreSurface) {
+    public HollowCylinderGrain(double outerDiameter, double coreDiameter, double segmentLength, int numberOfSegment, GrainSurface outerSurface, GrainSurface endsSurface, GrainSurface coreSurface) {
         this.outerDiameter = outerDiameter;
         this.coreDiameter = coreDiameter;
         this.segmentLength = segmentLength;

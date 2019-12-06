@@ -29,7 +29,7 @@ class KnCalculationTest {
         Calculator calculator = new CalculatorBuilder(KN)
                 .withResultLineProviders(
                         new KnDependenciesResultsProvider(throatArea.name(), singletonList(237.7325)),
-                        new BurningSurfaceResultProvider(new HollowCylinderGrain(69d, 20d, 115d, 4d, EXPOSED, EXPOSED, EXPOSED), 2))
+                        new BurningSurfaceResultProvider(new HollowCylinderGrain(69d, 20d, 115d, 4, EXPOSED, EXPOSED, EXPOSED), 2))
                 .withResultsToSave(KN)
                 .createCalculator();
 
@@ -47,7 +47,7 @@ class KnCalculationTest {
         Calculator calculator = new CalculatorBuilder(KN)
                 .withResultLineProviders(
                         new KnDependenciesResultsProvider(throatArea.name(), singletonList(237.7325)),
-                        new BurningSurfaceResultProvider(new HollowCylinderGrain(69d, 20d, 115d, 4d, INHIBITED, EXPOSED, EXPOSED), 2))
+                        new BurningSurfaceResultProvider(new HollowCylinderGrain(69d, 20d, 115d, 4, INHIBITED, EXPOSED, EXPOSED), 2))
                 .withResultsToSave(KN)
                 .createCalculator();
 
@@ -65,7 +65,7 @@ class KnCalculationTest {
         Calculator calculator = new CalculatorBuilder(KN)
                 .withResultLineProviders(
                         new KnDependenciesResultsProvider(throatArea.name(), singletonList(237.7325)),
-                        new BurningSurfaceResultProvider(new HollowCylinderGrain(69d, 20d, 115d, 4d, EXPOSED, INHIBITED, EXPOSED), 2))
+                        new BurningSurfaceResultProvider(new HollowCylinderGrain(69d, 20d, 115d, 4, EXPOSED, INHIBITED, EXPOSED), 2))
                 .withResultsToSave( KN)
                 .createCalculator();
 
@@ -83,7 +83,7 @@ class KnCalculationTest {
         Calculator calculator = new CalculatorBuilder(KN)
                 .withResultLineProviders(
                         new KnDependenciesResultsProvider(throatArea.name(), singletonList(237.7325)),
-                        new BurningSurfaceResultProvider(new HollowCylinderGrain(69d, 20d, 115d, 4d, EXPOSED, EXPOSED, INHIBITED), 2))
+                        new BurningSurfaceResultProvider(new HollowCylinderGrain(69d, 20d, 115d, 4, EXPOSED, EXPOSED, INHIBITED), 2))
                 .withResultsToSave(KN)
                 .createCalculator();
 
@@ -101,7 +101,7 @@ class KnCalculationTest {
         Calculator calculator = new CalculatorBuilder(KN)
                 .withResultLineProviders(
                         new KnDependenciesResultsProvider(throatArea.name(), singletonList(237.7325)),
-                        new BurningSurfaceResultProvider(new HollowCylinderGrain(69d, 20d, 115d, 2d, EXPOSED, EXPOSED, EXPOSED), 2))
+                        new BurningSurfaceResultProvider(new HollowCylinderGrain(69d, 20d, 115d, 2, EXPOSED, EXPOSED, EXPOSED), 2))
                 .withResultsToSave(KN)
                 .createCalculator();
 

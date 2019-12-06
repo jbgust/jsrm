@@ -1,6 +1,5 @@
 package com.github.jbgust.jsrm.application.motor;
 
-import com.github.jbgust.jsrm.application.motor.PropellantGrain;
 import com.github.jbgust.jsrm.application.motor.grain.HollowCylinderGrain;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +16,7 @@ class PropellantGrainTest {
         double outerDiameter = 20;
         double coreDiameter = 6;
         double segmentLength = 60;
-        double numberOfSegment = 2;
+        int numberOfSegment = 2;
         HollowCylinderGrain grainConfigutation = new HollowCylinderGrain(outerDiameter, coreDiameter, segmentLength, numberOfSegment,
                 INHIBITED, EXPOSED, INHIBITED);
 
