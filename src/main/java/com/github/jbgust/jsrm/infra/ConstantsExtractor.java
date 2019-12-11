@@ -3,7 +3,7 @@ package com.github.jbgust.jsrm.infra;
 import com.github.jbgust.jsrm.application.JSRMConfig;
 import com.github.jbgust.jsrm.application.RegisteredPropellant;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
-import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
+import com.github.jbgust.jsrm.application.motor.PropellantGrain;
 import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 import com.github.jbgust.jsrm.infra.function.CircleAreaFunction;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -19,19 +19,12 @@ public class ConstantsExtractor {
     public static Map<JSRMConstant, Double> extract(SolidRocketMotor solidRocketMotor, JSRMConfig config) {
         PropellantGrain propellantGrain = solidRocketMotor.getPropellantGrain();
 
-        double twoValue = (propellantGrain.getOuterDiameter() - propellantGrain.getCoreDiameter()) / 2;
         SolidPropellant propellant = propellantGrain.getPropellant();
 
         HashMap<JSRMConstant, Double> constants = new HashMap<>();
-        constants.put(ci, (double) propellantGrain.getCoreSurface().value());
-        constants.put(osi, (double) propellantGrain.getOuterSurface().value());
-        constants.put(ei, (double) propellantGrain.getEndsSurface().value());
-        constants.put(xincp, twoValue / (config.getNumberLineDuringBurnCalculation() - 1) / getXincFactor(propellantGrain));
         constants.put(dc, solidRocketMotor.getCombustionChamber().getChamberInnerDiameterInMillimeter());
-        constants.put(n, propellantGrain.getNumberOfSegment());
         constants.put(vc, solidRocketMotor.getCombustionChamber().getVolume());
         constants.put(dto, solidRocketMotor.getThroatDiameterInMillimeter());
-        constants.put(two, twoValue);
         constants.put(at, new CircleAreaFunction().runFunction(solidRocketMotor.getThroatDiameterInMillimeter()));
         constants.put(safeKN, config.isSafeKNFailure() ? 1d : 0d);
 
@@ -51,21 +44,13 @@ public class ConstantsExtractor {
         constants.put(k2ph, propellant.getK2Ph());
         constants.put(mgrain, computeGrainMass(constants.get(rhopgrain), propellantGrain));
 
+        constants.put(xincp, propellantGrain.getGrainConfigutation().getXincp(config.getNumberLineDuringBurnCalculation()));
+
         return constants;
     }
 
-    private static int getXincFactor(PropellantGrain propellantGrain) {
-        return propellantGrain.getCoreSurface().value() + propellantGrain.getOuterSurface().value();
-    }
-
     private static double computeGrainMass(Double rhopgrain, PropellantGrain propellantGrain) {
-        return new ExpressionBuilder("pi/4*(do^2-dio^2)*lgo")
-                .variables("do", "dio", "lgo")
-                .build()
-                .setVariable("do", propellantGrain.getOuterDiameter())
-                .setVariable("dio", propellantGrain.getCoreDiameter())
-                .setVariable("lgo", propellantGrain.getGrainLength())
-                .evaluate() * rhopgrain / 1000 / 1000;
+        return propellantGrain.getGrainConfigutation().getGrainVolume(0) * rhopgrain / 1000 / 1000;
     }
 
     private static double computeCstarValue(HashMap<JSRMConstant, Double> constants) {

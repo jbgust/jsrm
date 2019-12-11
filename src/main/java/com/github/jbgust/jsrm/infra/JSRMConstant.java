@@ -1,14 +1,9 @@
 package com.github.jbgust.jsrm.infra;
 
 public enum JSRMConstant {
-    ci,
     xincp,
-    osi,
-    ei,
-    n,
     dto,
     erate,
-    two,
     dc,
     vc,
     propellantId,

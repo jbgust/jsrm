@@ -5,6 +5,9 @@ import net.objecthunter.exp4j.ExpressionBuilder;
 
 public class CombustionChamber
 {
+    /**
+     * Inner diameter of combustion chamber
+     */
     private final double chamberInnerDiameterInMillimeter;
 
     /**

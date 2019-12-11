@@ -2,7 +2,7 @@ package com.github.jbgust.jsrm.application;
 
 import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
-import com.github.jbgust.jsrm.application.motor.propellant.GrainSurface;
+import com.github.jbgust.jsrm.application.motor.grain.GrainSurface;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.github.jbgust.jsrm.application.result.MotorParameters;
@@ -13,8 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
-import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
-import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
+import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.EXPOSED;
+import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.INHIBITED;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSU;
 import static com.github.jbgust.jsrm.application.result.MotorClassification.G;
@@ -51,7 +51,7 @@ class LowKNTest {
                 .withGrainOuterDiameter(outerDiameter)
                 .withGrainCoreDiameter(coreDiameter)
                 .withGrainSegmentLength(segmentLength)
-                .withNumberOfSegment(numberOfSegment)
+                .withNumberOfSegment(new Double(numberOfSegment).intValue())
                 .withOuterSurface(GrainSurface.valueOf(outerSurface))
                 .withEndsSurface(GrainSurface.valueOf(endsSurface))
                 .withCoreSurface(GrainSurface.valueOf(coreSurface))
@@ -164,7 +164,6 @@ class LowKNTest {
         System.out.println("Initial KN : "+ result.getMotorParameters().get(0).getKn());
         System.out.println("Average KN : "+ result.getMotorParameters().stream().mapToDouble(MotorParameters::getKn).average().getAsDouble());
         System.out.println("safe KN usage count: "+ result.getNumberOfKNCorrection());
-        System.out.println("Ratio  : "+ motor.getThroatDiameterInMillimeter()*100/motor.getPropellantGrain().getCoreDiameter());
         System.out.println("========================================================");
     }
 }

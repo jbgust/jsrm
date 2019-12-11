@@ -7,9 +7,16 @@ import com.github.jbgust.jsrm.calculation.CalculatorResults;
 import com.github.jbgust.jsrm.calculation.Formula;
 import com.github.jbgust.jsrm.infra.ConstantsExtractor;
 import com.github.jbgust.jsrm.infra.JSRMConstant;
+import com.github.jbgust.jsrm.infra.pressure.resultprovider.BurningSurfaceResultProvider;
+import com.github.jbgust.jsrm.infra.pressure.resultprovider.EndGrainSurfaceResultProvider;
+import com.github.jbgust.jsrm.infra.pressure.resultprovider.GrainVolumeResultProvider;
+import com.github.jbgust.jsrm.infra.pressure.resultprovider.ProgressionResultProvider;
 import com.google.common.collect.ImmutableMap;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -21,11 +28,13 @@ import static java.util.stream.Collectors.toMap;
 
 public class ChamberPressureCalculation {
 
+    private SolidRocketMotor motor;
     private JSRMConfig config;
     private final Map<JSRMConstant, Double> constants;
     private final Map<Formula, Double> initialValues;
 
     public ChamberPressureCalculation(SolidRocketMotor motor, JSRMConfig config, Map<JSRMConstant, Double> constants) {
+        this.motor = motor;
         this.config = config;
         this.constants = constants;
         initialValues = getInitialValues(motor, config);
@@ -48,11 +57,8 @@ public class ChamberPressureCalculation {
                 .withResultsToSave(PressureFormulas.KN)
                 .withConstants(ConstantsExtractor.toCalculationFormat(constants))
                 .withResultLineProviders(
-                        new KnDependenciesResultsProvider(throatArea.name(), pressureResults.getResults(PressureFormulas.THROAT_AREA)),
-                        new KnDependenciesResultsProvider("endGrainSurface", pressureResults.getResults(PressureFormulas.END_GRAIN_SRUFACE)),
-                        new KnDependenciesResultsProvider("grainCoreDiameter", pressureResults.getResults(PressureFormulas.GRAIN_CORE_DIAMETER)),
-                        new KnDependenciesResultsProvider("grainOutsideDiameter", pressureResults.getResults(PressureFormulas.GRAIN_OUTSIDE_DIAMETER)),
-                        new KnDependenciesResultsProvider("grainLength", pressureResults.getResults(PressureFormulas.GRAIN_LENGTH)))
+                        new BurningSurfaceResultProvider(motor.getPropellantGrain().getGrainConfigutation(), config.getNumberLineDuringBurnCalculation()),
+                        new KnDependenciesResultsProvider(throatArea.name(), pressureResults.getResults(PressureFormulas.THROAT_AREA)))
                 .createCalculator()
                 .compute(0, config.getNumberLineDuringBurnCalculation());
     }
@@ -149,13 +155,12 @@ public class ChamberPressureCalculation {
                         PressureFormulas.ABSOLUTE_CHAMBER_PRESSURE,
                         PressureFormulas.ABSOLUTE_CHAMBER_PRESSURE_PSIG,
                         PressureFormulas.NOZZLE_MASS_FLOW_RATE,
-                        PressureFormulas.MASS_STORAGE_RATE,
-                        //KN DEPENDENCIES
-                        PressureFormulas.GRAIN_LENGTH,
-                        PressureFormulas.END_GRAIN_SRUFACE,
-                        PressureFormulas.GRAIN_CORE_DIAMETER,
-                        PressureFormulas.GRAIN_OUTSIDE_DIAMETER
+                        PressureFormulas.MASS_STORAGE_RATE
                 )
+                .withResultLineProviders(
+                        new ProgressionResultProvider(config.getNumberLineDuringBurnCalculation()),
+                        new EndGrainSurfaceResultProvider(motor.getPropellantGrain().getGrainConfigutation(), config.getNumberLineDuringBurnCalculation()),
+                        new GrainVolumeResultProvider(motor.getPropellantGrain().getGrainConfigutation(), config.getNumberLineDuringBurnCalculation()))
                 .createCalculator()
                 .compute(JSRMConstant.START_CALCULATION_LINE, config.getNumberLineDuringBurnCalculation());
     }
@@ -185,9 +190,6 @@ public class ChamberPressureCalculation {
 
     private  Map<Formula, Double> getInitialValues(SolidRocketMotor motor, JSRMConfig config) {
         Map<Formula, Double> initialValues = new HashMap<>();
-        initialValues.put(PressureFormulas.GRAIN_CORE_DIAMETER, motor.getPropellantGrain().getCoreDiameter());
-        initialValues.put(PressureFormulas.GRAIN_OUTSIDE_DIAMETER, motor.getPropellantGrain().getOuterDiameter());
-        initialValues.put(PressureFormulas.GRAIN_LENGTH, motor.getPropellantGrain().getGrainLength());
         initialValues.put(PressureFormulas.TEMPORARY_CHAMBER_PRESSURE, config.getAmbiantPressureInMPa());
         initialValues.put(PressureFormulas.TIME_SINCE_BURN_STARTS, 0d);
         initialValues.put(PressureFormulas.MASS_GENERATION_RATE, 0d);

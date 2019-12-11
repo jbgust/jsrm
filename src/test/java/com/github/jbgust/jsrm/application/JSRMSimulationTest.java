@@ -4,8 +4,9 @@ import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
 import com.github.jbgust.jsrm.application.exception.SimulationFailedException;
 import com.github.jbgust.jsrm.application.motor.CombustionChamber;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
-import com.github.jbgust.jsrm.application.motor.propellant.GrainSurface;
-import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
+import com.github.jbgust.jsrm.application.motor.grain.GrainSurface;
+import com.github.jbgust.jsrm.application.motor.grain.HollowCylinderGrain;
+import com.github.jbgust.jsrm.application.motor.PropellantGrain;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.github.jbgust.jsrm.calculation.exception.LineCalculatorException;
 import com.github.jbgust.jsrm.utils.PropellantGrainBuilder;
@@ -13,8 +14,8 @@ import com.github.jbgust.jsrm.utils.SolidRocketMotorBuilder;
 import org.assertj.core.data.Percentage;
 import org.junit.jupiter.api.Test;
 
-import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
-import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
+import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.EXPOSED;
+import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.INHIBITED;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.*;
 import static com.github.jbgust.jsrm.application.result.MotorClassification.*;
 import static org.assertj.core.api.Assertions.*;
@@ -358,7 +359,7 @@ class JSRMSimulationTest {
     @Test
     void shouldThrowException(){
         SolidRocketMotor meteor = new SolidRocketMotor(
-                new PropellantGrain(KNSB_FINE, 21.2, 8, 60, 1, GrainSurface.INHIBITED, GrainSurface.INHIBITED, EXPOSED),
+                new PropellantGrain(KNSB_FINE, new HollowCylinderGrain(21.2, 8, 60, 1, GrainSurface.INHIBITED, GrainSurface.INHIBITED, EXPOSED)),
                 new CombustionChamber(21.2, 60),
                 6.0
         );

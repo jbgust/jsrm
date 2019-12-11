@@ -2,11 +2,12 @@ package com.github.jbgust.jsrm.utils;
 
 import com.github.jbgust.jsrm.application.motor.CombustionChamber;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
-import com.github.jbgust.jsrm.application.motor.propellant.GrainSurface;
-import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
+import com.github.jbgust.jsrm.application.motor.grain.GrainSurface;
+import com.github.jbgust.jsrm.application.motor.grain.HollowCylinderGrain;
+import com.github.jbgust.jsrm.application.motor.PropellantGrain;
 import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 
-import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.*;
+import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.*;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
 
 public class SolidRocketMotorBuilder {
@@ -14,7 +15,7 @@ public class SolidRocketMotorBuilder {
     private double grainOuterDiameter = 69d;
     private double grainCoreDiameter = 20d;
     private double grainSegmentLength = 115d;
-    private double numberOfSegment = 4d;
+    private int numberOfSegment = 4;
     private double chamberInnerDiameter = 75d;
     private double chamberLength = 470d;
     private double throatDiameter = 17.3985248919802;
@@ -32,9 +33,9 @@ public class SolidRocketMotorBuilder {
     }
 
     public SolidRocketMotor build() {
-        PropellantGrain propellantGrain = new PropellantGrain(propellant, grainOuterDiameter, grainCoreDiameter,
+        PropellantGrain propellantGrain = new PropellantGrain(propellant, new HollowCylinderGrain(grainOuterDiameter, grainCoreDiameter,
                 grainSegmentLength, numberOfSegment,
-                outerSurface, endsSurface, coreSurface);
+                outerSurface, endsSurface, coreSurface));
 
         CombustionChamber combustionChamber = new CombustionChamber(chamberInnerDiameter, chamberLength);
 
@@ -53,7 +54,7 @@ public class SolidRocketMotorBuilder {
         this.grainSegmentLength = grainSegmentLength;
         return this;
     }
-    public SolidRocketMotorBuilder withNumberOfSegment(double numberOfSegment) {
+    public SolidRocketMotorBuilder withNumberOfSegment(int numberOfSegment) {
         this.numberOfSegment = numberOfSegment;
         return this;
     }
@@ -85,5 +86,49 @@ public class SolidRocketMotorBuilder {
     public SolidRocketMotorBuilder withCoreSurface(GrainSurface coreSurface) {
         this.coreSurface = coreSurface;
         return this;
+    }
+
+    public double getGrainOuterDiameter() {
+        return grainOuterDiameter;
+    }
+
+    public double getGrainCoreDiameter() {
+        return grainCoreDiameter;
+    }
+
+    public double getGrainSegmentLength() {
+        return grainSegmentLength;
+    }
+
+    public int getNumberOfSegment() {
+        return numberOfSegment;
+    }
+
+    public double getChamberInnerDiameter() {
+        return chamberInnerDiameter;
+    }
+
+    public double getChamberLength() {
+        return chamberLength;
+    }
+
+    public double getThroatDiameter() {
+        return throatDiameter;
+    }
+
+    public SolidPropellant getPropellant() {
+        return propellant;
+    }
+
+    public GrainSurface getOuterSurface() {
+        return outerSurface;
+    }
+
+    public GrainSurface getEndsSurface() {
+        return endsSurface;
+    }
+
+    public GrainSurface getCoreSurface() {
+        return coreSurface;
     }
 }

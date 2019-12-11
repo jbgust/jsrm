@@ -6,7 +6,7 @@ Java implementation of Richard Nakka SRM Excel file. This library can predict pe
 
 # Usage
 ### Examples
-See examples in the integration test [com.github.jbgust.jsrm.application.JSRMSimulationIT](https://github.com/jbgust/jsrm/blob/master/src/test/java/com/github/jbgust/jsrm/application/JSRMSimulationIT.java)
+See examples in tests [com.github.jbgust.jsrm.application.JSRMSimulationTest](https://github.com/jbgust/jsrm/blob/4e4b0ee4455cfbbf24bb1b64b2115777ae93c840/src/test/java/com/github/jbgust/jsrm/application/JSRMSimulationTest.java#L55)
 
 ### Maven config
 Easy integration to your source code with [Maven repository](https://search.maven.org/artifact/com.github.jbgust/Java-Solid-Rocket-Motor/1.0/jar)
@@ -15,13 +15,15 @@ Easy integration to your source code with [Maven repository](https://search.mave
 <dependency>
   <groupId>com.github.jbgust</groupId>
   <artifactId>Java-Solid-Rocket-Motor</artifactId>
-  <version>1.4</version>
+  <version>2.0</version>
 </dependency>
 ```
 
 ### Javadoc
 [https://jbgust.github.io/jsrm/](https://jbgust.github.io/jsrm/)
 
+### Licence
+* [MotorSim - Bill Kuker](https://github.com/bkuker/motorsim)
 
 
 

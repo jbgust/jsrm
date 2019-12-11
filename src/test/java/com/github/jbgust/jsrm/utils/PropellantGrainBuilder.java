@@ -1,18 +1,19 @@
 package com.github.jbgust.jsrm.utils;
 
-import com.github.jbgust.jsrm.application.motor.propellant.GrainSurface;
-import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
+import com.github.jbgust.jsrm.application.motor.grain.GrainSurface;
+import com.github.jbgust.jsrm.application.motor.grain.HollowCylinderGrain;
+import com.github.jbgust.jsrm.application.motor.PropellantGrain;
 import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 
-import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.EXPOSED;
-import static com.github.jbgust.jsrm.application.motor.propellant.GrainSurface.INHIBITED;
+import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.EXPOSED;
+import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.INHIBITED;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
 
 public class PropellantGrainBuilder {
 
     private double coreDiameter = 10;
     private double segmentLength = 50;
-    private double numberOfSegments = 1;
+    private int numberOfSegments = 1;
     private GrainSurface outerSurface = INHIBITED;
     private GrainSurface endsSurface = INHIBITED;
     private GrainSurface coreSurface = EXPOSED;
@@ -20,7 +21,8 @@ public class PropellantGrainBuilder {
     private double outerDiameter = 20;
 
     public PropellantGrain build() {
-        return new PropellantGrain(propellantType, outerDiameter, coreDiameter, segmentLength, numberOfSegments, outerSurface, endsSurface, coreSurface);
+        return new PropellantGrain(propellantType,
+                new HollowCylinderGrain(outerDiameter, coreDiameter, segmentLength, numberOfSegments, outerSurface, endsSurface, coreSurface));
     }
 
     public PropellantGrainBuilder withCoreSurface(GrainSurface surface){
@@ -38,7 +40,7 @@ public class PropellantGrainBuilder {
         return this;
     }
 
-    public PropellantGrainBuilder withNumberOfSegments(double numberOfSegments) {
+    public PropellantGrainBuilder withNumberOfSegments(int numberOfSegments) {
         this.numberOfSegments = numberOfSegments;
         return this;
     }

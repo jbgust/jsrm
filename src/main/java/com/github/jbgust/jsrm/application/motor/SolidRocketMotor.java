@@ -1,7 +1,5 @@
 package com.github.jbgust.jsrm.application.motor;
 
-import com.github.jbgust.jsrm.application.motor.propellant.PropellantGrain;
-
 /**
  * A solid rocket motor that use Hollow cylindrical grain only
  */
