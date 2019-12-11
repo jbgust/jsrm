@@ -1,9 +1,13 @@
 package com.github.jbgust.jsrm.application.motor.grain.core;
 
-import com.github.jbgust.jsrm.application.motor.grain.GrainSurface;
-
 import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.INHIBITED;
 
+import com.github.jbgust.jsrm.application.motor.grain.GrainSurface;
+
+/**
+ * @author Bill Kuker
+ * https://github.com/bkuker/motorsim
+ */
 public abstract class ExtrudedGrain {
 	private boolean foreEndInhibited = false;
 	private boolean aftEndInhibited = false;

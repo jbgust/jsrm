@@ -22,6 +22,8 @@ Easy integration to your source code with [Maven repository](https://search.mave
 ### Javadoc
 [https://jbgust.github.io/jsrm/](https://jbgust.github.io/jsrm/)
 
+### Licence
+* [MotorSim - Bill Kuker](https://github.com/bkuker/motorsim)
 
 
 

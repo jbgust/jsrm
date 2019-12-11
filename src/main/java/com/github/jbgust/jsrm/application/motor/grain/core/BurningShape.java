@@ -5,6 +5,10 @@ import java.awt.geom.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author Bill Kuker
+ * https://github.com/bkuker/motorsim
+ */
 public class BurningShape {
 
 	private static class RegressableShape {

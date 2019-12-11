@@ -1,12 +1,16 @@
 package com.github.jbgust.jsrm.application.motor.grain.core;
 
-import com.github.jbgust.jsrm.application.motor.grain.GrainConfigutation;
-
 import java.awt.*;
 import java.awt.geom.Area;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.github.jbgust.jsrm.application.motor.grain.GrainConfigutation;
+
+/**
+ * @author Bill Kuker
+ * https://github.com/bkuker/motorsim
+ */
 public abstract class ExtrudedShapeGrain extends ExtrudedGrain implements GrainConfigutation {
 
 	protected BurningShape xsection = new BurningShape();

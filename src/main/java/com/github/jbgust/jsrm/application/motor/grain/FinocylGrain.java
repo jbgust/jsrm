@@ -1,15 +1,19 @@
 package com.github.jbgust.jsrm.application.motor.grain;
 
-import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
-import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
-import com.github.jbgust.jsrm.application.motor.grain.core.BurningShape;
-import com.github.jbgust.jsrm.application.motor.grain.core.ExtrudedShapeGrain;
-
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 
+import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
+import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
+import com.github.jbgust.jsrm.application.motor.grain.core.BurningShape;
+import com.github.jbgust.jsrm.application.motor.grain.core.ExtrudedShapeGrain;
+
+/**
+ * @author Bill Kuker
+ * https://github.com/bkuker/motorsim
+ */
 public class FinocylGrain extends ExtrudedShapeGrain {
 
 	/**

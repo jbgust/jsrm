@@ -7,6 +7,10 @@ import java.awt.geom.PathIterator;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author Bill Kuker
+ * https://github.com/bkuker/motorsim
+ */
 public class ShapeUtil {
 	private ShapeUtil(){}
 
