@@ -4,6 +4,7 @@ import com.github.jbgust.jsrm.calculation.Formula;
 import com.github.jbgust.jsrm.infra.FormulaConfiguration;
 import com.github.jbgust.jsrm.infra.JSRMConstant;
 import com.github.jbgust.jsrm.infra.performance.function.NozzleExitPressureFunction;
+import com.github.jbgust.jsrm.infra.performance.function.SafeMinValueFunction;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import net.objecthunter.exp4j.function.Function;
@@ -31,18 +32,24 @@ public enum PerformanceFormulas implements Formula {
             .withFunctions(Functions.nozzleExitPressure)
     ),
 
-    OPTIMUM_NOZZLE_EXPANSION_RATIO(new FormulaConfiguration("1/(((k2ph+1)/2)^(1/(k2ph-1))*(patm*1000000/CHAMBER_PRESSURE_PA)^(1/k2ph) * " +
-            "sqrt((k2ph+1)/(k2ph-1)*(1-(patm*1000000/CHAMBER_PRESSURE_PA)^((k2ph-1)/k2ph))))")
+    SAFE_CHAMMBER_PRESSURE(new FormulaConfiguration("SafeMinValue(CHAMBER_PRESSURE_PA, patm*1000000, patm*1000000+1000)")
             .withDependencies("CHAMBER_PRESSURE_PA")
+            .withConstants(JSRMConstant.patm)
+            .withFunctions(Functions.safeMinValue)
+    ),
+
+    OPTIMUM_NOZZLE_EXPANSION_RATIO(new FormulaConfiguration("1/(((k2ph+1)/2)^(1/(k2ph-1))*(patm*1000000/SAFE_CHAMMBER_PRESSURE)^(1/k2ph) * " +
+            "sqrt((k2ph+1)/(k2ph-1)*(1-(patm*1000000/SAFE_CHAMMBER_PRESSURE)^((k2ph-1)/k2ph))))")
+            .withDependencies("SAFE_CHAMMBER_PRESSURE")
             .withConstants(JSRMConstant.patm, JSRMConstant.k2ph)
     ),
 
     DELIVERED_THRUST_COEFFICIENT(new FormulaConfiguration("etanoz * " +
             "sqrt(2*k2ph^2/(k2ph-1)*(2/(k2ph+1))^((k2ph+1)/(k2ph-1)) * " +
-            "(1-(NOZZLE_EXIT_PRESSURE / CHAMBER_PRESSURE_PA)^((k2ph-1)/k2ph)))+(NOZZLE_EXIT_PRESSURE - patm * 1000000) " +
-            "/ CHAMBER_PRESSURE_PA * NOZZLE_EXPANSION_RATIO")
+            "(1-(NOZZLE_EXIT_PRESSURE / SAFE_CHAMMBER_PRESSURE)^((k2ph-1)/k2ph)))+(NOZZLE_EXIT_PRESSURE - patm * 1000000) " +
+            "/ SAFE_CHAMMBER_PRESSURE * NOZZLE_EXPANSION_RATIO")
             .withConstants(JSRMConstant.etanoz, JSRMConstant.patm, JSRMConstant.k2ph)
-            .withDependencies("NOZZLE_EXPANSION_RATIO", "NOZZLE_EXIT_PRESSURE", "CHAMBER_PRESSURE_PA")
+            .withDependencies("NOZZLE_EXPANSION_RATIO", "NOZZLE_EXIT_PRESSURE", "SAFE_CHAMMBER_PRESSURE")
     ),
 
     THRUST(new FormulaConfiguration("DELIVERED_THRUST_COEFFICIENT * nozzleCriticalPassageArea * CHAMBER_PRESSURE_PA")
@@ -111,6 +118,7 @@ public enum PerformanceFormulas implements Formula {
 
     private static class Functions {
         private static final Function nozzleExitPressure = new NozzleExitPressureFunction();
+        private static final Function safeMinValue = new SafeMinValueFunction();
     }
 
 }
