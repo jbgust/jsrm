@@ -1,8 +1,8 @@
 package com.github.jbgust.jsrm.application.motor.grain.core;
 
-import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.INHIBITED;
-
 import com.github.jbgust.jsrm.application.motor.grain.GrainSurface;
+
+import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.INHIBITED;
 
 /**
  * @author Bill Kuker
@@ -22,6 +22,11 @@ public abstract class ExtrudedGrain {
 		return (foreEndInhibited?0:1) + (aftEndInhibited?0:1);
 	}
 
+	/**
+	 * Length regression of single grain
+	 * @param regression regression in % (50% = 0.5)
+	 * @return
+	 */
 	public double regressedLength(double regression){
 		if ( regression<endLight )
 			return length;

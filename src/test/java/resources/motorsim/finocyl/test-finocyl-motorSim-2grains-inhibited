@@ -1,0 +1,36 @@
+<object-stream>
+  <com.billkuker.rocketry.motorsim.Motor>
+    <chamber class="com.billkuker.rocketry.motorsim.CylindricalChamber">
+      <ID>40 mm</ID>
+      <OD>41 mm</OD>
+      <length>150 mm</length>
+    </chamber>
+    <fuel class="com.billkuker.rocketry.motorsim.fuel.KNSU" serialization="custom">
+      <java.net.URI>
+        <default>
+          <string>motorsim:KNSU</string>
+        </default>
+      </java.net.URI>
+    </fuel>
+    <grain class="com.billkuker.rocketry.motorsim.grain.MultiGrain">
+      <count>2</count>
+      <grain class="com.billkuker.rocketry.motorsim.grain.Finocyl">
+        <ID>10 mm</ID>
+        <OD>30 mm</OD>
+        <aftEndInhibited>true</aftEndInhibited>
+        <finCount>5</finCount>
+        <finDiameter>20 mm</finDiameter>
+        <finWidth>2 mm</finWidth>
+        <foreEndInhibited>true</foreEndInhibited>
+        <length>70 mm</length>
+      </grain>
+      <spacing>6 mm</spacing>
+    </grain>
+    <name>2 grain</name>
+    <nozzle class="com.billkuker.rocketry.motorsim.ConvergentDivergentNozzle">
+      <efficiency>0.85</efficiency>
+      <exitDiameter>28.284 mm</exitDiameter>
+      <throatDiameter>10 mm</throatDiameter>
+    </nozzle>
+  </com.billkuker.rocketry.motorsim.Motor>
+</object-stream>

@@ -1,7 +1,5 @@
 package com.github.jbgust.jsrm.application.motor.grain;
 
-import com.github.jbgust.jsrm.application.JSRMConfig;
-import com.github.jbgust.jsrm.application.JSRMConfigBuilder;
 import com.github.jbgust.jsrm.application.JSRMSimulation;
 import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
 import com.github.jbgust.jsrm.application.motor.CombustionChamber;
@@ -9,7 +7,6 @@ import com.github.jbgust.jsrm.application.motor.PropellantGrain;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.EXPOSED;
@@ -20,18 +17,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.data.Offset.offset;
 import static org.assertj.core.data.Percentage.withPercentage;
 
-public class FinocylGrainTest {
-
-    private JSRMConfig motorSimConfig;
-
-    @BeforeEach
-    public void setUp() {
-        motorSimConfig = new JSRMConfigBuilder()
-                .withCombustionEfficiencyRatio(0.97)
-                .withDensityRatio(.96)
-                .withNozzleExpansionRatio(8)
-                .createJSRMConfig();
-    }
+public class FinocylGrainTest extends MotorSimGrainTestConfiguration{
 
     @Test
     public void test() {
@@ -156,7 +142,7 @@ public class FinocylGrainTest {
     }
 
     @Test
-    void shouldThrowExceptionIfInvaliLength() {
+    void shouldThrowExceptionIfInvalidLength() {
         FinocylGrain finocyl = new FinocylGrain(30d, 10d, 2d, 20d, 5, 0d, 2, EXPOSED);
         SolidRocketMotor finocylMotor = new SolidRocketMotor(new PropellantGrain(PropellantType.KNSU, finocyl), new CombustionChamber(40d, 150d), 10d);
 
@@ -166,7 +152,7 @@ public class FinocylGrainTest {
     }
 
     @Test
-    void shouldThrowExceptionIfInvaliInnerOuterDiameter() {
+    void shouldThrowExceptionIfInvalidInnerOuterDiameter() {
         FinocylGrain finocyl = new FinocylGrain(30d, 40d, 2d, 20d, 5, 70d, 2, EXPOSED);
         SolidRocketMotor finocylMotor = new SolidRocketMotor(new PropellantGrain(PropellantType.KNSU, finocyl), new CombustionChamber(40d, 150d), 10d);
 
