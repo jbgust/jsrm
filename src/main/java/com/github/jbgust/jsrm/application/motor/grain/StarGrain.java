@@ -48,10 +48,10 @@ public class StarGrain extends ExtrudedShapeGrain {
 	 * @param pointDiameter  Distance from grain center to star outer point
 	 * @param pointCount Number of star branches
 	 * @param numberOfSegment Number of segment
-	 * @param length Length of the grain
+	 * @param segmentLength Length of the grain
 	 * @param endSurface end segments surface are exposed to combustion or inhibited
 	 */
-	public StarGrain(double outerDiameter, double innerDiameter, double pointDiameter, int pointCount, int numberOfSegment, double length, GrainSurface endSurface) {
+	public StarGrain(double outerDiameter, double innerDiameter, double pointDiameter, int pointCount, int numberOfSegment, double segmentLength, GrainSurface endSurface) {
 		this.outerDiameter = outerDiameter;
 		this.innerDiameter = innerDiameter;
 		this.pointDiameter = pointDiameter;
@@ -60,7 +60,7 @@ public class StarGrain extends ExtrudedShapeGrain {
 
 		setAftEndInhibited(endSurface);
 		setForeEndInhibited(endSurface);
-		setLength(length);
+		setLength(segmentLength);
 		generateGeometry();
 	}
 

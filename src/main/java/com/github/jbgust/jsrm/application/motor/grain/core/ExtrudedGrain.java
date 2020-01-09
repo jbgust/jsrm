@@ -25,7 +25,7 @@ public abstract class ExtrudedGrain {
 	/**
 	 * Length regression of single grain
 	 * @param regression regression in % (50% = 0.5)
-	 * @return
+	 * @return regressed length
 	 */
 	public double regressedLength(double regression){
 		if ( regression<endLight )

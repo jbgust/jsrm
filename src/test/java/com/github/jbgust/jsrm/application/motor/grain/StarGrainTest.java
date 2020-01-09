@@ -47,7 +47,7 @@ class StarGrainTest extends MotorSimGrainTestConfiguration{
     }
 
     @Test
-    public void shouldNotFailedWhenChmaberPressureIsTooLow() {
+    public void shouldNotFailedWhenChamberPressureIsTooLow() {
         int numberOfSegment = 2;
         StarGrain grain = new StarGrain(30d, 5d, 15d, 5, numberOfSegment, 70d, EXPOSED);
         SolidRocketMotor motor = new SolidRocketMotor(
@@ -139,9 +139,9 @@ class StarGrainTest extends MotorSimGrainTestConfiguration{
     @Test
     void shouldThrowExceptionIfInvalidInnerDiameter() {
         StarGrain star = new StarGrain(30d, 0d, 15d, 5, 1, 70d, INHIBITED);
-        SolidRocketMotor finocylMotor = new SolidRocketMotor(new PropellantGrain(PropellantType.KNSU, star), new CombustionChamber(40d, 150d), 10d);
+        SolidRocketMotor motor = new SolidRocketMotor(new PropellantGrain(PropellantType.KNSU, star), new CombustionChamber(40d, 150d), 10d);
 
-        assertThatThrownBy(() -> star.checkConfiguration(finocylMotor))
+        assertThatThrownBy(() -> star.checkConfiguration(motor))
                 .isInstanceOf(InvalidMotorDesignException.class)
                 .hasMessage("Inner diameter should be > 0");
     }
@@ -149,9 +149,9 @@ class StarGrainTest extends MotorSimGrainTestConfiguration{
     @Test
     void shouldThrowExceptionIfInnerDiameterGreaterThanPointDiameter() {
         StarGrain star = new StarGrain(30d, 5d, 4d, 5, 1, 70d, INHIBITED);
-        SolidRocketMotor finocylMotor = new SolidRocketMotor(new PropellantGrain(PropellantType.KNSU, star), new CombustionChamber(40d, 150d), 10d);
+        SolidRocketMotor motor = new SolidRocketMotor(new PropellantGrain(PropellantType.KNSU, star), new CombustionChamber(40d, 150d), 10d);
 
-        assertThatThrownBy(() -> star.checkConfiguration(finocylMotor))
+        assertThatThrownBy(() -> star.checkConfiguration(motor))
                 .isInstanceOf(InvalidMotorDesignException.class)
                 .hasMessage("Inner diameter should be < than point diameter");
     }
@@ -159,9 +159,9 @@ class StarGrainTest extends MotorSimGrainTestConfiguration{
     @Test
     void shouldThrowExceptionIfPointDiameterGreaterThanOuterDiameter() {
         StarGrain star = new StarGrain(30d, 5d, 31d, 5, 1, 70d, INHIBITED);
-        SolidRocketMotor finocylMotor = new SolidRocketMotor(new PropellantGrain(PropellantType.KNSU, star), new CombustionChamber(40d, 150d), 10d);
+        SolidRocketMotor motor = new SolidRocketMotor(new PropellantGrain(PropellantType.KNSU, star), new CombustionChamber(40d, 150d), 10d);
 
-        assertThatThrownBy(() -> star.checkConfiguration(finocylMotor))
+        assertThatThrownBy(() -> star.checkConfiguration(motor))
                 .isInstanceOf(InvalidMotorDesignException.class)
                 .hasMessage("Point diameter should be < than outer diameter");
     }
@@ -169,9 +169,9 @@ class StarGrainTest extends MotorSimGrainTestConfiguration{
     @Test
     void shouldThrowExceptionIfInvalidPointCount() {
         StarGrain star = new StarGrain(30d, 5d, 15d, 0, 1, 70d, INHIBITED);
-        SolidRocketMotor finocylMotor = new SolidRocketMotor(new PropellantGrain(PropellantType.KNSU, star), new CombustionChamber(40d, 150d), 10d);
+        SolidRocketMotor motor = new SolidRocketMotor(new PropellantGrain(PropellantType.KNSU, star), new CombustionChamber(40d, 150d), 10d);
 
-        assertThatThrownBy(() -> star.checkConfiguration(finocylMotor))
+        assertThatThrownBy(() -> star.checkConfiguration(motor))
                 .isInstanceOf(InvalidMotorDesignException.class)
                 .hasMessage("Point count should be > 0");
     }
@@ -179,9 +179,9 @@ class StarGrainTest extends MotorSimGrainTestConfiguration{
     @Test
     void shouldThrowExceptionIfInvalidOuterDiameter() {
         StarGrain star = new StarGrain(0d, 5d, 15d, 5, 1, 70d, INHIBITED);
-        SolidRocketMotor finocylMotor = new SolidRocketMotor(new PropellantGrain(PropellantType.KNSU, star), new CombustionChamber(40d, 150d), 10d);
+        SolidRocketMotor motor = new SolidRocketMotor(new PropellantGrain(PropellantType.KNSU, star), new CombustionChamber(40d, 150d), 10d);
 
-        assertThatThrownBy(() -> star.checkConfiguration(finocylMotor))
+        assertThatThrownBy(() -> star.checkConfiguration(motor))
                 .isInstanceOf(InvalidMotorDesignException.class)
                 .hasMessage("Outer diameter should be > 0");
     }
@@ -189,9 +189,9 @@ class StarGrainTest extends MotorSimGrainTestConfiguration{
     @Test
     void shouldThrowExceptionIfInvalidLength() {
         StarGrain star = new StarGrain(30d, 5d, 15d, 5, 1, 0d, INHIBITED);
-        SolidRocketMotor finocylMotor = new SolidRocketMotor(new PropellantGrain(PropellantType.KNSU, star), new CombustionChamber(40d, 150d), 10d);
+        SolidRocketMotor motor = new SolidRocketMotor(new PropellantGrain(PropellantType.KNSU, star), new CombustionChamber(40d, 150d), 10d);
 
-        assertThatThrownBy(() -> star.checkConfiguration(finocylMotor))
+        assertThatThrownBy(() -> star.checkConfiguration(motor))
                 .isInstanceOf(InvalidMotorDesignException.class)
                 .hasMessage("Grain length should be > 0");
     }
@@ -199,9 +199,9 @@ class StarGrainTest extends MotorSimGrainTestConfiguration{
     @Test
     void shouldThrowExceptionIfInvalidInnerOuterDiameter() {
         StarGrain star = new StarGrain(30d, 31d, 15d, 5, 1, 70d, INHIBITED);
-        SolidRocketMotor finocylMotor = new SolidRocketMotor(new PropellantGrain(PropellantType.KNSU, star), new CombustionChamber(40d, 150d), 10d);
+        SolidRocketMotor motor = new SolidRocketMotor(new PropellantGrain(PropellantType.KNSU, star), new CombustionChamber(40d, 150d), 10d);
 
-        assertThatThrownBy(() -> star.checkConfiguration(finocylMotor))
+        assertThatThrownBy(() -> star.checkConfiguration(motor))
                 .isInstanceOf(InvalidMotorDesignException.class)
                 .hasMessage("Inner diameter should be < than outer diameter");
     }
@@ -209,9 +209,9 @@ class StarGrainTest extends MotorSimGrainTestConfiguration{
     @Test
     void shouldThrowExceptionIfCombustionChamberLengthTooSmall() {
         StarGrain star = new StarGrain(30d, 5d, 15d, 5, 3, 70d, INHIBITED);
-        SolidRocketMotor finocylMotor = new SolidRocketMotor(new PropellantGrain(PropellantType.KNSU, star), new CombustionChamber(40d, 150d), 10d);
+        SolidRocketMotor motor = new SolidRocketMotor(new PropellantGrain(PropellantType.KNSU, star), new CombustionChamber(40d, 150d), 10d);
 
-        assertThatThrownBy(() -> star.checkConfiguration(finocylMotor))
+        assertThatThrownBy(() -> star.checkConfiguration(motor))
                 .isInstanceOf(InvalidMotorDesignException.class)
                 .hasMessage("Combustion chamber length should be >= than Grain total length");
     }
@@ -219,9 +219,9 @@ class StarGrainTest extends MotorSimGrainTestConfiguration{
     @Test
     void shouldThrowExceptionIfCombustionChamberDiameterTooSmall() {
         StarGrain star = new StarGrain(41d, 5d, 15d, 5, 1, 70d, INHIBITED);
-        SolidRocketMotor finocylMotor = new SolidRocketMotor(new PropellantGrain(PropellantType.KNSU, star), new CombustionChamber(40d, 150d), 10d);
+        SolidRocketMotor motor = new SolidRocketMotor(new PropellantGrain(PropellantType.KNSU, star), new CombustionChamber(40d, 150d), 10d);
 
-        assertThatThrownBy(() -> star.checkConfiguration(finocylMotor))
+        assertThatThrownBy(() -> star.checkConfiguration(motor))
                 .isInstanceOf(InvalidMotorDesignException.class)
                 .hasMessage("Combution chamber diameter should be >= than grain outer diameter");
     }
@@ -229,9 +229,9 @@ class StarGrainTest extends MotorSimGrainTestConfiguration{
     @Test
     void shouldThrowExceptionIfInvalidNumberOfSegment() {
         StarGrain star = new StarGrain(30d, 5d, 15d, 5, 0, 70d, INHIBITED);
-        SolidRocketMotor finocylMotor = new SolidRocketMotor(new PropellantGrain(PropellantType.KNSU, star), new CombustionChamber(40d, 150d), 10d);
+        SolidRocketMotor motor = new SolidRocketMotor(new PropellantGrain(PropellantType.KNSU, star), new CombustionChamber(40d, 150d), 10d);
 
-        assertThatThrownBy(() -> star.checkConfiguration(finocylMotor))
+        assertThatThrownBy(() -> star.checkConfiguration(motor))
                 .isInstanceOf(InvalidMotorDesignException.class)
                 .hasMessage("Number of segment should be > 0");
     }
