@@ -97,6 +97,7 @@ class LowKNTest {
                 .createJSRMConfig());
 
         //THEN
+        printSimulationInfos(motor, result);
         assertThat(result.getMotorClassification()).isEqualTo(G);
     }
 
@@ -148,6 +149,9 @@ class LowKNTest {
 
         //WHEN
         JSRMResult result = new JSRMSimulation(motor).run(new JSRMConfigBuilder()
+                /**
+                 * plus utile depuis la correction du sur OPTIMUM_NOZZLE_EXPANSION_RATIO dans JSRM 2.1
+                 */
                 .withSafeKNFailure(true)
                 .createJSRMConfig());
 

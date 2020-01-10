@@ -1,11 +1,11 @@
 package com.github.jbgust.jsrm.application.motor.grain.core;
 
+import com.github.jbgust.jsrm.application.motor.grain.GrainConfigutation;
+
 import java.awt.*;
 import java.awt.geom.Area;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.github.jbgust.jsrm.application.motor.grain.GrainConfigutation;
 
 /**
  * @author Bill Kuker
@@ -37,6 +37,11 @@ public abstract class ExtrudedShapeGrain extends ExtrudedGrain implements GrainC
 		return webThickness()/numberOfPoints;
 	}
 
+	/**
+	 * Burning surface of single grain
+	 * @param regression regression in % (50% = 0.5)
+	 * @return
+	 */
 	private double surfaceArea(double regression) {
 		double zero = 0d;
 
@@ -71,6 +76,11 @@ public abstract class ExtrudedShapeGrain extends ExtrudedGrain implements GrainC
 		return areaCache.computeIfAbsent(regression, currentRegression -> ShapeUtil.area(getCrossSection(regression)));
 	}
 
+	/**
+	 * Single grain valume
+	 * @param regression regression in % (50% = 0.5)
+	 * @return
+	 */
 	private double volume(double regression) {
 		double zero = 0d;
 
