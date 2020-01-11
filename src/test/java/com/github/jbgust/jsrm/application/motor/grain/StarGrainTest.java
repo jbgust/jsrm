@@ -1,15 +1,5 @@
 package com.github.jbgust.jsrm.application.motor.grain;
 
-import com.github.jbgust.jsrm.application.JSRMConfigBuilder;
-import com.github.jbgust.jsrm.application.JSRMSimulation;
-import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
-import com.github.jbgust.jsrm.application.motor.CombustionChamber;
-import com.github.jbgust.jsrm.application.motor.PropellantGrain;
-import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
-import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
-import com.github.jbgust.jsrm.application.result.JSRMResult;
-import org.junit.jupiter.api.Test;
-
 import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.EXPOSED;
 import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.INHIBITED;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSU;
@@ -18,6 +8,17 @@ import static com.github.jbgust.jsrm.application.result.MotorClassification.I;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.data.Percentage.withPercentage;
+
+import org.junit.jupiter.api.Test;
+
+import com.github.jbgust.jsrm.application.JSRMConfigBuilder;
+import com.github.jbgust.jsrm.application.JSRMSimulation;
+import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
+import com.github.jbgust.jsrm.application.motor.CombustionChamber;
+import com.github.jbgust.jsrm.application.motor.PropellantGrain;
+import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
+import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
+import com.github.jbgust.jsrm.application.result.JSRMResult;
 
 class StarGrainTest extends MotorSimGrainTestConfiguration{
 
@@ -148,7 +149,7 @@ class StarGrainTest extends MotorSimGrainTestConfiguration{
 
     @Test
     void shouldThrowExceptionIfInnerDiameterGreaterThanPointDiameter() {
-        StarGrain star = new StarGrain(30d, 5d, 4d, 5, 1, 70d, INHIBITED);
+        StarGrain star = new StarGrain(30d, 5d, 5d, 5, 1, 70d, INHIBITED);
         SolidRocketMotor motor = new SolidRocketMotor(new PropellantGrain(PropellantType.KNSU, star), new CombustionChamber(40d, 150d), 10d);
 
         assertThatThrownBy(() -> star.checkConfiguration(motor))
@@ -158,7 +159,7 @@ class StarGrainTest extends MotorSimGrainTestConfiguration{
 
     @Test
     void shouldThrowExceptionIfPointDiameterGreaterThanOuterDiameter() {
-        StarGrain star = new StarGrain(30d, 5d, 31d, 5, 1, 70d, INHIBITED);
+        StarGrain star = new StarGrain(30d, 5d, 30d, 5, 1, 70d, INHIBITED);
         SolidRocketMotor motor = new SolidRocketMotor(new PropellantGrain(PropellantType.KNSU, star), new CombustionChamber(40d, 150d), 10d);
 
         assertThatThrownBy(() -> star.checkConfiguration(motor))
@@ -198,7 +199,7 @@ class StarGrainTest extends MotorSimGrainTestConfiguration{
 
     @Test
     void shouldThrowExceptionIfInvalidInnerOuterDiameter() {
-        StarGrain star = new StarGrain(30d, 31d, 15d, 5, 1, 70d, INHIBITED);
+        StarGrain star = new StarGrain(30d, 30d, 15d, 5, 1, 70d, INHIBITED);
         SolidRocketMotor motor = new SolidRocketMotor(new PropellantGrain(PropellantType.KNSU, star), new CombustionChamber(40d, 150d), 10d);
 
         assertThatThrownBy(() -> star.checkConfiguration(motor))

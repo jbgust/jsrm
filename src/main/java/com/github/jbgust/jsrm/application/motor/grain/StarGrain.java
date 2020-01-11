@@ -1,14 +1,14 @@
 package com.github.jbgust.jsrm.application.motor.grain;
 
-import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
-import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
-import com.github.jbgust.jsrm.application.motor.grain.core.BurningShape;
-import com.github.jbgust.jsrm.application.motor.grain.core.ExtrudedShapeGrain;
-
 import java.awt.*;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
+
+import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
+import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
+import com.github.jbgust.jsrm.application.motor.grain.core.BurningShape;
+import com.github.jbgust.jsrm.application.motor.grain.core.ExtrudedShapeGrain;
 
 /**
  * @author Bill Kuker
@@ -107,13 +107,13 @@ public class StarGrain extends ExtrudedShapeGrain {
 		if ( getLength() <= 0 ) {
 			throw new InvalidMotorDesignException("Grain length should be > 0");
 		}
-		if ( innerDiameter > outerDiameter ) {
+		if ( innerDiameter >= outerDiameter ) {
 			throw new InvalidMotorDesignException("Inner diameter should be < than outer diameter");
 		}
-		if ( innerDiameter > pointDiameter ) {
+		if ( innerDiameter >= pointDiameter ) {
 			throw new InvalidMotorDesignException("Inner diameter should be < than point diameter");
 		}
-		if ( pointDiameter > outerDiameter ) {
+		if ( pointDiameter >= outerDiameter ) {
 			throw new InvalidMotorDesignException("Point diameter should be < than outer diameter");
 		}
 
