@@ -2,10 +2,7 @@ package com.github.jbgust.jsrm.application.motor.grain.core;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.GeneralPath;
 import java.awt.geom.PathIterator;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Bill Kuker
@@ -97,56 +94,5 @@ public class ShapeUtil {
 		}
 		return len;
 	}
-
-	/*
-	 * Separate an area into multiple distinct area.
-	 * Area CAN NOT HAVE HOLES. HOLES WILL BE RETURNED AS AREAS,
-	 * SO A DONUT WILL TURN INTO TWO CIRCLES.
-	 */
-	public static Set<java.awt.geom.Area> separate(java.awt.geom.Area a) {
-		Set<java.awt.geom.Area> res = new HashSet<java.awt.geom.Area>();
-		PathIterator i = a.getPathIterator(new AffineTransform());
-		GeneralPath cur = null;
-
-		while (!i.isDone()) {
-			double[] coords = new double[6];
-			int type = i.currentSegment(coords);
-			switch (type) {
-			case PathIterator.SEG_CLOSE:
-				cur.closePath();
-				if (cur != null ){
-					java.awt.geom.Area area = new java.awt.geom.Area(cur);
-					if ( !a.isEmpty() )
-						res.add(area);
-				}
-				cur = new GeneralPath(i.getWindingRule());
-				break;
-			case PathIterator.SEG_MOVETO:
-				if (cur != null ){
-					java.awt.geom.Area area = new java.awt.geom.Area(cur);
-					if ( !a.isEmpty() )
-						res.add(area);
-				}
-				cur = new GeneralPath(i.getWindingRule());
-				cur.moveTo(coords[0], coords[1]);
-				break;
-			case PathIterator.SEG_CUBICTO:
-				cur.curveTo(coords[0], coords[1], coords[2], coords[3],
-						coords[4], coords[5]);
-				break;
-			case PathIterator.SEG_LINETO:
-				cur.lineTo(coords[0], coords[1]);
-				break;
-			case PathIterator.SEG_QUADTO:
-				cur.quadTo(coords[0], coords[1], coords[2], coords[3]);
-				break;
-
-			}
-			i.next();
-		}
-
-		return res;
-	}
-
 
 }

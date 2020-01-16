@@ -38,19 +38,6 @@ public abstract class RotatedShapeGrain implements GrainConfigutation {
 
 	protected double web = -1;
 
-	public Area getCrossSection(double regression) {
-		Area ret = new Area();
-		for( Area a : ShapeUtil.separate(shape.getShape(regression))){
-			Rectangle2D b = a.getBounds2D();
-			Ellipse2D inner = new Ellipse2D.Double(-b.getMinX(), -b.getMinX(), b.getMinX()*2, b.getMinX()*2);
-			Ellipse2D outer = new Ellipse2D.Double(-b.getMaxX(), -b.getMaxX(), b.getMaxX()*2, b.getMaxX()*2);
-			Area aa = new Area(outer);
-			aa.subtract(new Area(inner));
-			ret.add(aa);
-		}
-		return ret;
-	}
-
 	public double surfaceArea(double regression) {
 		if (regression> webThickness())
 			return 0;
