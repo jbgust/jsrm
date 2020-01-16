@@ -9,7 +9,11 @@ import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EndBurner extends RotatedShapeGrain {
+/**
+ * @author Bill Kuker
+ * https://github.com/bkuker/motorsim
+ */
+public class EndBurnerGrain extends RotatedShapeGrain {
 
 	private final double length;
 	private final double outerDiameter;
@@ -17,7 +21,7 @@ public class EndBurner extends RotatedShapeGrain {
 	private final double holeDepth;
 
 
-	public EndBurner(double length, double outerDiameter, double holeDiameter, double holeDepth) {
+	public EndBurnerGrain(double length, double outerDiameter, double holeDiameter, double holeDepth) {
 		this.length = length;
 		this.outerDiameter = outerDiameter;
 		this.holeDiameter = holeDiameter;
