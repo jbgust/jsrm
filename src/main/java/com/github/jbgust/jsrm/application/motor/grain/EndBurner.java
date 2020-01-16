@@ -9,6 +9,10 @@ import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Bill Kuker
+ * https://github.com/bkuker/motorsim
+ */
 public class EndBurner extends RotatedShapeGrain {
 
 	private final double length;
