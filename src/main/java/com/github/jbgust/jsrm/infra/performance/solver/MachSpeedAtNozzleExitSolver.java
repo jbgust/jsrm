@@ -1,6 +1,7 @@
 package com.github.jbgust.jsrm.infra.performance.solver;
 
 import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
+import com.github.jbgust.jsrm.calculation.exception.DichotomicSolveFailedException;
 import com.google.common.collect.Range;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -50,7 +51,6 @@ public class MachSpeedAtNozzleExitSolver {
 
         Range<Double> initialMachSpeedAtNozzleExitRange = closed(MIN_MACH_EXIT_SPEED, MAX_MACH_EXIT_SPEED);
 
-        double machSpeedAtNozzleExit = 0;
         try {
             return dichotomicSolve(isSolved, initialMachSpeedAtNozzleExitRange);
         } catch (DichotomicSolveFailedException e) {
@@ -101,6 +101,4 @@ public class MachSpeedAtNozzleExitSolver {
         return result.entrySet().stream().min(Comparator.comparingDouble(Map.Entry::getValue)).get().getKey();
     }
 
-    private class DichotomicSolveFailedException extends Exception {
-    }
 }
