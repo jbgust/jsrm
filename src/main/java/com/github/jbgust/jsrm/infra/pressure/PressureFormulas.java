@@ -3,7 +3,6 @@ package com.github.jbgust.jsrm.infra.pressure;
 import com.github.jbgust.jsrm.calculation.Formula;
 import com.github.jbgust.jsrm.infra.FormulaConfiguration;
 import com.github.jbgust.jsrm.infra.function.CircleAreaFunction;
-import com.github.jbgust.jsrm.infra.function.HollowCircleAreaFunction;
 import com.github.jbgust.jsrm.infra.pressure.function.*;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -21,9 +20,6 @@ import static java.util.stream.Stream.of;
 
 
 public enum PressureFormulas implements Formula {
-
-    WEB_THICKNESS(new FormulaConfiguration("(GRAIN_OUTSIDE_DIAMETER - GRAIN_CORE_DIAMETER) / 2")
-            .withDependencies("GRAIN_CORE_DIAMETER", "GRAIN_OUTSIDE_DIAMETER")),
 
     THROAT_AREA(new FormulaConfiguration("CircleArea(dto+erate*" + PROGRESSION_VARIABLE + ")")
             .withConstants(dto, erate)
@@ -103,7 +99,14 @@ public enum PressureFormulas implements Formula {
             .withConstants(patm, rat, to, k)),
 
     KN(new FormulaConfiguration(BURNING_SURFACE_VARIABLE + " / throatArea")
-            .withVariables("throatArea", BURNING_SURFACE_VARIABLE));
+            .withVariables("throatArea", BURNING_SURFACE_VARIABLE)),
+
+//    CORE_MACH_NUMBER(new FormulaConfiguration("")
+//            .withConstants(k)
+//            .withDependencies("THROAT_AREA")
+//            .withFunctions(Functions.coreMachNumberFunction)
+//    )
+    ;
 
     private final Expression expression;
     private final Set<String> dependencies;
@@ -155,11 +158,11 @@ public enum PressureFormulas implements Formula {
     private static class Functions {
         private static final CircleAreaFunction circleArea = new CircleAreaFunction();
         private static final ErosiveBurnFactorFunction erosiveBurnFactor = new ErosiveBurnFactorFunction();
-        private static final HollowCircleAreaFunction hollowCircleArea = new HollowCircleAreaFunction();
         private static final BurnRateCharacteristicFunction burnRateCharacteristic = new BurnRateCharacteristicFunction();
         private static final GrainMassFunction grainMass = new GrainMassFunction();
         private static final NozzleMassFlowRateFunction nozzleMassFlowRate = new NozzleMassFlowRateFunction();
         private static final FreeVolumeInChamberFunction freeVolumeInChamber = new FreeVolumeInChamberFunction();
         private static final LowKnFunction lowKNFunction = new LowKnFunction();
+        private static final CoreMachNumberFunction coreMachNumberFunction = new CoreMachNumberFunction();
     }
 }

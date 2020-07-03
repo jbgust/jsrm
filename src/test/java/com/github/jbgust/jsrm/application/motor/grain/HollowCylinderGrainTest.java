@@ -67,20 +67,28 @@ class HollowCylinderGrainTest {
                 solidRocketMotorBuilder.getNumberOfSegment(),
                 EXPOSED, EXPOSED, EXPOSED);
 
+        //0% burn progress
+        assertThat(grain.getGrainOuterDiameter(0.0)).isEqualTo(solidRocketMotorBuilder.getGrainOuterDiameter());
+
         //50% burn progress
+        double outerDiameterAtHalfBrun = solidRocketMotorBuilder.getGrainOuterDiameter() - webRegression;
+
+        assertThat(grain.getGrainOuterDiameter(0.5)).isEqualTo(outerDiameterAtHalfBrun);
+
         assertThat(grain.getGrainEndSurface(0.5))
                 .describedAs("Grain end surface 50%")
                 .isCloseTo(new HollowCircleAreaFunction().runFunction(
-                        solidRocketMotorBuilder.getGrainOuterDiameter() - webRegression,
+                        outerDiameterAtHalfBrun,
                         solidRocketMotorBuilder.getGrainCoreDiameter() + webRegression
                 ), offset(0.1d));
 
         assertThat(grain.getGrainVolume(0.5))
                 .describedAs("Grain volume 50%")
                 .isCloseTo(new HollowCircleAreaFunction().runFunction(
-                        solidRocketMotorBuilder.getGrainOuterDiameter() - webRegression,
+                        outerDiameterAtHalfBrun,
                         solidRocketMotorBuilder.getGrainCoreDiameter() + webRegression
                 ) * solidRocketMotorBuilder.getNumberOfSegment() * (solidRocketMotorBuilder.getGrainSegmentLength() - webRegression), offset(0.1d));
+
 
         //100% burn progress
         assertThat(grain.getGrainEndSurface(1))

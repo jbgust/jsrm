@@ -1,14 +1,14 @@
 package com.github.jbgust.jsrm.application.motor.grain;
 
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
-
 import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.motor.grain.core.BurningShape;
 import com.github.jbgust.jsrm.application.motor.grain.core.ExtrudedShapeGrain;
+
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 
 /**
  * @author Bill Kuker
@@ -82,6 +82,11 @@ public class FinocylGrain extends ExtrudedShapeGrain {
 			Shape fin = new Rectangle2D.Double(-finWidth/2,0,finWidth,finDiameter/2);
 			xsection.subtract(fin, AffineTransform.getRotateInstance(i*(2.0*Math.PI/finCount)));
 		}
+	}
+
+	@Override
+	public double getGrainOuterDiameter(double burnProgression) {
+		return outerDiameter;
 	}
 
 	@Override

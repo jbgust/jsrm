@@ -1,16 +1,5 @@
 package com.github.jbgust.jsrm.application.motor.grain;
 
-import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.EXPOSED;
-import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.INHIBITED;
-import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSU;
-import static com.github.jbgust.jsrm.application.result.MotorClassification.H;
-import static com.github.jbgust.jsrm.application.result.MotorClassification.I;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.data.Percentage.withPercentage;
-
-import org.junit.jupiter.api.Test;
-
 import com.github.jbgust.jsrm.application.JSRMConfigBuilder;
 import com.github.jbgust.jsrm.application.JSRMSimulation;
 import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
@@ -19,6 +8,16 @@ import com.github.jbgust.jsrm.application.motor.PropellantGrain;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
+import org.junit.jupiter.api.Test;
+
+import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.EXPOSED;
+import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.INHIBITED;
+import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSU;
+import static com.github.jbgust.jsrm.application.result.MotorClassification.H;
+import static com.github.jbgust.jsrm.application.result.MotorClassification.I;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.data.Percentage.withPercentage;
 
 class StarGrainTest extends MotorSimGrainTestConfiguration{
 
@@ -45,6 +44,8 @@ class StarGrainTest extends MotorSimGrainTestConfiguration{
         assertThat(grain.getBurningArea(0.5))
                 .as("Burning surfaces area")
                 .isCloseTo(11029, withPercentage(0.015));
+
+        assertThat(grain.getGrainOuterDiameter(0.7)).isEqualTo(30d);
     }
 
     @Test

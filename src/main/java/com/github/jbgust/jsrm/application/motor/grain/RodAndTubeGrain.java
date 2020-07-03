@@ -52,6 +52,11 @@ public class RodAndTubeGrain implements GrainConfigutation {
     }
 
     @Override
+    public double getGrainOuterDiameter(double burnProgression) {
+        return tubeOuterDiameter;
+    }
+
+    @Override
     public double getGrainVolume(double burnProgression) {
         double grainLength = getGrainLength(burnProgression) * numberOfSegment;
         return getGrainEndSurface(burnProgression) * grainLength;

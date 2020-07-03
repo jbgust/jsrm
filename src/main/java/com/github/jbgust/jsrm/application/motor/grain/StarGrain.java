@@ -1,14 +1,14 @@
 package com.github.jbgust.jsrm.application.motor.grain;
 
-import java.awt.*;
-import java.awt.geom.Area;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.GeneralPath;
-
 import com.github.jbgust.jsrm.application.exception.InvalidMotorDesignException;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.motor.grain.core.BurningShape;
 import com.github.jbgust.jsrm.application.motor.grain.core.ExtrudedShapeGrain;
+
+import java.awt.*;
+import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.GeneralPath;
 
 /**
  * @author Bill Kuker
@@ -94,6 +94,11 @@ public class StarGrain extends ExtrudedShapeGrain {
 	@Override
 	public int getNumberOfSegments() {
 		return numberOfSegment;
+	}
+
+	@Override
+	public double getGrainOuterDiameter(double burnProgression) {
+		return outerDiameter;
 	}
 
 	@Override

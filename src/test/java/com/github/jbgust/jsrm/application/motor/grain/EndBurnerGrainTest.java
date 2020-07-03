@@ -37,6 +37,8 @@ class EndBurnerGrainTest extends MotorSimGrainTestConfiguration{
         assertThat(grain.getGrainEndSurface(.5))
                 .as("GrainEndSurface")
                 .isCloseTo(grain.getBurningArea(0.5), withPercentage(0.01));
+
+        assertThat(grain.getGrainOuterDiameter(0.7)).isEqualTo(30d);
     }
 
     @Test

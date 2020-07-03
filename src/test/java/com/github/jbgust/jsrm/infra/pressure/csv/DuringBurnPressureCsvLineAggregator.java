@@ -20,7 +20,7 @@ public class DuringBurnPressureCsvLineAggregator implements ArgumentsAggregator 
 
         csvValues.put(INTERVAL, argumentsAccessor.getDouble(0));
 
-        csvValues.put(WEB_THICKNESS.getName(), argumentsAccessor.getDouble(2));
+        csvValues.put("WEB_THICKNESS", argumentsAccessor.getDouble(2));
 
         csvValues.put(THROAT_AREA.getName(), argumentsAccessor.getDouble(6));
         csvValues.put(NOZZLE_CRITICAL_PASSAGE_AREA.getName(), argumentsAccessor.getDouble(7));

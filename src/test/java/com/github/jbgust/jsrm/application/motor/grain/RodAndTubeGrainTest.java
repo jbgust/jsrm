@@ -102,6 +102,8 @@ class RodAndTubeGrainTest extends MotorSimGrainTestConfiguration {
 
         assertThat(grain.getGrainVolume(regression / grain.webThickness()))
                 .isCloseTo((tubeArea + rodArea) * segmentLength * numberOfSegment, withPercentage(0.00001));
+
+        Assertions.assertThat(grain.getGrainOuterDiameter(0.7)).isEqualTo(30d);
     }
 
     @Test

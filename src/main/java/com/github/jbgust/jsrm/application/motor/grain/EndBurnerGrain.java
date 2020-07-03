@@ -50,6 +50,11 @@ public class EndBurnerGrain extends RotatedShapeGrain {
 		return getCachedBurningArea(getRegression(burnProgression));
 	}
 
+	@Override
+	public double getGrainOuterDiameter(double burnProgression) {
+		return outerDiameter;
+	}
+
 	private double getRegression(double burnProgression) {
 		return burnProgression * webThickness();
 	}

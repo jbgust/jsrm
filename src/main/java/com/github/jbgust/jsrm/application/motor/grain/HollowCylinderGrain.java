@@ -42,7 +42,7 @@ public class HollowCylinderGrain implements GrainConfigutation {
     public double getGrainEndSurface(double burnProgression) {
         HollowCircleAreaFunction hollowCircleAreaFunction = new HollowCircleAreaFunction();
         return hollowCircleAreaFunction.runFunction(
-                getOuterDiameter(burnProgression),
+                getGrainOuterDiameter(burnProgression),
                 getCoreDiameter(burnProgression));
     }
 
@@ -92,7 +92,7 @@ public class HollowCylinderGrain implements GrainConfigutation {
     }
 
     private double getGrainOuterBurningSurface(double burnProgression) {
-        return outerSurface.value() * Math.PI * getOuterDiameter(burnProgression) * getGrainLength(burnProgression);
+        return outerSurface.value() * Math.PI * getGrainOuterDiameter(burnProgression) * getGrainLength(burnProgression);
     }
 
     private double getGrainCoreBurningSurface(double burnProgression) {
@@ -103,7 +103,7 @@ public class HollowCylinderGrain implements GrainConfigutation {
         return (segmentLength - webRegression(burnProgression) * endsSurface.value()) * numberOfSegment;
     }
 
-    private double getOuterDiameter(double burnProgression) {
+    public double getGrainOuterDiameter(double burnProgression) {
         return outerDiameter - webRegression(burnProgression) * outerSurface.value();
     }
 

@@ -42,6 +42,8 @@ class CSlotGrainTest extends MotorSimGrainTestConfiguration {
         assertThat(grain.getBurningArea(0.5))
                 .as("Burning surfaces area")
                 .isCloseTo(4747, withPercentage(0.033));
+
+        assertThat(grain.getGrainOuterDiameter(0.7)).isEqualTo(30d);
     }
 
     @Test

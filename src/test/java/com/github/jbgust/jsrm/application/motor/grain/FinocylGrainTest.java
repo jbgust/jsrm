@@ -40,6 +40,8 @@ public class FinocylGrainTest extends MotorSimGrainTestConfiguration{
         assertThat(finocyl.getBurningArea(4.05 / tweb))
                 .as("Burning surfaces area")
                 .isCloseTo(6717, offset(1d));
+
+        assertThat(finocyl.getGrainOuterDiameter(0.7)).isEqualTo(30d);
     }
 
     @Test

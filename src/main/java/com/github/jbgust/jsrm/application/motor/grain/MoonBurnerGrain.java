@@ -63,6 +63,11 @@ public class MoonBurnerGrain extends ExtrudedShapeGrain {
 	}
 
 	@Override
+	public double getGrainOuterDiameter(double burnProgression) {
+		return outerDiameter;
+	}
+
+	@Override
 	public void checkConfiguration(SolidRocketMotor solidRocketMotor) throws InvalidMotorDesignException {
 
 		if (coreDiameter <= 0) {

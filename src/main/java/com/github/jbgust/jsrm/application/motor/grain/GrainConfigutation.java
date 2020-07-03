@@ -13,6 +13,13 @@ public interface GrainConfigutation {
     double getGrainEndSurface(double burnProgression);
 
     /**
+     * Compute the grain outer diameter
+     * @param burnProgression (0 to 1, 0 = before burn start ; 1 = grain completly burn)
+     * @return the grain outer diameter in mm
+     */
+    double getGrainOuterDiameter(double burnProgression);
+
+    /**
      * Compute the grain volume during burn
      * @param burnProgression (0 to 1, 0 = before burn start ; 1 = grain completly burn)
      * @return the grain volume in mm^3

@@ -42,6 +42,8 @@ class MoonBurnerGrainTest extends MotorSimGrainTestConfiguration{
         assertThat(grain.getBurningArea(0.5))
                 .as("Burning surfaces area")
                 .isCloseTo(6351, withPercentage(0.07));
+
+        assertThat(grain.getGrainOuterDiameter(0.7)).isEqualTo(30d);
     }
 
     @Test
