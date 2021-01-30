@@ -6,10 +6,12 @@ import com.github.jbgust.jsrm.application.motor.CombustionChamber;
 import com.github.jbgust.jsrm.application.motor.PropellantGrain;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
+import com.github.jbgust.jsrm.infra.function.CircleAreaFunction;
 import org.junit.jupiter.api.Test;
 
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNSU;
 import static com.github.jbgust.jsrm.application.result.MotorClassification.G;
+import static java.lang.Math.PI;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.data.Percentage.withPercentage;
@@ -57,6 +59,8 @@ class EndBurnerGrainTest extends MotorSimGrainTestConfiguration{
         assertThat(result.getGrainMassInKg()).isCloseTo(0.0883, withPercentage(0.3));
         assertThat(result.getSpecificImpulseInSecond()).isCloseTo(107, withPercentage(1.0));
         assertThat(result.getTotalImpulseInNewtonSecond()).isCloseTo(92.7, withPercentage(1.0));
+        double expectedPortToThroat = (Math.pow(motor.getCombustionChamber().getChamberInnerDiameterInMillimeter(), 2)* PI/4) / new CircleAreaFunction().runFunction(motor.getThroatDiameterInMillimeter());
+        assertThat(result.getPortToThroatArea()).isEqualTo(expectedPortToThroat);
     }
 
     @Test

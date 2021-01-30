@@ -2,13 +2,12 @@ package com.github.jbgust.jsrm.application;
 
 import com.github.jbgust.jsrm.application.exception.SimulationFailedException;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
-import com.github.jbgust.jsrm.application.result.JSRMResult;
-import com.github.jbgust.jsrm.application.result.MotorClassification;
-import com.github.jbgust.jsrm.application.result.MotorParameters;
-import com.github.jbgust.jsrm.application.result.Nozzle;
+import com.github.jbgust.jsrm.application.motor.grain.EndBurnerGrain;
+import com.github.jbgust.jsrm.application.result.*;
 import com.github.jbgust.jsrm.infra.ConstantsExtractor;
 import com.github.jbgust.jsrm.infra.JSRMConstant;
 import com.github.jbgust.jsrm.infra.SolidRocketMotorChecker;
+import com.github.jbgust.jsrm.infra.function.CircleAreaFunction;
 import com.github.jbgust.jsrm.infra.performance.PerformanceCalculation;
 import com.github.jbgust.jsrm.infra.performance.PerformanceCalculationResult;
 import com.github.jbgust.jsrm.infra.performance.PerformanceResultProvider;
@@ -19,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.jbgust.jsrm.application.result.PortToThroatAreaWarning.fromPortToThroat;
 import static com.github.jbgust.jsrm.infra.JSRMConstant.*;
 import static com.github.jbgust.jsrm.infra.pressure.ChamberPressureCalculation.Results.*;
 
@@ -89,6 +89,7 @@ public class JSRMSimulation {
         long averageThrust = Math.round(totalImpulse/thrustTime);
         double specificImpulse = getSpecificImpulse(constants, totalImpulse);
 
+        double portToThroatArea = computePortToThroatArea(motor, constants.get(at));
         return new JSRMResult(
                 maxThrust,
                 totalImpulse,
@@ -101,7 +102,19 @@ public class JSRMSimulation {
                 buildNozzleResult(config, performanceCalculationResult),
                 averageThrust,
                 constants.get(mgrain),
-                chamberPressureResults.get(lowKNCorrection).stream().findFirst().orElse(0.0).longValue());
+                chamberPressureResults.get(lowKNCorrection).stream().findFirst().orElse(0.0).longValue(),
+                fromPortToThroat(portToThroatArea), portToThroatArea);
+    }
+
+    private double computePortToThroatArea(SolidRocketMotor motor, double throatArea) {
+        double CombustionChamberCrossSectionnalArea = new CircleAreaFunction().runFunction(motor.getCombustionChamber().getChamberInnerDiameterInMillimeter());
+
+        // For end grain we don't use the endGrainsurface because it doesn't make sense
+        double grainEndSurface = motor.getPropellantGrain().getGrainConfigutation() instanceof EndBurnerGrain ?
+                0 : motor.getPropellantGrain().getGrainConfigutation().getGrainEndSurface(0);
+
+        double portArea = CombustionChamberCrossSectionnalArea - grainEndSurface;
+        return portArea / throatArea;
     }
 
     private Nozzle buildNozzleResult(JSRMConfig config, PerformanceCalculationResult performanceCalculationResult) {

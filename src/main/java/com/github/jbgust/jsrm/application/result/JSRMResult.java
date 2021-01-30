@@ -16,12 +16,17 @@ public class JSRMResult {
     private final long averageThrustInNewton;
     private Double grainMassInKg;
     private final long numberOfKNCorrection;
+    private PortToThroatAreaWarning portToThroatAreaWarning;
+    private Double portToThroatArea;
 
     public JSRMResult(double maxThrustInNewton, double totalImpulseInNewtonSecond,
                       double specificImpulseInSecond, double maxChamberPressureInMPa, double averageChamberPressureInMPa,
                       double thrustTimeInSecond, MotorClassification motorClassification,
                       List<MotorParameters> motorParameters, Nozzle nozzle,
-                      long averageThrustInNewton, Double grainMassInKg, long numberOfKNCorrection) {
+                      long averageThrustInNewton, Double grainMassInKg,
+                      long numberOfKNCorrection,
+                      PortToThroatAreaWarning portToThroatAreaWarning,
+                      double portToThroatArea) {
         this.maxThrustInNewton = maxThrustInNewton;
         this.totalImpulseInNewtonSecond = totalImpulseInNewtonSecond;
         this.specificImpulseInSecond = specificImpulseInSecond;
@@ -34,6 +39,8 @@ public class JSRMResult {
         this.averageThrustInNewton = averageThrustInNewton;
         this.grainMassInKg = grainMassInKg;
         this.numberOfKNCorrection = numberOfKNCorrection;
+        this.portToThroatAreaWarning = portToThroatAreaWarning;
+        this.portToThroatArea = portToThroatArea;
     }
 
     public double getMaxThrustInNewton() {
@@ -82,5 +89,13 @@ public class JSRMResult {
 
     public Double getGrainMassInKg() {
         return grainMassInKg;
+    }
+
+    public PortToThroatAreaWarning getPortToThroatAreaWarning() {
+        return portToThroatAreaWarning;
+    }
+
+    public Double getPortToThroatArea() {
+        return portToThroatArea;
     }
 }

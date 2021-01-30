@@ -18,6 +18,9 @@ public enum JSRMConstant {
     patm,
     k,
     cstar,
+    /**
+     * THROAT AREA
+     */
     at,
     rhopgrain,
     safeKN,

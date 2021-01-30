@@ -18,6 +18,7 @@ import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.EXPOSE
 import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.INHIBITED;
 import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.*;
 import static com.github.jbgust.jsrm.application.result.MotorClassification.*;
+import static com.github.jbgust.jsrm.application.result.PortToThroatAreaWarning.NORMAL;
 import static org.assertj.core.api.Assertions.*;
 
 class JSRMSimulationTest {
@@ -70,6 +71,8 @@ class JSRMSimulationTest {
         assertThat(result.getMaxThrustInNewton()).isEqualTo(2060, offset(1.0));
         assertThat(result.getThrustTimeInSecond()).isEqualTo(2.158, offset(0.001));
         assertThat(result.getMaxChamberPressureInMPa()).isEqualTo(5.93, offset(0.01));
+        assertThat(result.getPortToThroatAreaWarning()).isEqualTo(NORMAL);
+        assertThat(result.getPortToThroatArea()).isEqualTo(4.18, offset(0.01));
     }
 
     @Test
