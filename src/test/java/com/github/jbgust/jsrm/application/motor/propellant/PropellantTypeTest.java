@@ -64,6 +64,14 @@ class PropellantTypeTest {
     }
 
     @Test
+    void checkKNXYBurnRateData() {
+        double minPressureInChamber = 0.001;
+        double maxPressureInChamber = 10.3;
+        assertPropellantBurnRateCoefficient(minPressureInChamber, maxPressureInChamber, 3.23, KNXY);
+        assertPropellantPressureExponent(minPressureInChamber, maxPressureInChamber, 0.483, KNXY);
+    }
+
+    @Test
     void checkKNSUBurnRateData() {
         double minPressureInChamber = 0.001;
         double maxPressureInChamber = 10.3;

@@ -78,7 +78,16 @@ public enum PropellantType implements SolidPropellant {
             1.854, 1.042, 1.1363, 39.826, 1616,
             new ImmutableRangeMap.Builder<Double, BurnRateData>()
                     .put(all(), new BurnRateData(5.13, 0.22))
-                    .build(), 6);
+                    .build(), 6),
+
+    /**
+     * KNXY = potassium nitrate/Xylitol 65/35 O/F ratio
+     */
+    KNXY("KNXY =  potassium nitrate/Xylitol 65/35 O/F ratio",
+                        1.8654, 1.043, 1.138, 39.293, 1623,
+                        new ImmutableRangeMap.Builder<Double, BurnRateData>()
+                    .put(all(), new BurnRateData(3.23, 0.483))
+            .build(), 7);
 
     private final RangeMap<Double, BurnRateData> byPressureData;
     private final String description;
