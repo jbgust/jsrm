@@ -134,7 +134,8 @@ public class JSRMSimulation {
                     performanceCalculationResult.getResults().get(PerformanceCalculation.Results.thrust).get(i),
                     chamberPressureResults.get(kn).get(i),
                     chamberPressureResults.get(ChamberPressureCalculation.Results.absoluteChamberPressure).get(i),
-                    chamberPressureResults.get(ChamberPressureCalculation.Results.massFlowRate).get(i)));
+                    chamberPressureResults.get(ChamberPressureCalculation.Results.massFlowRate).get(i),
+                    chamberPressureResults.get(ChamberPressureCalculation.Results.grainMass).get(i)));
         }
         return motorParameters;
     }

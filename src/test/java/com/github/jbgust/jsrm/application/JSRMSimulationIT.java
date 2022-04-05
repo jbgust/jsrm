@@ -137,6 +137,10 @@ public class JSRMSimulationIT {
                     .describedAs("Thrust")
                     .isEqualTo(expectedMotorParameters.getThrustInNewton(), offset(1d));
 
+            assertThat(motorParameters.getGrainMassInKg())
+                    .describedAs("Grain mass")
+                    .isEqualTo(expectedMotorParameters.getGrainMassInKg(), offset(1d));
+
             assertThat(motorParameters.getKn())
                     .describedAs("KN")
                     .isEqualTo(expectedMotorParameters.getKn(), offset(0.01d));

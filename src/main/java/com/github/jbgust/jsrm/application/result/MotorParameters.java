@@ -7,13 +7,15 @@ public class MotorParameters {
     private final double kn;
     private final double chamberPressureInMPa;
     private final double massFlowRateInKgPerSec;
+    private final double grainMassInKg;
 
-    public MotorParameters(double timeSinceBurnStartInSecond, double thrustInNewton, double kn, double chamberPressureInMPa, double massFlowRateInKgPerSec) {
+    public MotorParameters(double timeSinceBurnStartInSecond, double thrustInNewton, double kn, double chamberPressureInMPa, double massFlowRateInKgPerSec, double grainMassInKg) {
         this.thrustInNewton = thrustInNewton;
         this.timeSinceBurnStartInSecond = timeSinceBurnStartInSecond;
         this.kn = kn;
         this.chamberPressureInMPa = chamberPressureInMPa;
         this.massFlowRateInKgPerSec = massFlowRateInKgPerSec;
+        this.grainMassInKg = grainMassInKg;
     }
 
     public double getThrustInNewton() {
@@ -34,5 +36,9 @@ public class MotorParameters {
 
     public double getMassFlowRateInKgPerSec() {
         return massFlowRateInKgPerSec;
+    }
+
+    public double getGrainMassInKg() {
+        return grainMassInKg;
     }
 }

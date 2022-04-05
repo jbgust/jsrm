@@ -17,8 +17,9 @@ class MotorPerformanceResultAggregator implements ArgumentsAggregator {
         Double kn = argumentsAccessor.getDouble(2);
         Double chamberPressure = argumentsAccessor.getDouble(3);
         Double massFlowRate = argumentsAccessor.getDouble(4);
+        Double grainMass = argumentsAccessor.getDouble(5);
 
-        return new MotorParameters(time, thrust, kn, chamberPressure, massFlowRate);
+        return new MotorParameters(time, thrust, kn, chamberPressure, massFlowRate, grainMass);
     }
 
 }

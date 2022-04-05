@@ -53,9 +53,15 @@ public enum PressureFormulas implements Formula {
             .withDependencies("PROPELLANT_BURN_RATE")
             .withVariables("TIME_SINCE_BURN_STARTS_previous")),
 
+    //Grain mass
+    GRAIN_MASS(new FormulaConfiguration("GrainMass(rhopgrain, "+GRAIN_VOLUME_VARIABLE+")")
+            .withVariables(GRAIN_VOLUME_VARIABLE)
+            .withConstants(rhopgrain)
+            .withFunctions(Functions.grainMass)),
+
     //Mass generation rate of combustion products
-    MASS_GENERATION_RATE(new FormulaConfiguration("(GrainMass(rhopgrain, "+GRAIN_VOLUME_VARIABLE+"_previous)-GrainMass(rhopgrain, "+GRAIN_VOLUME_VARIABLE+")) / (TIME_SINCE_BURN_STARTS-TIME_SINCE_BURN_STARTS_previous)")
-            .withDependencies("TIME_SINCE_BURN_STARTS")
+    MASS_GENERATION_RATE(new FormulaConfiguration("(GrainMass(rhopgrain, "+GRAIN_VOLUME_VARIABLE+"_previous)-GRAIN_MASS) / (TIME_SINCE_BURN_STARTS-TIME_SINCE_BURN_STARTS_previous)")
+            .withDependencies("TIME_SINCE_BURN_STARTS", "GRAIN_MASS")
             .withVariables(GRAIN_VOLUME_VARIABLE+"_previous", "TIME_SINCE_BURN_STARTS_previous", GRAIN_VOLUME_VARIABLE)
             .withConstants(rhopgrain)
             .withFunctions(Functions.grainMass)),

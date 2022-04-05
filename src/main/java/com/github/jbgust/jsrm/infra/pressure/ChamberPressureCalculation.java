@@ -75,12 +75,17 @@ public class ChamberPressureCalculation {
                 .forEach(value -> knResultValues.add(0d));
 
         List<Double> massFlowRateValues = new ArrayList<>(pressureResults.getResults(PressureFormulas.NOZZLE_MASS_FLOW_RATE));
+        List<Double> grainMassValues = new ArrayList<>(pressureResults.getResults(PressureFormulas.GRAIN_MASS));
 
         // linear decrease of MassFlow rate during post burn phase to 0 kg/s
         double lastMassFlowRateComputed = massFlowRateValues.get(massFlowRateValues.size() - 1);
         double massflowIncrement = lastMassFlowRateComputed/(config.getNumberLineDuringPostBurnCalculation()+1);
         IntStream.range(0, config.getNumberLineDuringPostBurnCalculation() + 1)
                 .forEach(value -> massFlowRateValues.add(lastMassFlowRateComputed - (massflowIncrement * (value+1))));
+
+        // add  0g for grainMass during postBurn Result
+        IntStream.range(0, config.getNumberLineDuringPostBurnCalculation() + 1)
+                .forEach(value -> grainMassValues.add(0D));
 
         List<Double> nozzlePassageAreaResults = new ArrayList<>(pressureResults.getResults(PressureFormulas.NOZZLE_CRITICAL_PASSAGE_AREA));
         IntStream.range(0, config.getNumberLineDuringPostBurnCalculation() + 1)
@@ -107,6 +112,7 @@ public class ChamberPressureCalculation {
                 .put(absoluteChamberPressurePSIG, absoluteChamberPressurePSIGResults)
                 .put(kn, knResultValues)
                 .put(massFlowRate, massFlowRateValues)
+                .put(grainMass, grainMassValues)
                 .put(lowKNCorrection, singletonList(countLowKNFunctionUsage(pressureResults)))
                 .build();
     }
@@ -155,6 +161,7 @@ public class ChamberPressureCalculation {
                         PressureFormulas.ABSOLUTE_CHAMBER_PRESSURE,
                         PressureFormulas.ABSOLUTE_CHAMBER_PRESSURE_PSIG,
                         PressureFormulas.NOZZLE_MASS_FLOW_RATE,
+                        PressureFormulas.GRAIN_MASS,
                         PressureFormulas.MASS_STORAGE_RATE
                 )
                 .withResultLineProviders(
@@ -209,6 +216,6 @@ public class ChamberPressureCalculation {
         absoluteChamberPressurePSIG,
         kn,
         massFlowRate,
-        lowKNCorrection;
+        lowKNCorrection, grainMass;
     }
 }
