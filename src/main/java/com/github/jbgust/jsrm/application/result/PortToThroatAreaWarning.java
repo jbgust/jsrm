@@ -4,7 +4,7 @@ package com.github.jbgust.jsrm.application.result;
  * Port/Throat Area warning :
  * If it drops below 1.0 you will have a DANGER indicator.
  * If Port/Throat Area drops below 2.0 you will have a WARNING indicator.
- * Else return NORMAL indictator
+ * Else return NORMAL indicator
  * Enlarging the core on the nozzle-end grain is a good way to solve this problem.
  * Except for extreme L/D ratio motors, no part of the core should be less than the diameter of the nozzle throat.
  */

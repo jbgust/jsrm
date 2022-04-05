@@ -119,7 +119,7 @@ public class ChamberPressureCalculation {
 
     private double countLowKNFunctionUsage(CalculatorResults pressureResults) {
         if(constants.get(JSRMConstant.safeKN) == 1) {
-            return new Long(pressureResults.getResults(PressureFormulas.MASS_STORAGE_RATE).stream()
+            return Long.valueOf(pressureResults.getResults(PressureFormulas.MASS_STORAGE_RATE).stream()
                     .filter(massStorageRate -> Double.compare(LOW_KN_MASS_STORAGE_RATE, massStorageRate) == 0)
                     .count()).doubleValue();
         }
