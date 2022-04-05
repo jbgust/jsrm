@@ -32,6 +32,16 @@ See examples in tests [com.github.jbgust.jsrm.application.JSRMSimulationTest](ht
 ### Maven config
 Easy integration to your source code with [Maven repository](https://search.maven.org/artifact/com.github.jbgust/Java-Solid-Rocket-Motor)
 
+#### Java 17
+```
+<dependency>
+  <groupId>com.github.jbgust</groupId>
+  <artifactId>Java-Solid-Rocket-Motor</artifactId>
+  <version>3.0</version>
+</dependency>
+```
+
+#### Java 8
 ```
 <dependency>
   <groupId>com.github.jbgust</groupId>
