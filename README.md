@@ -37,16 +37,7 @@ Easy integration to your source code with [Maven repository](https://search.mave
 <dependency>
   <groupId>com.github.jbgust</groupId>
   <artifactId>Java-Solid-Rocket-Motor</artifactId>
-  <version>3.0</version>
-</dependency>
-```
-
-#### Java 8
-```
-<dependency>
-  <groupId>com.github.jbgust</groupId>
-  <artifactId>Java-Solid-Rocket-Motor</artifactId>
-  <version>2.4</version>
+  <version>3.1</version>
 </dependency>
 ```
 
