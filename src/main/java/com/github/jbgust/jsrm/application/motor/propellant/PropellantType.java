@@ -12,7 +12,7 @@ public enum PropellantType implements SolidPropellant {
      * KNDX = Potassium Nitrate/Dextrose, 65/35 O/F ratio
      */
     KNDX("KNDX = Potassium Nitrate/Dextrose, 65/35 O/F ratio",
-            1.879, 1.043, 1.1308, 42.39, 1710,
+            1.879, 1.1308, 1.1308, 42.42, 1710,
             new ImmutableRangeMap.Builder<Double, BurnRateData>()
                     .put(lessThan(0.779135), new BurnRateData(8.87544496778536, 0.6193))
                     .put(closedOpen(0.779135, 2.571835), new BurnRateData(7.55278442387944, -0.0087))
@@ -27,7 +27,7 @@ public enum PropellantType implements SolidPropellant {
      * KNSB fine = potassium nitrate/sorbitol 65/35 O/F ratio, oxidizer finely milled
      */
     KNSB_FINE("KNSB fine = potassium nitrate/sorbitol 65/35 O/F ratio, oxidizer finely milled",
-            1.841, 1.042, 1.1361, 39.90, 1600,
+            1.841, 1.1370, 1.1370, 39.90, 1600,
             new ImmutableRangeMap.Builder<Double, BurnRateData>()
                     .put(lessThan(0.806715), new BurnRateData(10.7076837980331, 0.6247))
                     .put(closedOpen(0.806715, 1.50311), new BurnRateData(8.76328007101773, -0.3142))
@@ -42,7 +42,7 @@ public enum PropellantType implements SolidPropellant {
      * KNSB coarse = potassium nitrate/sorbitol 65/35 O/F ratio, oxidizer granular or lightly milled prills
      */
     KNSB_COARSE("KNSB coarse = potassium nitrate/sorbitol 65/35 O/F ratio, oxidizer granular or lightly milled prills",
-            1.841, 1.042, 1.1361, 39.90, 1600,
+            1.841, 1.1370, 1.1370, 39.90, 1600,
             new ImmutableRangeMap.Builder<Double, BurnRateData>()
                     //According to Richard Nakka burnrate Excel sheet the last range should be 0.101 to 10,3
                     // but the algorithm return also this BurnRateData even if the pressure exceed 10,3 MPa
@@ -53,7 +53,7 @@ public enum PropellantType implements SolidPropellant {
      * KNSU = potassium nitrate/sucrose 65/35 O/F ratio, oxidizer finely milled
      */
     KNSU("KNSU = potassium nitrate/sucrose 65/35 O/F ratio, oxidizer finely milled",
-            1.889, 1.044, 1.133, 41.98, 1720,
+            1.889, 1.133, 1.133, 42.02, 1720,
             new ImmutableRangeMap.Builder<Double, BurnRateData>()
                     //According to Richard Nakka burnrate Excel sheet the last range should be 0.101 to 10,3
                     // but the algorithm return also this BurnRateData even if the pressure exceed 10,3 MPa
@@ -64,7 +64,7 @@ public enum PropellantType implements SolidPropellant {
      * KNER coarse = potassium nitrate/erythritol 65/35 O/F ratio, oxidizer granular or lightly milled prills
      */
     KNER_COARSE("KNER coarse = potassium nitrate/erythritol 65/35 O/F ratio, oxidizer granular or lightly milled prills",
-            1.820, 1.0426, 1.139, 38.78, 1608,
+            1.820, 1.14, 1.14, 38.58, 1608,
             new ImmutableRangeMap.Builder<Double, BurnRateData>()
                     //According to Richard Nakka burnrate Excel sheet the last range should be 0.101 to 10,3
                     // but the algorithm return also this BurnRateData even if the pressure exceed 10,3 MPa
@@ -75,7 +75,7 @@ public enum PropellantType implements SolidPropellant {
      * KNMN coarse = potassium nitrate/mannitol 65/35 O/F ratio, oxidizer granular or lightly milled prills
      */
     KNMN_COARSE("KNMN coarse = potassium nitrate/mannitol 65/35 O/F ratio, oxidizer granular or lightly milled prills",
-            1.854, 1.042, 1.1363, 39.826, 1616,
+            1.854, 1.1363, 1.1363, 39.826, 1616,
             new ImmutableRangeMap.Builder<Double, BurnRateData>()
                     .put(all(), new BurnRateData(5.13, 0.22))
                     .build(), 6),
@@ -84,7 +84,7 @@ public enum PropellantType implements SolidPropellant {
      * KNXY = potassium nitrate/Xylitol 65/35 O/F ratio
      */
     KNXY("KNXY =  potassium nitrate/Xylitol 65/35 O/F ratio",
-                        1.8654, 1.043, 1.138, 39.293, 1623,
+                        1.8654, 1.138, 1.138, 39.293, 1623,
                         new ImmutableRangeMap.Builder<Double, BurnRateData>()
                     .put(all(), new BurnRateData(3.23, 0.483))
             .build(), 7);
