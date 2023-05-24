@@ -1,6 +1,8 @@
 package com.github.jbgust.jsrm.infra.performance.function;
 
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
+import com.github.jbgust.jsrm.utils.KNDX_SRM_2014;
+import com.github.jbgust.jsrm.utils.KNSU_SRM_2014;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +27,7 @@ class NozzleExitPressureFunctionTest {
     @Test
     void shouldNotReturnPatmValue() {
         double chamberPressureMpa = 2935262.54708905;
-        double k2ph = PropellantType.KNDX.getK2Ph();
+        double k2ph = new KNDX_SRM_2014().getK2Ph();
         double machSpeedAtNozzleExit = 2.00813230872116;
         double patm = 0.101;
 

@@ -7,6 +7,7 @@ import com.github.jbgust.jsrm.application.motor.PropellantGrain;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
+import com.github.jbgust.jsrm.utils.KNSU_SRM_2014;
 import org.junit.jupiter.api.Test;
 
 import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.EXPOSED;
@@ -49,7 +50,7 @@ class CSlotGrainTest extends MotorSimGrainTestConfiguration {
         int numberOfSegment = 2;
         CSlotGrain grain = createCSlotTestGrain(numberOfSegment, EXPOSED);
         SolidRocketMotor motor = new SolidRocketMotor(
-                new PropellantGrain(KNSU, grain),
+                new PropellantGrain(new KNSU_SRM_2014(), grain),
                 new CombustionChamber(40d, 150d), 10d);
 
         JSRMSimulation jsrmSimulation = new JSRMSimulation(motor);
@@ -70,7 +71,7 @@ class CSlotGrainTest extends MotorSimGrainTestConfiguration {
         int numberOfSegment = 2;
         CSlotGrain grain = createCSlotTestGrain(numberOfSegment, INHIBITED);
         SolidRocketMotor motor = new SolidRocketMotor(
-                new PropellantGrain(KNSU, grain),
+                new PropellantGrain(new KNSU_SRM_2014(), grain),
                 new CombustionChamber(40d, 150d), 10d);
 
         JSRMSimulation jsrmSimulation = new JSRMSimulation(motor);

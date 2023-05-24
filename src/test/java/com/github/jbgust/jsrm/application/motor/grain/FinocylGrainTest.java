@@ -7,6 +7,7 @@ import com.github.jbgust.jsrm.application.motor.PropellantGrain;
 import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
+import com.github.jbgust.jsrm.utils.KNSU_SRM_2014;
 import org.junit.jupiter.api.Test;
 
 import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.EXPOSED;
@@ -46,7 +47,7 @@ public class FinocylGrainTest extends MotorSimGrainTestConfiguration{
     public void runComputationWithFinocyl() {
         FinocylGrain finocyl = new FinocylGrain(30d, 10d, 2d, 20d, 5, 70d, 1, EXPOSED);
         SolidRocketMotor finocylMotor = new SolidRocketMotor(
-                new PropellantGrain(PropellantType.KNSU, finocyl),
+                new PropellantGrain(new KNSU_SRM_2014(), finocyl),
                 new CombustionChamber(40d, 150d), 10d);
 
         JSRMSimulation jsrmSimulation = new JSRMSimulation(finocylMotor);
@@ -65,7 +66,7 @@ public class FinocylGrainTest extends MotorSimGrainTestConfiguration{
     public void runComputationWith2FinocylGrain() {
         FinocylGrain finocyl = new FinocylGrain(30d, 10d, 2d, 20d, 5, 70d, 2, EXPOSED);
         SolidRocketMotor finocylMotor = new SolidRocketMotor(
-                new PropellantGrain(PropellantType.KNSU, finocyl),
+                new PropellantGrain(new KNSU_SRM_2014(), finocyl),
                 new CombustionChamber(40d, 150d), 10d);
 
         JSRMSimulation jsrmSimulation = new JSRMSimulation(finocylMotor);
@@ -85,7 +86,7 @@ public class FinocylGrainTest extends MotorSimGrainTestConfiguration{
     public void runComputationWith2FinocylGrainEndsInhibited() {
         FinocylGrain finocyl = new FinocylGrain(30d, 10d, 2d, 20d, 5, 70d, 2, INHIBITED);
         SolidRocketMotor finocylMotor = new SolidRocketMotor(
-                new PropellantGrain(PropellantType.KNSU, finocyl),
+                new PropellantGrain(new KNSU_SRM_2014(), finocyl),
                 new CombustionChamber(40d, 150d), 10d);
 
         JSRMSimulation jsrmSimulation = new JSRMSimulation(finocylMotor);
@@ -105,7 +106,7 @@ public class FinocylGrainTest extends MotorSimGrainTestConfiguration{
     public void runComputationWith4FinocylGrainEndsInhibited() {
         FinocylGrain finocyl = new FinocylGrain(30d, 0.01d, 3d, 20d, 3, 70d, 4, EXPOSED);
         SolidRocketMotor finocylMotor = new SolidRocketMotor(
-                new PropellantGrain(PropellantType.KNSU, finocyl),
+                new PropellantGrain(new KNSU_SRM_2014(), finocyl),
                 new CombustionChamber(40d, 300d), 10d);
 
         JSRMSimulation jsrmSimulation = new JSRMSimulation(finocylMotor);

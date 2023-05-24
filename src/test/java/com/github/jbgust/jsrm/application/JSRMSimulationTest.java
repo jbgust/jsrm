@@ -9,6 +9,7 @@ import com.github.jbgust.jsrm.application.motor.grain.HollowCylinderGrain;
 import com.github.jbgust.jsrm.application.motor.PropellantGrain;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.github.jbgust.jsrm.calculation.exception.LineCalculatorException;
+import com.github.jbgust.jsrm.utils.KNSU_SRM_2014;
 import com.github.jbgust.jsrm.utils.PropellantGrainBuilder;
 import com.github.jbgust.jsrm.utils.SolidRocketMotorBuilder;
 import org.assertj.core.data.Percentage;
@@ -265,7 +266,7 @@ class JSRMSimulationTest {
                 .withGrainCoreDiameter(10)
                 .withGrainOuterDiameter(34)
                 .withGrainSegmentLength(58)
-                .withPropellant(KNSU)
+                .withPropellant(new KNSU_SRM_2014())
                 .build();
 
         JSRMConfig jsrmConfig = new JSRMConfigBuilder()
