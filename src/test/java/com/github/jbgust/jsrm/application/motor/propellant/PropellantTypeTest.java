@@ -87,6 +87,22 @@ class PropellantTypeTest {
         assertPropellantPressureExponent(minPressureInChamber, maxPressureInChamber, 0.4, KNER_COARSE);
     }
 
+    @Test
+    void checkKNFRBurnRateData() {
+        double minPressureInChamber = 0.001;
+        double maxPressureInChamber = 10.3;
+        assertPropellantBurnRateCoefficient(minPressureInChamber, maxPressureInChamber, 7.4, KNFR);
+        assertPropellantPressureExponent(minPressureInChamber, maxPressureInChamber, 0.25, KNFR);
+    }
+
+    @Test
+    void checkKNPSB_COARSEBurnRateData() {
+        double minPressureInChamber = 0.001;
+        double maxPressureInChamber = 10.3;
+        assertPropellantBurnRateCoefficient(minPressureInChamber, maxPressureInChamber, 6.5, KNPSB);
+        assertPropellantPressureExponent(minPressureInChamber, maxPressureInChamber, 0.628, KNPSB);
+    }
+
     private void assertPropellantBurnRateCoefficient(double minPressureInChamber, double maxPressureInChamber, double burnRateCoefficient, PropellantType propellantType) {
         assertPropellantBurnRateCoefficient(minPressureInChamber, maxPressureInChamber, burnRateCoefficient, propellantType, 0, 1);
     }
