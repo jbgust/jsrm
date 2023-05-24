@@ -8,6 +8,7 @@ import com.github.jbgust.jsrm.application.motor.SolidRocketMotor;
 import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
 import com.github.jbgust.jsrm.application.result.JSRMResult;
 import com.github.jbgust.jsrm.infra.function.HollowCircleAreaFunction;
+import com.github.jbgust.jsrm.utils.KNSU_SRM_2014;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -151,7 +152,7 @@ class RodAndTubeGrainTest extends MotorSimGrainTestConfiguration {
         int numberOfSegment = 2;
         RodAndTubeGrain grain = createRodTubeTestGrain(numberOfSegment, EXPOSED);
         SolidRocketMotor motor = new SolidRocketMotor(
-                new PropellantGrain(KNSU, grain),
+                new PropellantGrain(new KNSU_SRM_2014(), grain),
                 new CombustionChamber(40d, 150d), 10d);
 
         JSRMSimulation jsrmSimulation = new JSRMSimulation(motor);
@@ -172,7 +173,7 @@ class RodAndTubeGrainTest extends MotorSimGrainTestConfiguration {
         int numberOfSegment = 2;
         RodAndTubeGrain grain = createRodTubeTestGrain(numberOfSegment, INHIBITED);
         SolidRocketMotor motor = new SolidRocketMotor(
-                new PropellantGrain(KNSU, grain),
+                new PropellantGrain(new KNSU_SRM_2014(), grain),
                 new CombustionChamber(40d, 150d), 10d);
 
         JSRMSimulation jsrmSimulation = new JSRMSimulation(motor);

@@ -19,7 +19,7 @@ public class SolidRocketMotorBuilder {
     private double chamberInnerDiameter = 75d;
     private double chamberLength = 470d;
     private double throatDiameter = 17.3985248919802;
-    private SolidPropellant propellant = KNDX;
+    private SolidPropellant propellant = new KNDX_SRM_2014();
     private GrainSurface outerSurface = INHIBITED;
     private GrainSurface endsSurface = EXPOSED;
     private GrainSurface coreSurface = EXPOSED;
@@ -29,7 +29,14 @@ public class SolidRocketMotorBuilder {
      * @return the solid rocket motor described in SRM_2014.xls
      */
     public static SolidRocketMotor createMotorAsSRM_2014ExcelFile() {
-        return new SolidRocketMotorBuilder().build();
+        return new SolidRocketMotorBuilder()
+                .build();
+    }
+
+    public static SolidRocketMotor createMotorAsSRM_2014ExcelFile(SolidPropellant propellant) {
+        return new SolidRocketMotorBuilder()
+                .withPropellant(propellant)
+                .build();
     }
 
     public SolidRocketMotor build() {

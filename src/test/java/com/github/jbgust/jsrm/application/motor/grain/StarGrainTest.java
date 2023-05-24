@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.data.Percentage.withPercentage;
 
+import com.github.jbgust.jsrm.utils.KNSU_SRM_2014;
 import org.junit.jupiter.api.Test;
 
 import com.github.jbgust.jsrm.application.JSRMConfigBuilder;
@@ -79,7 +80,7 @@ class StarGrainTest extends MotorSimGrainTestConfiguration{
         int numberOfSegment = 2;
         StarGrain grain = new StarGrain(30d, 5d, 15d, 5, numberOfSegment, 70d, EXPOSED);
         SolidRocketMotor motor = new SolidRocketMotor(
-                new PropellantGrain(KNSU, grain),
+                new PropellantGrain(new KNSU_SRM_2014(), grain),
                 new CombustionChamber(40d, 150d), 10d);
 
         JSRMSimulation jsrmSimulation = new JSRMSimulation(motor);
@@ -100,7 +101,7 @@ class StarGrainTest extends MotorSimGrainTestConfiguration{
         int numberOfSegment = 2;
         StarGrain grain = new StarGrain(30d, 5d, 15d, 5, numberOfSegment, 70d, INHIBITED);
         SolidRocketMotor motor = new SolidRocketMotor(
-                new PropellantGrain(KNSU, grain),
+                new PropellantGrain(new KNSU_SRM_2014(), grain),
                 new CombustionChamber(40d, 150d), 10d);
 
         JSRMSimulation jsrmSimulation = new JSRMSimulation(motor);
@@ -121,7 +122,7 @@ class StarGrainTest extends MotorSimGrainTestConfiguration{
         int numberOfSegment = 4;
         StarGrain grain = new StarGrain(30d, 5d, 15d, 5, numberOfSegment, 70d, INHIBITED);
         SolidRocketMotor motor = new SolidRocketMotor(
-                new PropellantGrain(KNSU, grain),
+                new PropellantGrain(new KNSU_SRM_2014(), grain),
                 new CombustionChamber(40d, 300d), 10d);
 
         JSRMSimulation jsrmSimulation = new JSRMSimulation(motor);

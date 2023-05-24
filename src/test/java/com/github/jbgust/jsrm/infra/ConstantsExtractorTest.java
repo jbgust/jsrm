@@ -8,11 +8,13 @@ import com.github.jbgust.jsrm.application.motor.propellant.PropellantType;
 import com.github.jbgust.jsrm.application.motor.propellant.SolidPropellant;
 import com.github.jbgust.jsrm.utils.SolidRocketMotorBuilder;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 import java.util.Map;
 import java.util.stream.Stream;
 
 import static com.github.jbgust.jsrm.application.motor.grain.GrainSurface.EXPOSED;
+import static com.github.jbgust.jsrm.application.motor.propellant.PropellantType.KNDX;
 import static com.github.jbgust.jsrm.infra.JSRMConstant.*;
 import static com.github.jbgust.jsrm.utils.SolidRocketMotorBuilder.createMotorAsSRM_2014ExcelFile;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,14 +26,14 @@ class ConstantsExtractorTest {
 
     @Test
     void shouldExtractConstants(){
-        SolidRocketMotor solidRocketMotor = createMotorAsSRM_2014ExcelFile();
+        SolidRocketMotor solidRocketMotor = createMotorAsSRM_2014ExcelFile(KNDX);
 
         Map<JSRMConstant, Double> constants = ConstantsExtractor.extract(solidRocketMotor, config);
 
         assertThat(constants.size()).isEqualTo(numberOfConstantThatShouldBeInitialized());
 
         assertThat(constants.get(xincp)).isEqualTo(0.0293764988009578, offset(0.00000000000001d));
-        assertThat(constants.get(cstar)).isEqualTo(889.279521360202, offset(0.000000000001));
+        assertThat(constants.get(cstar)).isEqualTo(888.9650104674790, offset(0.000000000001));
         assertThat(constants.get(patm)).isEqualTo(config.getAmbiantPressureInMPa());
         assertThat(constants.get(etanoz)).isEqualTo(config.getNozzleEfficiency());
         assertThat(constants.get(at)).isEqualTo(237.746832, offset(0.000001));

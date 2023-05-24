@@ -1,6 +1,7 @@
 package com.github.jbgust.jsrm.infra.performance;
 
 import com.github.jbgust.jsrm.infra.performance.csv.CsvToPerformanceLine;
+import com.github.jbgust.jsrm.utils.KNDX_SRM_2014;
 import com.google.common.collect.ImmutableMap;
 import com.github.jbgust.jsrm.calculation.Formula;
 import com.github.jbgust.jsrm.calculation.LineCalculator;
@@ -54,7 +55,7 @@ class QualificationPerformanceCalculationsTest {
         Map<String, Double> constants = ImmutableMap.<String, Double>builder()
                 .put(patm.name(), 0.101)
                 .put(etanoz.name(), 0.85)
-                .put(k2ph.name(), KNDX.getK2Ph())
+                .put(k2ph.name(), new KNDX_SRM_2014().getK2Ph())
                 .put(aexit.name(), 1901.974657752680)
                 .put(me.name(), 2.95455756202289)
                 .put(mef.name(), 2.95455756202289)
