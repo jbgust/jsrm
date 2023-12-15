@@ -47,5 +47,3 @@ Easy integration to your source code with [Maven repository](https://search.mave
 ### Licence
 * [MotorSim - Bill Kuker](https://github.com/bkuker/motorsim)
 * [SRM - Richard Nakka](http://nakka-rocketry.net/softw.html#SRM)
-
-
