@@ -54,11 +54,11 @@ public final class KNDX_SRM_2014 implements SolidPropellant {
 
     @Override
     public double getBurnRateCoefficient(double chamberPressure) throws ChamberPressureOutOfBoundException {
-        return byPressureData.get(chamberPressure).getBurnRateCoefficient();
+        return byPressureData.get(chamberPressure).burnRateCoefficient();
     }
 
     @Override
     public double getPressureExponent(double chamberPressure) throws ChamberPressureOutOfBoundException {
-        return byPressureData.get(chamberPressure).getPressureExponent();
+        return byPressureData.get(chamberPressure).pressureExponent();
     }
 }

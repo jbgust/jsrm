@@ -81,10 +81,10 @@ public class JSRMSimulation {
     }
 
     private JSRMResult buildResult(JSRMConfig config, Map<JSRMConstant, Double> constants, Map<ChamberPressureCalculation.Results, List<Double>> chamberPressureResults, PerformanceResultProvider timeSinceBurnStartProvider, PerformanceCalculationResult performanceCalculationResult) {
-        double maxThrust = performanceCalculationResult.getResults().get(PerformanceCalculation.Results.thrust).stream().mapToDouble(Double::doubleValue).max().getAsDouble();
+        double maxThrust = performanceCalculationResult.results().get(PerformanceCalculation.Results.thrust).stream().mapToDouble(Double::doubleValue).max().getAsDouble();
         double maxChamberPressure = chamberPressureResults.get(ChamberPressureCalculation.Results.absoluteChamberPressure).stream().mapToDouble(Double::doubleValue).max().getAsDouble();
         double averageChamberPressure = chamberPressureResults.get(ChamberPressureCalculation.Results.absoluteChamberPressure).stream().mapToDouble(Double::doubleValue).average().getAsDouble();
-        double totalImpulse = performanceCalculationResult.getResults().get(PerformanceCalculation.Results.deliveredImpulse).stream().mapToDouble(Double::doubleValue).sum();
+        double totalImpulse = performanceCalculationResult.results().get(PerformanceCalculation.Results.deliveredImpulse).stream().mapToDouble(Double::doubleValue).sum();
         double thrustTime = getThrustTime(timeSinceBurnStartProvider);
         long averageThrust = Math.round(totalImpulse/thrustTime);
         double specificImpulse = getSpecificImpulse(constants, totalImpulse);
@@ -118,9 +118,9 @@ public class JSRMSimulation {
     }
 
     private Nozzle buildNozzleResult(JSRMConfig config, PerformanceCalculationResult performanceCalculationResult) {
-        return new Nozzle(motor.getThroatDiameterInMillimeter(), motor.getCombustionChamber().getChamberInnerDiameterInMillimeter(), performanceCalculationResult.getOptimalNozzleExpansionResult(), performanceCalculationResult.getOptimalNozzleExitDiameterInMillimeter(),
-                getNozzleExpansionRatioResult(config, performanceCalculationResult), performanceCalculationResult.getNozzleExitDiameterInMillimeter(),
-                performanceCalculationResult.getInitialNozzleExitSpeedInMach(), performanceCalculationResult.getFinalNozzleExitSpeedInMach());
+        return new Nozzle(motor.getThroatDiameterInMillimeter(), motor.getCombustionChamber().getChamberInnerDiameterInMillimeter(), performanceCalculationResult.optimalNozzleExpansionResult(), performanceCalculationResult.optimalNozzleExitDiameterInMillimeter(),
+                getNozzleExpansionRatioResult(config, performanceCalculationResult), performanceCalculationResult.nozzleExitDiameterInMillimeter(),
+                performanceCalculationResult.initialNozzleExitSpeedInMach(), performanceCalculationResult.finalNozzleExitSpeedInMach());
     }
 
     private List<MotorParameters> buildMotorParametersResult(PerformanceResultProvider timeSinceBurnStartProvider,
@@ -131,7 +131,7 @@ public class JSRMSimulation {
         for(int i = 0; i < config.getLastCalcultationLine()+1; i++){
             motorParameters.add(new MotorParameters(
                     timeSinceBurnStartProvider.getResult(i),
-                    performanceCalculationResult.getResults().get(PerformanceCalculation.Results.thrust).get(i),
+                    performanceCalculationResult.results().get(PerformanceCalculation.Results.thrust).get(i),
                     chamberPressureResults.get(kn).get(i),
                     chamberPressureResults.get(ChamberPressureCalculation.Results.absoluteChamberPressure).get(i),
                     chamberPressureResults.get(ChamberPressureCalculation.Results.massFlowRate).get(i),
@@ -145,7 +145,7 @@ public class JSRMSimulation {
     }
 
     private double getNozzleExpansionRatioResult(JSRMConfig config, PerformanceCalculationResult performanceCalculationResult) {
-        return config.isOptimalNozzleDesign()?performanceCalculationResult.getOptimalNozzleExpansionResult() : config.getNozzleExpansionRatio();
+        return config.isOptimalNozzleDesign()?performanceCalculationResult.optimalNozzleExpansionResult() : config.getNozzleExpansionRatio();
     }
 
     private double getThrustTime(PerformanceResultProvider timeSinceBurnStartProvider) {

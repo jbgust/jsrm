@@ -163,7 +163,7 @@ public enum PropellantType implements SolidPropellant {
     public double getBurnRateCoefficient(double chamberPressure) throws ChamberPressureOutOfBoundException {
         BurnRateData burnRateData = byPressureData.get(chamberPressure);
         if (burnRateData !=null){
-            return burnRateData.getBurnRateCoefficient();
+            return burnRateData.burnRateCoefficient();
         } else {
             throw new ChamberPressureOutOfBoundException(
                     name() + " has no burn rate coefficient for this pressure ("+chamberPressure+") should be in range " + byPressureData.span());
@@ -174,7 +174,7 @@ public enum PropellantType implements SolidPropellant {
     public double getPressureExponent(double chamberPressure) throws ChamberPressureOutOfBoundException {
         BurnRateData burnRateData = byPressureData.get(chamberPressure);
         if (burnRateData !=null){
-            return burnRateData.getPressureExponent();
+            return burnRateData.pressureExponent();
         } else {
             throw new ChamberPressureOutOfBoundException(
                     name() + " has no pressure exponent for this pressure ("+chamberPressure+") should be in range " + byPressureData.span());

@@ -1,6 +1,5 @@
 package com.github.jbgust.jsrm.infra.performance.solver;
 
-import lombok.Value;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -20,10 +19,10 @@ class MachSpeedAtNozzleExitSolverTest {
         MachSpeedAtNozzleExitSolver solver = new MachSpeedAtNozzleExitSolver(KNDX);
 
         //WHEN
-        double initialMachSpeedAtNozzleExit = solver.solve(nozzleDataTest.getNozzleExpansionRatio());
+        double initialMachSpeedAtNozzleExit = solver.solve(nozzleDataTest.nozzleExpansionRatio());
 
         //THEN
-        assertThat(initialMachSpeedAtNozzleExit).isEqualTo(nozzleDataTest.getExpectedMachSpeed(), offset(0.00001));
+        assertThat(initialMachSpeedAtNozzleExit).isEqualTo(nozzleDataTest.expectedMachSpeed(), offset(0.00001));
     }
 
     @Test
@@ -38,11 +37,11 @@ class MachSpeedAtNozzleExitSolverTest {
         assertThat(initialMachSpeedAtNozzleExit).isEqualTo(9.999, offset(0.001));
     }
 
-    @Value
-    private static class NozzleDataTest {
-        double nozzleExpansionRatio;
-        double expectedMachSpeed;
-    }
+
+    private static record NozzleDataTest (
+        double nozzleExpansionRatio,
+        double expectedMachSpeed
+    ){}
 
     static Stream<NozzleDataTest> testDatas() {
         return Stream.of(

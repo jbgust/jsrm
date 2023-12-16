@@ -61,7 +61,7 @@ class PerformanceCalculationTest {
                 chamberPressureProvider, throatAreaProvider,
                 nozzleCriticalPassageAreaProvider, timeSinceBurnStartProvider)
                 .compute(new JSRMConfigBuilder().withNozzleExpansionRatio(8).createJSRMConfig())
-                .getResults();
+                .results();
 
     }
 
